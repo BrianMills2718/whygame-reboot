@@ -1,10 +1,10 @@
 # Plan #1: Graph-Adversary Vertical
 
-**Status:** Planned — local work unit ready for claim
-**Status ID:** planned
+**Status:** Blocked — authentic Luna call rejected before usage; alternate model requires Brian
+**Status ID:** blocked
 **Type:** standard product vertical
 **Priority:** Critical
-**Blocked By:** None within the adopted Luna-medium and cumulative portfolio budget
+**Blocked By:** Luna subscription capacity until 2026-08-28, or Brian's explicit alternate-model decision
 **Created:** 2026-08-23
 **Updated:** 2026-08-23
 
@@ -56,6 +56,28 @@ No world-model or truth claim, independent critic, general contradiction
 detection, random strategy, SSE server, public deployment, legacy source
 mutation, generic AES loop API, or shared graph-contract promotion.
 
+## Static report UI spike
+
+- **Actor and decision:** Brian or a future implementing agent decides whether
+  the graph actually changed the explanation, rather than merely storing more
+  claims.
+- **Stage and hypothesis:** PoC outcome surface. If proposal, challenge,
+  revision, active result, and uncertainty appear in one reading flow, the
+  bounded loop can be judged without opening raw JSON or traces.
+- **Critical flow:** open `report.html`, read the answer first, step through the
+  five loop stages, inspect the superseded and replacement claim, then step down
+  to observations and call receipts.
+- **Boundary:** immutable `LoopRun` JSON is the typed source; deterministic
+  rendering owns presentation only. Evaluation and revision rules remain in
+  domain operators. The report has no write action or hidden client state.
+- **States:** accepted, blocked/error with the last valid checkpoint, and dry
+  run. The first review targets a representative desktop viewport; a single
+  responsive column must remain readable on narrow screens, but no viewport
+  matrix or interactive graph is part of this PoC.
+- **Readout and stop rule:** continue only if direct inspection answers what
+  changed and why. Stop or revise if the report leads with schemas, makes the
+  conflict ambiguous, hides incomplete stages, or implies truth certification.
+
 ## Trace evaluation
 
 Acceptance requires two rooted shared-client child traces with requested and
@@ -66,6 +88,9 @@ Fixtures establish contract behavior but cannot complete the vertical.
 
 ## Exact next action
 
-Claim `WGR-WU01` at the canonical bootstrap revision, create its linked
-worktree, and implement the smallest deterministic contracts before making the
-first authentic proposal call.
+Land the provider-free PR only after its immutable-output, source-revision, and
+outer-run-custody negative controls pass, then resume the exact authentic run
+after Luna capacity returns. Amend the route only if Brian explicitly selects
+an alternate model. The clean-room repair is retained through `9b8566c`; the
+zero-usage failed attempt is retained under
+`evidence/runs/2026-08-23-luna-capacity-blocked/`.

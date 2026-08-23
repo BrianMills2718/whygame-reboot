@@ -1,0 +1,29 @@
+id: aes-mission-drift
+question: >-
+  Why can an agentic engineering system designed to prevent drift drift away
+  from its own mission?
+observations:
+  - id: gate-became-identity
+    text: >-
+      A deliberately narrow Gate 1 implementation boundary became the
+      repository's product identity during an authority migration.
+    source_ref: docs/decisions/0003-full-product-mission-and-documentation-dogfood.md#context
+    source_revision: ce866efd2855318570034a39343dace73f243352
+  - id: green-but-incomplete
+    text: >-
+      The resulting documentation was internally coherent and mechanically
+      green while omitting the complete product outcome.
+    source_ref: docs/decisions/0003-full-product-mission-and-documentation-dogfood.md#context
+    source_revision: ce866efd2855318570034a39343dace73f243352
+  - id: registered-island
+    text: >-
+      Relationship checks protected only the registered policy-admission
+      island, so unregistered mission intent was outside the green checks.
+    source_ref: docs/decisions/0003-full-product-mission-and-documentation-dogfood.md#context
+    source_revision: ce866efd2855318570034a39343dace73f243352
+  - id: sequencing-not-scope
+    text: >-
+      Avoiding speculative universal infrastructure is a sequencing constraint,
+      not authorization to narrow the complete product mission.
+    source_ref: docs/decisions/0003-full-product-mission-and-documentation-dogfood.md#what-no-speculative-universal-platform-means
+    source_revision: ce866efd2855318570034a39343dace73f243352

@@ -32,14 +32,18 @@ def test_bootstrap_claims_do_not_overstate_adoption() -> None:
     }
 
 
-def test_local_work_unit_is_claimable_and_bound_to_upstream() -> None:
+def test_local_work_unit_lifecycle_is_bound_to_upstream() -> None:
     graph = json.loads(
         (ROOT / "docs" / "plans" / "1_graph-adversary-vertical_work_graph.json").read_text()
     )
     assert len(graph["units"]) == 1
     unit = graph["units"][0]
     assert unit["id"] == "WGR-WU01"
-    assert unit["status"] == "ready"
+    assert (unit["status"], unit["claimability"]) in {
+        ("ready", "ready_for_execution"),
+        ("in_progress", "unavailable_active_claim"),
+        ("accepted", "not_applicable"),
+    }
     assert unit["readiness"]["status"] == "ready"
     assert unit["authorization_mode"] == "registry_claim"
     assert {
