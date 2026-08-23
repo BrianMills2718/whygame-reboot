@@ -1,0 +1,294 @@
+{
+  "active_projection": {
+    "active_claims": [
+      {
+        "claim_id": "claim-52b3d61b31e23e00",
+        "confidence": "provisional",
+        "content_sha256": "52b3d61b31e23e006233150353efcf55ecaeda9cccfb64360e3578197b0aa5d6",
+        "normalized_object": "mission drift away from the complete product outcome",
+        "normalized_subject": "a narrow implementation boundary becoming the repository s product identity",
+        "object": "mission drift away from the complete product outcome",
+        "observation_ids": [
+          "gate-became-identity",
+          "green-but-incomplete"
+        ],
+        "proposal_local_id": "claim-gate-identity-causes-mission-drift",
+        "rationale": "If the Gate 1 boundary becomes the product identity, the system may treat an incomplete scope as the mission.",
+        "relation": "causes",
+        "subject": "a narrow implementation boundary becoming the repository's product identity"
+      },
+      {
+        "claim_id": "claim-6f9f150e9f5217b1",
+        "confidence": "provisional",
+        "content_sha256": "6f9f150e9f5217b149e510000f0ce657821d7dd4416b3cc7dd91710d414746d9",
+        "normalized_object": "mission drift away from the complete product outcome",
+        "normalized_subject": "a narrow implementation boundary becoming the repository s product identity",
+        "object": "mission drift away from the complete product outcome",
+        "observation_ids": [
+          "gate-became-identity",
+          "green-but-incomplete",
+          "registered-island",
+          "sequencing-not-scope"
+        ],
+        "proposal_local_id": "revision:claim-1420e4b67f11618c",
+        "rationale": "When a sequencing boundary is treated as the complete identity, it can contribute to mission drift by allowing internally coherent checks to omit the full outcome; the extent and controls for this effect remain uncertain.",
+        "relation": "contributes_to",
+        "subject": "a narrow implementation boundary becoming the repository's product identity"
+      },
+      {
+        "claim_id": "claim-9983832e65ee29f9",
+        "confidence": "provisional",
+        "content_sha256": "9983832e65ee29f97ab90f2414103aaa9b515d023324c49e8d942b660c6448c4",
+        "normalized_object": "mission drift away from the complete product outcome",
+        "normalized_subject": "relationship checks limited to the registered policy admission island",
+        "object": "mission drift away from the complete product outcome",
+        "observation_ids": [
+          "green-but-incomplete",
+          "registered-island"
+        ],
+        "proposal_local_id": "claim-registered-island-contributes",
+        "rationale": "Unregistered mission intent remains outside the green checks, allowing mechanically passing documentation to omit the complete outcome.",
+        "relation": "contributes_to",
+        "subject": "relationship checks limited to the registered policy-admission island"
+      }
+    ],
+    "projection_sha256": "22a12132039bcbd9456126bff7abcb8cf02e5ff8a24c2995abda2df447df6f40",
+    "superseded_claim_ids": [
+      "claim-1420e4b67f11618c"
+    ]
+  },
+  "config_sha256": "e640aea5daee8995795056706e168dfb4976bb412d2a8a1d3d94b90ee50ae33b",
+  "finding": {
+    "explanation": "The committed claims use the same normalized subject and object but make opposed direct causal assertions (causes versus prevents).",
+    "finding_id": "finding-be2687da8b7a9b8d",
+    "finding_sha256": "be2687da8b7a9b8dd6de8a6541085dcc39759ce8978b16b17b24c52f5ce459fa",
+    "kind": "direct_causal_conflict",
+    "left_claim_id": "claim-1420e4b67f11618c",
+    "proposal_sha256": "9c13f49ac5f09ba373a32bbf836d46e1b2d69bafcc29e740d71885430252abb5",
+    "right_claim_id": "claim-52b3d61b31e23e00"
+  },
+  "input_sha256": "0cdcf8202f4224591a03c4953ec7cad5e8e9d5d94bebe4e227f4ab0a082ee80c",
+  "issues": [],
+  "observations": [
+    {
+      "id": "gate-became-identity",
+      "source_ref": "docs/decisions/0003-full-product-mission-and-documentation-dogfood.md#context",
+      "source_revision": "ce866efd2855318570034a39343dace73f243352",
+      "text": "A deliberately narrow Gate 1 implementation boundary became the repository's product identity during an authority migration."
+    },
+    {
+      "id": "green-but-incomplete",
+      "source_ref": "docs/decisions/0003-full-product-mission-and-documentation-dogfood.md#context",
+      "source_revision": "ce866efd2855318570034a39343dace73f243352",
+      "text": "The resulting documentation was internally coherent and mechanically green while omitting the complete product outcome."
+    },
+    {
+      "id": "registered-island",
+      "source_ref": "docs/decisions/0003-full-product-mission-and-documentation-dogfood.md#context",
+      "source_revision": "ce866efd2855318570034a39343dace73f243352",
+      "text": "Relationship checks protected only the registered policy-admission island, so unregistered mission intent was outside the green checks."
+    },
+    {
+      "id": "sequencing-not-scope",
+      "source_ref": "docs/decisions/0003-full-product-mission-and-documentation-dogfood.md#what-no-speculative-universal-platform-means",
+      "source_revision": "ce866efd2855318570034a39343dace73f243352",
+      "text": "Avoiding speculative universal infrastructure is a sequencing constraint, not authorization to narrow the complete product mission."
+    }
+  ],
+  "outer_runs": [
+    {
+      "config_sha256": "sha256:e640aea5daee8995795056706e168dfb4976bb412d2a8a1d3d94b90ee50ae33b",
+      "error_phase": null,
+      "error_type": null,
+      "linked_call_count": 2,
+      "max_budget": 0.5,
+      "reasoning_effort": "medium",
+      "requested_model": "codex/gpt-5.6-luna",
+      "root_trace_id": "whygame-reboot:4d128113640d2ae4:48c8ea64ecc04267aa6d749ca1f4b63d",
+      "run_id": "whygame-reboot-attempt-48c8ea64ecc04267aa6d749ca1f4b63d",
+      "runtime_revision": "0f07a07c81cde9624a036d1f91f384a4299b4598",
+      "status": "completed"
+    }
+  ],
+  "producer_revision": "0f07a07c81cde9624a036d1f91f384a4299b4598",
+  "proposal": {
+    "answer": "This bounded proposal suggests that a narrow implementation boundary can become mistaken for the full mission when authority migration and checks protect only what is registered. The competing pair is deliberate stress-testing, not a truth claim.",
+    "claims": [
+      {
+        "claim_id": "claim-52b3d61b31e23e00",
+        "confidence": "provisional",
+        "content_sha256": "52b3d61b31e23e006233150353efcf55ecaeda9cccfb64360e3578197b0aa5d6",
+        "normalized_object": "mission drift away from the complete product outcome",
+        "normalized_subject": "a narrow implementation boundary becoming the repository s product identity",
+        "object": "mission drift away from the complete product outcome",
+        "observation_ids": [
+          "gate-became-identity",
+          "green-but-incomplete"
+        ],
+        "proposal_local_id": "claim-gate-identity-causes-mission-drift",
+        "rationale": "If the Gate 1 boundary becomes the product identity, the system may treat an incomplete scope as the mission.",
+        "relation": "causes",
+        "subject": "a narrow implementation boundary becoming the repository's product identity"
+      },
+      {
+        "claim_id": "claim-1420e4b67f11618c",
+        "confidence": "contested",
+        "content_sha256": "1420e4b67f11618c32d08c1f8c3f72239b9ffdd8eab54f6ca75f37eac55abbaf",
+        "normalized_object": "mission drift away from the complete product outcome",
+        "normalized_subject": "a narrow implementation boundary becoming the repository s product identity",
+        "object": "mission drift away from the complete product outcome",
+        "observation_ids": [
+          "gate-became-identity",
+          "sequencing-not-scope"
+        ],
+        "proposal_local_id": "claim-gate-identity-prevents-mission-dre",
+        "rationale": "As a deliberately competing proposal, the boundary could be treated as a stabilizing scope constraint that prevents unauthorized expansion; the observations do not resolve this polarity.",
+        "relation": "prevents",
+        "subject": "a narrow implementation boundary becoming the repository's product identity"
+      },
+      {
+        "claim_id": "claim-9983832e65ee29f9",
+        "confidence": "provisional",
+        "content_sha256": "9983832e65ee29f97ab90f2414103aaa9b515d023324c49e8d942b660c6448c4",
+        "normalized_object": "mission drift away from the complete product outcome",
+        "normalized_subject": "relationship checks limited to the registered policy admission island",
+        "object": "mission drift away from the complete product outcome",
+        "observation_ids": [
+          "green-but-incomplete",
+          "registered-island"
+        ],
+        "proposal_local_id": "claim-registered-island-contributes",
+        "rationale": "Unregistered mission intent remains outside the green checks, allowing mechanically passing documentation to omit the complete outcome.",
+        "relation": "contributes_to",
+        "subject": "relationship checks limited to the registered policy-admission island"
+      }
+    ],
+    "model_competing_pair": {
+      "disagreement": "Whether the narrow implementation boundary becoming product identity causes or prevents mission drift away from the complete product outcome.",
+      "left_local_id": "claim-gate-identity-causes-mission-drift",
+      "right_local_id": "claim-gate-identity-prevents-mission-dre"
+    },
+    "proposal_sha256": "9c13f49ac5f09ba373a32bbf836d46e1b2d69bafcc29e740d71885430252abb5",
+    "unresolved_questions": [
+      "Which controls distinguish sequencing constraints from unauthorized narrowing of the complete mission?",
+      "How should unregistered mission intent enter the checks without creating speculative universal infrastructure?"
+    ]
+  },
+  "question": "Why can an agentic engineering system designed to prevent drift drift away from its own mission?",
+  "receipts": [
+    {
+      "billing_mode": "subscription_included",
+      "completion_tokens": 480,
+      "cost_source": "subscription_included",
+      "cost_usd": 0.0,
+      "fallback_used": false,
+      "latency_s": 13.401,
+      "logical_call_id": "llmcall_e363fce247d9452ab7ad0aacbd2043b4",
+      "prompt_tokens": 16864,
+      "reasoning_effort": "medium",
+      "request_fingerprint": "48147bef81f1d63c9d84b43429ff72ee68caa78da5ea59ee0ca73e380a32a997",
+      "requested_model": "codex/gpt-5.6-luna",
+      "resolved_model": "codex/gpt-5.6-luna",
+      "response_sha256": "74367df9cef6e06f32856cfc2b20e1fe38c7d483193d15e93644a3457843bb72",
+      "retry_count": 0,
+      "total_tokens": 17344,
+      "trace_id": "whygame-reboot:4d128113640d2ae4:48c8ea64ecc04267aa6d749ca1f4b63d/proposal"
+    },
+    {
+      "billing_mode": "subscription_included",
+      "completion_tokens": 792,
+      "cost_source": "subscription_included",
+      "cost_usd": 0.0,
+      "fallback_used": false,
+      "latency_s": 17.048,
+      "logical_call_id": "llmcall_2363a7e117f745c0a348d831369aaf5a",
+      "prompt_tokens": 17954,
+      "reasoning_effort": "medium",
+      "request_fingerprint": "7f2b8c435df6e185715ad10b72cf0e5858069a04c244b3b9a8350f1f8b5d9355",
+      "requested_model": "codex/gpt-5.6-luna",
+      "resolved_model": "codex/gpt-5.6-luna",
+      "response_sha256": "0bc1c71397b5e0651d79c7a09a37c864fe3e71fea9c071e172cf713b85b05e3c",
+      "retry_count": 0,
+      "total_tokens": 18746,
+      "trace_id": "whygame-reboot:4d128113640d2ae4:48c8ea64ecc04267aa6d749ca1f4b63d/revision"
+    }
+  ],
+  "report_sha256": "93b5adc2f0ea578557421d25f637db5046b7ac0687d6cf8489230d22d9eec7ec",
+  "resumed_stages": [],
+  "revision_events": [
+    {
+      "added_claims": [
+        {
+          "claim_id": "claim-6f9f150e9f5217b1",
+          "confidence": "provisional",
+          "content_sha256": "6f9f150e9f5217b149e510000f0ce657821d7dd4416b3cc7dd91710d414746d9",
+          "normalized_object": "mission drift away from the complete product outcome",
+          "normalized_subject": "a narrow implementation boundary becoming the repository s product identity",
+          "object": "mission drift away from the complete product outcome",
+          "observation_ids": [
+            "gate-became-identity",
+            "green-but-incomplete",
+            "registered-island",
+            "sequencing-not-scope"
+          ],
+          "proposal_local_id": "revision:claim-1420e4b67f11618c",
+          "rationale": "When a sequencing boundary is treated as the complete identity, it can contribute to mission drift by allowing internally coherent checks to omit the full outcome; the extent and controls for this effect remain uncertain.",
+          "relation": "contributes_to",
+          "subject": "a narrow implementation boundary becoming the repository's product identity"
+        }
+      ],
+      "event_id": "event-8b9d747f958e5d2c",
+      "event_sha256": "8b9d747f958e5d2cc1c339256576e7f293938c8fb413fd7cfa55b55816ce9b9b",
+      "finding_sha256": "be2687da8b7a9b8dd6de8a6541085dcc39759ce8978b16b17b24c52f5ce459fa",
+      "plan_sha256": "b277dea6318afc0efe420cda3a7b5ae22e4a9b62d699b5767bc9177340f29cdd",
+      "superseded_claim_ids": [
+        "claim-1420e4b67f11618c"
+      ]
+    }
+  ],
+  "revision_plan": {
+    "decisions": [
+      {
+        "action": "supersede",
+        "rationale": "The observations do not support a prevention claim. They distinguish sequencing constraints from authorization to narrow the mission and show that registered checks excluded unregistered intent.",
+        "replacement": {
+          "claim_id": "claim-6f9f150e9f5217b1",
+          "confidence": "provisional",
+          "content_sha256": "6f9f150e9f5217b149e510000f0ce657821d7dd4416b3cc7dd91710d414746d9",
+          "normalized_object": "mission drift away from the complete product outcome",
+          "normalized_subject": "a narrow implementation boundary becoming the repository s product identity",
+          "object": "mission drift away from the complete product outcome",
+          "observation_ids": [
+            "gate-became-identity",
+            "green-but-incomplete",
+            "registered-island",
+            "sequencing-not-scope"
+          ],
+          "proposal_local_id": "revision:claim-1420e4b67f11618c",
+          "rationale": "When a sequencing boundary is treated as the complete identity, it can contribute to mission drift by allowing internally coherent checks to omit the full outcome; the extent and controls for this effect remain uncertain.",
+          "relation": "contributes_to",
+          "subject": "a narrow implementation boundary becoming the repository's product identity"
+        },
+        "target_claim_id": "claim-1420e4b67f11618c"
+      },
+      {
+        "action": "retain",
+        "rationale": "The observations report that the narrow Gate 1 boundary became the repository identity and that the resulting documentation was green but incomplete, supporting the bounded causal direction.",
+        "replacement": null,
+        "target_claim_id": "claim-52b3d61b31e23e00"
+      }
+    ],
+    "finding_id": "finding-be2687da8b7a9b8d",
+    "finding_sha256": "be2687da8b7a9b8dd6de8a6541085dcc39759ce8978b16b17b24c52f5ce459fa",
+    "plan_sha256": "b277dea6318afc0efe420cda3a7b5ae22e4a9b62d699b5767bc9177340f29cdd",
+    "proposal_sha256": "9c13f49ac5f09ba373a32bbf836d46e1b2d69bafcc29e740d71885430252abb5",
+    "revised_answer": "The observations provisionally support that treating a narrow implementation boundary as the product identity contributes to mission drift: coherent green checks can omit the complete outcome when they protect only registered policy-admission scope. Whether additional controls should admit unregistered mission intent without speculative universal infrastructure remains unresolved.",
+    "unresolved_questions": [
+      "Which controls distinguish sequencing constraints from unauthorized narrowing of the complete mission?",
+      "How should unregistered mission intent enter the checks without creating speculative universal infrastructure?"
+    ]
+  },
+  "run_id": "whygame-reboot/2026-08-23-aes-mission-drift-account-bound",
+  "schema_version": "1.0",
+  "status": "accepted"
+}

@@ -1,0 +1,42 @@
+{
+  "decisions": [
+    {
+      "action": "supersede",
+      "rationale": "The observations do not support a prevention claim. They distinguish sequencing constraints from authorization to narrow the mission and show that registered checks excluded unregistered intent.",
+      "replacement": {
+        "claim_id": "claim-6f9f150e9f5217b1",
+        "confidence": "provisional",
+        "content_sha256": "6f9f150e9f5217b149e510000f0ce657821d7dd4416b3cc7dd91710d414746d9",
+        "normalized_object": "mission drift away from the complete product outcome",
+        "normalized_subject": "a narrow implementation boundary becoming the repository s product identity",
+        "object": "mission drift away from the complete product outcome",
+        "observation_ids": [
+          "gate-became-identity",
+          "green-but-incomplete",
+          "registered-island",
+          "sequencing-not-scope"
+        ],
+        "proposal_local_id": "revision:claim-1420e4b67f11618c",
+        "rationale": "When a sequencing boundary is treated as the complete identity, it can contribute to mission drift by allowing internally coherent checks to omit the full outcome; the extent and controls for this effect remain uncertain.",
+        "relation": "contributes_to",
+        "subject": "a narrow implementation boundary becoming the repository's product identity"
+      },
+      "target_claim_id": "claim-1420e4b67f11618c"
+    },
+    {
+      "action": "retain",
+      "rationale": "The observations report that the narrow Gate 1 boundary became the repository identity and that the resulting documentation was green but incomplete, supporting the bounded causal direction.",
+      "replacement": null,
+      "target_claim_id": "claim-52b3d61b31e23e00"
+    }
+  ],
+  "finding_id": "finding-be2687da8b7a9b8d",
+  "finding_sha256": "be2687da8b7a9b8dd6de8a6541085dcc39759ce8978b16b17b24c52f5ce459fa",
+  "plan_sha256": "b277dea6318afc0efe420cda3a7b5ae22e4a9b62d699b5767bc9177340f29cdd",
+  "proposal_sha256": "9c13f49ac5f09ba373a32bbf836d46e1b2d69bafcc29e740d71885430252abb5",
+  "revised_answer": "The observations provisionally support that treating a narrow implementation boundary as the product identity contributes to mission drift: coherent green checks can omit the complete outcome when they protect only registered policy-admission scope. Whether additional controls should admit unregistered mission intent without speculative universal infrastructure remains unresolved.",
+  "unresolved_questions": [
+    "Which controls distinguish sequencing constraints from unauthorized narrowing of the complete mission?",
+    "How should unregistered mission intent enter the checks without creating speculative universal infrastructure?"
+  ]
+}
