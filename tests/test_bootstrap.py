@@ -56,5 +56,5 @@ def test_cross_project_dependencies_are_revision_pinned() -> None:
     project = tomllib.loads((ROOT / "pyproject.toml").read_text())["project"]
     dependencies = "\n".join(project["dependencies"])
     governance = "\n".join(project["optional-dependencies"]["governance"])
-    assert "llm_client.git@a695335e74e5ace1b207939720679c22a06dbc03" in dependencies
+    assert "llm_client.git@c171d542658402f7de4d99a2d3f3bf085b7b3c00" in dependencies
     assert "agentic-engineering-system.git@ce866efd2855318570034a39343dace73f243352" in governance
