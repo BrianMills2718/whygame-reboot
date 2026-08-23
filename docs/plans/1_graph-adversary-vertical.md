@@ -1,10 +1,10 @@
 # Plan #1: Graph-Adversary Vertical
 
-**Status:** Blocked — authentic Luna call rejected before usage; alternate model requires Brian
-**Status ID:** blocked
+**Status:** In progress — live account binding repaired; authentic account-bound run pending
+**Status ID:** in_progress
 **Type:** standard product vertical
 **Priority:** Critical
-**Blocked By:** Luna subscription capacity until 2026-08-28, or Brian's explicit alternate-model decision
+**Blocked By:** Nothing; the next run must use the explicit caller-owned Codex profile
 **Created:** 2026-08-23
 **Updated:** 2026-08-23
 
@@ -88,9 +88,10 @@ Fixtures establish contract behavior but cannot complete the vertical.
 
 ## Exact next action
 
-Land the provider-free PR only after its immutable-output, source-revision, and
-outer-run-custody negative controls pass, then resume the exact authentic run
-after Luna capacity returns. Amend the route only if Brian explicitly selects
-an alternate model. The clean-room repair is retained through `9b8566c`; the
-zero-usage failed attempt is retained under
-`evidence/runs/2026-08-23-luna-capacity-blocked/`.
+Run the exact authentic two-call journey from canonical `main` with a dedicated,
+explicit caller-owned Codex profile. Verify the lifecycle rows retain
+`codex_auth_binding=explicit` and the expected one-way account digest before
+interpreting any provider failure. The earlier zero-usage failure is retained
+under `evidence/runs/2026-08-23-luna-capacity-blocked/`, but its former
+"capacity until 2026-08-28" interpretation is withdrawn: the observed evidence
+only established an unpinned account route, not Luna-wide capacity exhaustion.

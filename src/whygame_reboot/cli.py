@@ -37,6 +37,11 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--run-id", help="Stable run ID; generated when omitted")
     parser.add_argument("--dry-run", action="store_true", help="Validate without model calls")
     parser.add_argument("--no-resume", action="store_true", help="Ignore an existing checkpoint")
+    parser.add_argument(
+        "--codex-home",
+        type=Path,
+        help="Caller-owned profile root containing .codex/auth.json; required for live runs",
+    )
     return parser
 
 
@@ -99,6 +104,15 @@ class _TerminalRunError(RuntimeError):
 
 def main() -> int:
     args = _parser().parse_args()
+    codex_home: Path | None = None
+    if not args.dry_run:
+        if args.codex_home is None:
+            print("live runs require --codex-home for an explicit Codex account", file=sys.stderr)
+            return 2
+        codex_home = args.codex_home.expanduser().resolve()
+        if not (codex_home / ".codex" / "auth.json").is_file():
+            print("--codex-home must contain .codex/auth.json", file=sys.stderr)
+            return 2
     revision = _producer_revision()
     product_run_id = args.run_id or f"whygame-reboot/{uuid.uuid4().hex}"
     attempt_token = uuid.uuid4().hex
@@ -135,6 +149,7 @@ def main() -> int:
                 dry_run=args.dry_run,
                 run_id=product_run_id,
                 resume=not args.no_resume,
+                codex_home=codex_home,
             )
             if run.status not in {"accepted", "dry_run"}:
                 raise _TerminalRunError(run)

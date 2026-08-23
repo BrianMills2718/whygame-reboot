@@ -24,9 +24,18 @@ uv run whygame-reboot examples/aes-mission-drift/question.yaml \
   --output artifacts/aes-mission-drift-dry-run --dry-run
 ```
 
-Omit `--dry-run` only for the adopted two-call Luna-medium journey. The command
-writes `run.json` and `report.html`; a failed second stage retains the committed
-proposal and finding and can resume only when their digests still match.
+Omit `--dry-run` only for the adopted two-call Luna-medium journey, and bind the
+run to a caller-owned Codex account profile explicitly:
+
+```bash
+uv run whygame-reboot examples/aes-mission-drift/question.yaml \
+  --output artifacts/aes-mission-drift-live \
+  --codex-home /path/to/caller-owned-profile
+```
+
+The profile root must contain `.codex/auth.json`. The command writes `run.json`
+and `report.html`; a failed second stage retains the committed proposal and
+finding and can resume only when their digests still match.
 
 The legacy `whygame4` repository is a read-only salvage source. It remains the
 incumbent until the first replacement vertical is accepted.

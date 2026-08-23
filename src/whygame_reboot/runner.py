@@ -131,6 +131,7 @@ def _call_stage(
     system_prompt: str,
     payload: dict[str, Any],
     response_model: type[StructuredResult],
+    codex_home: Path,
 ) -> tuple[StructuredResult, CallReceipt]:
     trace_id = observed_run.child_trace_id(stage)
     started = time.monotonic()
@@ -153,6 +154,7 @@ def _call_stage(
         model_policy="enforce_allowlist",
         model_justification=MODEL_JUSTIFICATION,
         reasoning_effort=REASONING_EFFORT,
+        codex_home=str(codex_home),
     )
     if not isinstance(structured, response_model):
         structured = response_model.model_validate(structured)
@@ -302,6 +304,7 @@ def run_loop(
     caller: StructuredCaller = call_llm_structured,
     run_id: str | None = None,
     resume: bool = True,
+    codex_home: Path | None = None,
 ) -> LoopRun:
     """Execute or resume the exact two-call graph-adversary loop."""
 
@@ -328,6 +331,15 @@ def run_loop(
             packet,
             status="error",
             issues=("non-dry execution requires outer-run custody",),
+            **common,
+        )
+        _write_json(output_dir / "run.json", run)
+        return run
+    if codex_home is None:
+        run = _base_run(
+            packet,
+            status="error",
+            issues=("non-dry execution requires an explicit codex_home",),
             **common,
         )
         _write_json(output_dir / "run.json", run)
@@ -362,6 +374,7 @@ def run_loop(
                 system_prompt=PROPOSAL_PROMPT,
                 payload={"question_packet": packet.model_dump(mode="json")},
                 response_model=ProposalResponse,
+                codex_home=codex_home,
             )
             receipts.append(receipt)
             proposal = commit_proposal(response, packet)
@@ -408,6 +421,7 @@ def run_loop(
                 "selected_finding": finding.model_dump(mode="json"),
             },
             response_model=RevisionResponse,
+            codex_home=codex_home,
         )
         receipts.append(receipt)
         plan = build_revision_plan(revision, proposal=proposal, finding=finding, packet=packet)

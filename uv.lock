@@ -904,7 +904,7 @@ wheels = [
 [[package]]
 name = "llm-client"
 version = "0.7.1"
-source = { git = "https://github.com/BrianMills2718/llm_client.git?rev=a695335e74e5ace1b207939720679c22a06dbc03#a695335e74e5ace1b207939720679c22a06dbc03" }
+source = { git = "https://github.com/BrianMills2718/llm_client.git?rev=c171d542658402f7de4d99a2d3f3bf085b7b3c00#c171d542658402f7de4d99a2d3f3bf085b7b3c00" }
 dependencies = [
     { name = "httpx" },
     { name = "instructor" },
@@ -2037,7 +2037,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "agentic-engineering-system", marker = "extra == 'governance'", git = "https://github.com/BrianMills2718/agentic-engineering-system.git?rev=ce866efd2855318570034a39343dace73f243352" },
-    { name = "llm-client", extras = ["codex"], git = "https://github.com/BrianMills2718/llm_client.git?rev=a695335e74e5ace1b207939720679c22a06dbc03" },
+    { name = "llm-client", extras = ["codex"], git = "https://github.com/BrianMills2718/llm_client.git?rev=c171d542658402f7de4d99a2d3f3bf085b7b3c00" },
     { name = "pydantic", specifier = ">=2.11,<3" },
     { name = "pyyaml", specifier = ">=6.0,<7" },
 ]

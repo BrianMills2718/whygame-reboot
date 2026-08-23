@@ -110,3 +110,27 @@ def test_installed_cli_resolves_source_revision_outside_caller_repo(tmp_path: Pa
     assert result.returncode == 0, result.stderr
     manifest = json.loads((output_dir / "run.json").read_text(encoding="utf-8"))
     assert manifest["producer_revision"] == expected_revision
+
+
+def test_live_cli_requires_explicit_codex_home_before_dispatch(tmp_path: Path) -> None:
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "whygame_reboot.cli",
+            "examples/aes-mission-drift/question.yaml",
+            "--output",
+            str(tmp_path / "run"),
+            "--run-id",
+            "whygame-reboot/test-cli-missing-codex-home",
+        ],
+        cwd=ROOT,
+        env=_isolated_env(tmp_path),
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert result.returncode == 2
+    assert "live runs require --codex-home" in result.stderr
+    assert not (tmp_path / "run").exists()
