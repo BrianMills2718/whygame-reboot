@@ -1,0 +1,13 @@
+{
+  "config_sha256": "e640aea5daee8995795056706e168dfb4976bb412d2a8a1d3d94b90ee50ae33b",
+  "files": {
+    "finding.json": "fed42771c0f953fb1ecb0a47eff4463af976ffac81a3bc6cb93e8ab0807cd865",
+    "proposal-receipt.json": "893c5f3a6a199b781cb13ea88be2c647c9796479e18fac8991bff79228fc7e0e",
+    "proposal.json": "e8a38eb5c6e37106725a9fa6dce216b6440a3189d06f391ea6a0de8f9a80d989"
+  },
+  "input_sha256": "0cdcf8202f4224591a03c4953ec7cad5e8e9d5d94bebe4e227f4ab0a082ee80c",
+  "producer_revision": "0f07a07c81cde9624a036d1f91f384a4299b4598",
+  "question_id": "aes-mission-drift",
+  "run_id": "whygame-reboot/2026-08-23-aes-mission-drift-account-bound",
+  "schema_version": "1.0"
+}

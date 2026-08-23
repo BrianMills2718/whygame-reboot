@@ -1,0 +1,29 @@
+{
+  "added_claims": [
+    {
+      "claim_id": "claim-6f9f150e9f5217b1",
+      "confidence": "provisional",
+      "content_sha256": "6f9f150e9f5217b149e510000f0ce657821d7dd4416b3cc7dd91710d414746d9",
+      "normalized_object": "mission drift away from the complete product outcome",
+      "normalized_subject": "a narrow implementation boundary becoming the repository s product identity",
+      "object": "mission drift away from the complete product outcome",
+      "observation_ids": [
+        "gate-became-identity",
+        "green-but-incomplete",
+        "registered-island",
+        "sequencing-not-scope"
+      ],
+      "proposal_local_id": "revision:claim-1420e4b67f11618c",
+      "rationale": "When a sequencing boundary is treated as the complete identity, it can contribute to mission drift by allowing internally coherent checks to omit the full outcome; the extent and controls for this effect remain uncertain.",
+      "relation": "contributes_to",
+      "subject": "a narrow implementation boundary becoming the repository's product identity"
+    }
+  ],
+  "event_id": "event-8b9d747f958e5d2c",
+  "event_sha256": "8b9d747f958e5d2cc1c339256576e7f293938c8fb413fd7cfa55b55816ce9b9b",
+  "finding_sha256": "be2687da8b7a9b8dd6de8a6541085dcc39759ce8978b16b17b24c52f5ce459fa",
+  "plan_sha256": "b277dea6318afc0efe420cda3a7b5ae22e4a9b62d699b5767bc9177340f29cdd",
+  "superseded_claim_ids": [
+    "claim-1420e4b67f11618c"
+  ]
+}
