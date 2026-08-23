@@ -18,7 +18,7 @@ def test_authority_surfaces_are_routed() -> None:
     relationships = yaml.safe_load((ROOT / "scripts" / "relationships.yaml").read_text())
     governed = {entry["source"] for entry in relationships["governance"]}
     assert "docs/topics/graph-adversary.md" in governed
-    assert "docs/plans/0.1-graph-adversary.md" in governed
+    assert "docs/plans/1_graph-adversary-vertical.md" in governed
 
 
 def test_bootstrap_claims_do_not_overstate_adoption() -> None:
@@ -30,6 +30,22 @@ def test_bootstrap_claims_do_not_overstate_adoption() -> None:
         "aes-external-adoption": "unobserved",
         "legacy-replacement": "unobserved",
     }
+
+
+def test_local_work_unit_is_claimable_and_bound_to_upstream() -> None:
+    graph = json.loads(
+        (ROOT / "docs" / "plans" / "1_graph-adversary-vertical_work_graph.json").read_text()
+    )
+    assert len(graph["units"]) == 1
+    unit = graph["units"][0]
+    assert unit["id"] == "WGR-WU01"
+    assert unit["status"] == "ready"
+    assert unit["readiness"]["status"] == "ready"
+    assert unit["authorization_mode"] == "registry_claim"
+    assert {
+        (item["id"], item["revision"])
+        for item in unit["inputs"]
+    } >= {("P246-WU30", "P246-WU30@2")}
 
 
 def test_cross_project_dependencies_are_revision_pinned() -> None:

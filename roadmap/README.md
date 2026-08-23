@@ -24,7 +24,8 @@ for the machine-readable statement.
 ## Authority map
 
 - [Normative graph-adversary contract](../docs/topics/graph-adversary.md)
-- [Adopted first-vertical plan](../docs/plans/0.1-graph-adversary.md)
+- [Adopted first-vertical plan](../docs/plans/1_graph-adversary-vertical.md)
+- [Machine-consumed local work graph](../docs/plans/1_graph-adversary-vertical_work_graph.json)
 - [Current claims](../policy/current-claims.json)
 - [Evidence policy](../evidence/README.md)
 - [Documentation relationships](../scripts/relationships.yaml)

@@ -1,0 +1,144 @@
+{
+  "units": [
+    {
+      "schema_version": "1.0",
+      "record_type": "work_unit",
+      "id": "WGR-WU01",
+      "initiative_id": "whygame-reboot-plan-1",
+      "goal_id": "graph-adversary-vertical",
+      "design_revision": "plan-246-whygame-graph-adversary-rewrite-design@1",
+      "spec_revision": "WGR-WU01@1",
+      "title": "Deliver the first graph-adversary product vertical",
+      "class": "implementation",
+      "objective": "Produce one useful, traced, revision-bound causal explanation whose deterministic graph finding causes an applied append-only replan and whose immutable accepted artifact is evaluated separately by installed AES.",
+      "profile": "standard",
+      "execution_class": "independently_executable",
+      "claimability": "ready_for_execution",
+      "authorization_mode": "registry_claim",
+      "scope": {
+        "included": [
+          "Strict project-local Pydantic contracts, deterministic direct-conflict selection, append-only revision application, replay, and loud checkpoint recovery",
+          "Exactly two Luna-medium shared-client calls with rooted receipts and no retry or fallback",
+          "Immutable JSON, directly understandable static HTML, focused both-sign tests, and a documented CLI journey",
+          "Separate installed AES immutable-baseline BLOCK-to-ALLOW consumer receipt"
+        ],
+        "excluded": [
+          "Legacy source mutation or wholesale copy, world modeling, truth certification, external retrieval, random strategies, SSE, deployment, alternate models, or a third critic call",
+          "Generic AES loop API design, shared graph-contract promotion, hidden fallback, in-place claim mutation, or success with a missing loop stage"
+        ]
+      },
+      "inputs": [
+        {
+          "kind": "upstream_work_unit",
+          "id": "P246-WU30",
+          "revision": "P246-WU30@2"
+        },
+        {
+          "kind": "repository_revision",
+          "id": "whygame4",
+          "revision": "55bd068e29909965ba4ccce8980db1bfd3d41dd4"
+        },
+        {
+          "kind": "dependency_revision",
+          "id": "agentic-engineering-system",
+          "revision": "ce866efd2855318570034a39343dace73f243352"
+        },
+        {
+          "kind": "dependency_revision",
+          "id": "llm_client",
+          "revision": "a695335e74e5ace1b207939720679c22a06dbc03"
+        }
+      ],
+      "outputs": [
+        "Canonical graph-adversary package and documented CLI",
+        "Focused positive, negative, corruption, resume, rendering, and AES-admission evidence",
+        "Fresh Luna-medium run JSON, static HTML, exact child-call receipts, and direct-inspection record",
+        "Immutable-baseline installed AES BLOCK-to-ALLOW receipt bound to the useful result"
+      ],
+      "dependencies": [],
+      "conflict_surfaces": [
+        {
+          "kind": "repository_path",
+          "target": "product source, tests, example input, report rendering, policy checker, evidence, package metadata, and local plan",
+          "repository": "whygame-reboot",
+          "access": "exclusive",
+          "coordination_key": "whygame-reboot-graph-adversary-product"
+        },
+        {
+          "kind": "route",
+          "target": "shared llm_client codex/gpt-5.6-luna medium route and traces",
+          "access": "write",
+          "coordination_key": "whygame-reboot-luna-run"
+        },
+        {
+          "kind": "external_system",
+          "target": "installed agentic-engineering-system policy admission at the pinned revision",
+          "access": "write",
+          "coordination_key": "whygame-reboot-aes-admission"
+        }
+      ],
+      "acceptance": [
+        {
+          "id": "WGR-WU01-AC1",
+          "criterion": "Strict contracts separate proposals, committed claims, deterministic findings, digest-bound revision plans, append-only events, active projections, rendered views, and terminal evidence.",
+          "evidence_required": [
+            "Positive conflict-to-revision fixture and byte-stable report",
+            "Malformed reference, reverse edge, no target, wrong finding, corrupt checkpoint, and missing-replan negatives",
+            "Replay proof that history is unchanged while active state changes"
+          ],
+          "negative_control": "Free-text heuristics, prose-only advice, in-place mutation, or a non-empty graph cannot satisfy the loop contract."
+        },
+        {
+          "id": "WGR-WU01-AC2",
+          "criterion": "The canonical mission-drift question completes one fresh two-call Luna-medium journey and the static report directly exposes the disagreement, changed claim, evidence step-down, and remaining uncertainty.",
+          "evidence_required": [
+            "Exact clean-checkout command, input/config/source digests, and terminal artifacts",
+            "Two rooted child traces with model, effort, tokens, latency, attempts, fallback, billing, and settled cost",
+            "Direct report inspection against the normative reader criteria"
+          ],
+          "negative_control": "A fixture caller, one-call proposal, raw JSON alone, extra critic call, or unchanged graph cannot establish useful product output."
+        },
+        {
+          "id": "WGR-WU01-AC3",
+          "criterion": "Late revision, render, or admission failure retains truthful partial state and resumes only from the first incomplete stage when every prior digest matches.",
+          "evidence_required": [
+            "Injected second-call or render failure with retained proposal and finding",
+            "Matching-digest resume and changed-digest rejection",
+            "Proof of no automatic retry, fallback, or duplicate first-stage dispatch"
+          ],
+          "negative_control": "Rerunning the call graph, erasing valid work, or accepting changed checkpoint bytes invalidates recovery."
+        },
+        {
+          "id": "WGR-WU01-AC4",
+          "criterion": "Installed AES evaluates the immutable consumer baseline, blocks without complete coherent-loop evidence, and allows only with the exact accepted run and useful report digests.",
+          "evidence_required": [
+            "Exact AES and WhyGame baseline revisions",
+            "Public-entrypoint BLOCK and ALLOW receipts",
+            "Retained nonclaims for generic loop reuse, world-model truth, and later gates"
+          ],
+          "negative_control": "Corrected worktree bytes or later unattached reports cannot rescue an invalid baseline."
+        }
+      ],
+      "readiness": {
+        "status": "ready",
+        "required_approval_types": [
+          "design"
+        ],
+        "approvals": [
+          {
+            "approval_type": "design",
+            "role": "delegated_planner",
+            "approver_id": "Codex",
+            "approved_revision": "plan-246-whygame-graph-adversary-rewrite-design@1",
+            "approved_at": "2026-08-23T13:05:42Z"
+          }
+        ],
+        "failed_guards": []
+      },
+      "status": "ready",
+      "record_version": 1,
+      "created_at": "2026-08-23T13:30:57Z",
+      "updated_at": "2026-08-23T13:30:57Z"
+    }
+  ]
+}

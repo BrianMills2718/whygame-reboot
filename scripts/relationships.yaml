@@ -4,14 +4,19 @@ governance:
       - CLAUDE.md
       - README.md
       - roadmap/README.md
-      - docs/plans/0.1-graph-adversary.md
+      - docs/plans/1_graph-adversary-vertical.md
       - policy/current-claims.json
       - evidence/README.md
-  - source: docs/plans/0.1-graph-adversary.md
+  - source: docs/plans/1_graph-adversary-vertical.md
     docs:
       - docs/plans/CLAUDE.md
       - roadmap/README.md
       - policy/current-claims.json
+  - source: docs/plans/1_graph-adversary-vertical_work_graph.json
+    docs:
+      - docs/plans/1_graph-adversary-vertical.md
+      - docs/plans/CLAUDE.md
+      - roadmap/README.md
 couplings:
   - source: pyproject.toml
     docs:

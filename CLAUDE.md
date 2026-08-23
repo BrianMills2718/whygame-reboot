@@ -7,7 +7,7 @@ This is the canonical instruction surface for the Brian-owned private
 
 Build a clean rewrite of WhyGame in which a typed graph challenges a proposed
 causal explanation and produces an inspectable, append-only revision. The
-adopted product design is `docs/plans/0.1-graph-adversary.md`; the normative
+adopted product design is `docs/plans/1_graph-adversary-vertical.md`; the normative
 contract is `docs/topics/graph-adversary.md`.
 
 The first stable example asks why a system intended to prevent engineering

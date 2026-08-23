@@ -1,0 +1,71 @@
+# Plan #1: Graph-Adversary Vertical
+
+**Status:** Planned — local work unit ready for claim
+**Status ID:** planned
+**Type:** standard product vertical
+**Priority:** Critical
+**Blocked By:** None within the adopted Luna-medium and cumulative portfolio budget
+**Created:** 2026-08-23
+**Updated:** 2026-08-23
+
+`trace_evaluable: true`
+
+## Authority and handoff
+
+Project Meta Plan 246 owns portfolio selection and promotion. Its adopted design
+revision is `plan-246-whygame-graph-adversary-rewrite-design@1`, and its upstream
+implementation unit is `P246-WU30@2`.
+
+This repository owns implementation. The machine-consumed local handoff is
+[`WGR-WU01`](1_graph-adversary-vertical_work_graph.json). That local unit exists
+because Enforced Planning binds a plan claim to a work graph in the repository
+being changed. It does not duplicate or independently advance Project Meta's
+portfolio state.
+
+## Outcome and boundary
+
+Implement one question end to end through typed proposal, committed claims,
+deterministic stress test, digest-bound revision, replayed active graph,
+immutable JSON, static HTML, and separate AES admission. Do not port the legacy
+application or build generalized orchestration.
+
+## Canonical journey
+
+1. Load the fixed AES mission-drift question and revision-bound observations.
+2. Call Luna-medium once for a typed causal proposal with a competing pair.
+3. Commit system-identified claims and deterministically select a direct
+   same-endpoint, opposed-polarity conflict.
+4. Call Luna-medium once for a digest-bound revision plan.
+5. Apply that plan as an append-only event and replay the active graph.
+6. Render immutable JSON and a static report that visibly explains proposal,
+   challenge, change, and outcome.
+7. Accept the product artifact before installed AES evaluates the immutable
+   baseline through separate BLOCK and ALLOW receipts.
+
+## Failure and cost contract
+
+Two serial Luna-medium calls are authorized, with no retries or fallback. The
+technical ceiling is USD 0.25 per stage and USD 0.50 for the run; the portfolio
+aggregate remains below USD 5. A different model or higher spend requires
+Brian. A failed stage stops visibly and retains every earlier digest-valid
+checkpoint. Changed or corrupted checkpoint bytes require a new run.
+
+## Non-goals
+
+No world-model or truth claim, independent critic, general contradiction
+detection, random strategy, SSE server, public deployment, legacy source
+mutation, generic AES loop API, or shared graph-contract promotion.
+
+## Trace evaluation
+
+Acceptance requires two rooted shared-client child traces with requested and
+resolved model, medium effort, tokens, latency, attempts, fallback state,
+billing mode, and settled cost. The report and run JSON must bind those receipts
+to exact input, source, proposal, finding, revision-plan, and replay digests.
+Fixtures establish contract behavior but cannot complete the vertical.
+
+## Exact next action
+
+Claim `WGR-WU01` at the canonical bootstrap revision, create its linked
+worktree, and implement the smallest deterministic contracts before making the
+first authentic proposal call.
