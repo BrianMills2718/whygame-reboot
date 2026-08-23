@@ -19,6 +19,9 @@ governance = [
   "agentic-engineering-system @ git+https://github.com/BrianMills2718/agentic-engineering-system.git@ce866efd2855318570034a39343dace73f243352",
 ]
 
+[project.scripts]
+whygame-reboot = "whygame_reboot.cli:main"
+
 [dependency-groups]
 dev = [
   "pytest>=8.4,<9",

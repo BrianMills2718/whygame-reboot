@@ -1,7 +1,7 @@
 # Plan #1: Graph-Adversary Vertical
 
-**Status:** Planned — local work unit ready for claim
-**Status ID:** planned
+**Status:** In Progress — claimed implementation complete through provider-free contract proof
+**Status ID:** in_progress
 **Type:** standard product vertical
 **Priority:** Critical
 **Blocked By:** None within the adopted Luna-medium and cumulative portfolio budget
@@ -55,6 +55,28 @@ checkpoint. Changed or corrupted checkpoint bytes require a new run.
 No world-model or truth claim, independent critic, general contradiction
 detection, random strategy, SSE server, public deployment, legacy source
 mutation, generic AES loop API, or shared graph-contract promotion.
+
+## Static report UI spike
+
+- **Actor and decision:** Brian or a future implementing agent decides whether
+  the graph actually changed the explanation, rather than merely storing more
+  claims.
+- **Stage and hypothesis:** PoC outcome surface. If proposal, challenge,
+  revision, active result, and uncertainty appear in one reading flow, the
+  bounded loop can be judged without opening raw JSON or traces.
+- **Critical flow:** open `report.html`, read the answer first, step through the
+  five loop stages, inspect the superseded and replacement claim, then step down
+  to observations and call receipts.
+- **Boundary:** immutable `LoopRun` JSON is the typed source; deterministic
+  rendering owns presentation only. Evaluation and revision rules remain in
+  domain operators. The report has no write action or hidden client state.
+- **States:** accepted, blocked/error with the last valid checkpoint, and dry
+  run. The first review targets a representative desktop viewport; a single
+  responsive column must remain readable on narrow screens, but no viewport
+  matrix or interactive graph is part of this PoC.
+- **Readout and stop rule:** continue only if direct inspection answers what
+  changed and why. Stop or revise if the report leads with schemas, makes the
+  conflict ambiguous, hides incomplete stages, or implies truth certification.
 
 ## Trace evaluation
 
