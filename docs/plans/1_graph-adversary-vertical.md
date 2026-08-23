@@ -1,10 +1,10 @@
 # Plan #1: Graph-Adversary Vertical
 
-**Status:** In Progress — claimed implementation complete through provider-free contract proof
-**Status ID:** in_progress
+**Status:** Blocked — authentic Luna call rejected before usage; alternate model requires Brian
+**Status ID:** blocked
 **Type:** standard product vertical
 **Priority:** Critical
-**Blocked By:** None within the adopted Luna-medium and cumulative portfolio budget
+**Blocked By:** Luna subscription capacity until 2026-08-28, or Brian's explicit alternate-model decision
 **Created:** 2026-08-23
 **Updated:** 2026-08-23
 
@@ -88,6 +88,8 @@ Fixtures establish contract behavior but cannot complete the vertical.
 
 ## Exact next action
 
-Claim `WGR-WU01` at the canonical bootstrap revision, create its linked
-worktree, and implement the smallest deterministic contracts before making the
-first authentic proposal call.
+Resume the exact authentic run after Luna capacity returns, or amend the route
+only if Brian explicitly selects an alternate model. The provider-free
+implementation is frozen at `fe794234629172c806834825db37dcd1a69b1799`; the
+zero-usage failed attempt is retained under
+`evidence/runs/2026-08-23-luna-capacity-blocked/`.

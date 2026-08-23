@@ -1,0 +1,46 @@
+{
+  "active_projection": null,
+  "config_sha256": "e640aea5daee8995795056706e168dfb4976bb412d2a8a1d3d94b90ee50ae33b",
+  "finding": null,
+  "input_sha256": "0cdcf8202f4224591a03c4953ec7cad5e8e9d5d94bebe4e227f4ab0a082ee80c",
+  "issues": [
+    "ThreadRunError: You've hit your usage limit. Visit https://chatgpt.com/codex/settings/usage to purchase more credits or try again at Aug 28th, 2026 8:07 AM."
+  ],
+  "observations": [
+    {
+      "id": "gate-became-identity",
+      "source_ref": "docs/decisions/0003-full-product-mission-and-documentation-dogfood.md#context",
+      "source_revision": "ce866efd2855318570034a39343dace73f243352",
+      "text": "A deliberately narrow Gate 1 implementation boundary became the repository's product identity during an authority migration."
+    },
+    {
+      "id": "green-but-incomplete",
+      "source_ref": "docs/decisions/0003-full-product-mission-and-documentation-dogfood.md#context",
+      "source_revision": "ce866efd2855318570034a39343dace73f243352",
+      "text": "The resulting documentation was internally coherent and mechanically green while omitting the complete product outcome."
+    },
+    {
+      "id": "registered-island",
+      "source_ref": "docs/decisions/0003-full-product-mission-and-documentation-dogfood.md#context",
+      "source_revision": "ce866efd2855318570034a39343dace73f243352",
+      "text": "Relationship checks protected only the registered policy-admission island, so unregistered mission intent was outside the green checks."
+    },
+    {
+      "id": "sequencing-not-scope",
+      "source_ref": "docs/decisions/0003-full-product-mission-and-documentation-dogfood.md#what-no-speculative-universal-platform-means",
+      "source_revision": "ce866efd2855318570034a39343dace73f243352",
+      "text": "Avoiding speculative universal infrastructure is a sequencing constraint, not authorization to narrow the complete product mission."
+    }
+  ],
+  "producer_revision": "fe794234629172c806834825db37dcd1a69b1799",
+  "proposal": null,
+  "question": "Why can an agentic engineering system designed to prevent drift drift away from its own mission?",
+  "receipts": [],
+  "report_sha256": "d65d74263784240cb4120454ec0a4001ef90ef8e6d243828c5c73186819f93ad",
+  "resumed_stages": [],
+  "revision_events": [],
+  "revision_plan": null,
+  "run_id": "whygame-reboot/2026-08-23-aes-mission-drift",
+  "schema_version": "1.0",
+  "status": "error"
+}
