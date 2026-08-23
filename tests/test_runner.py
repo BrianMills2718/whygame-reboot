@@ -3,11 +3,23 @@ from __future__ import annotations
 import json
 from types import SimpleNamespace
 
+import pytest
+
 from tests.test_engine import packet, proposal, revision
-from whygame_reboot.contracts import ProposalResponse, RevisionResponse
+from whygame_reboot.cli import _attach_outer_custody
+from whygame_reboot.contracts import OuterRunReceipt, ProposalResponse, RevisionResponse
 from whygame_reboot.engine import commit_proposal, select_finding
 from whygame_reboot.render import render_report
 from whygame_reboot.runner import run_loop
+
+
+class ObservedRunStub:
+    def __init__(self, run_id: str) -> None:
+        self.run_id = run_id
+        self.root_trace_id = f"{run_id}/outer"
+
+    def child_trace_id(self, segment: str) -> str:
+        return f"{self.root_trace_id}/{segment}"
 
 
 def result(number: int) -> SimpleNamespace:
@@ -49,12 +61,14 @@ def test_two_call_run_is_accepted_and_report_is_stable(tmp_path) -> None:
         packet(),
         output_dir=tmp_path,
         producer_revision="a" * 40,
+        observed_run=ObservedRunStub("whygame-reboot/test-accepted"),
         caller=caller,
         run_id="whygame-reboot/test-accepted",
     )
     assert run.status == "accepted"
     assert len(calls) == 2
     assert len(run.receipts) == 2
+    assert all(item.trace_id.startswith("whygame-reboot/test-accepted/outer/") for item in run.receipts)
     assert all(call[1]["num_retries"] == 0 for call in calls)
     assert all(call[1]["fallback_models"] == [] for call in calls)
     assert run.active_projection
@@ -65,6 +79,28 @@ def test_two_call_run_is_accepted_and_report_is_stable(tmp_path) -> None:
     assert "Applied revision" in report
     assert "does not certify truth" in report
 
+    missing_lifecycle = OuterRunReceipt(
+        run_id="attempt-missing-lifecycle",
+        root_trace_id="whygame-reboot/test-accepted/outer",
+        status="completed",
+        linked_call_count=0,
+        runtime_revision="a" * 40,
+        config_sha256="sha256:" + "b" * 64,
+        requested_model="codex/gpt-5.6-luna",
+        reasoning_effort="medium",
+        max_budget=0.5,
+        error_type=None,
+        error_phase=None,
+    )
+    with pytest.raises(ValueError, match="lifecycle custody"):
+        _attach_outer_custody(run, missing_lifecycle)
+
+    retained = _attach_outer_custody(
+        run,
+        missing_lifecycle.model_copy(update={"linked_call_count": 2}),
+    )
+    assert retained.outer_runs[0].linked_call_count == 2
+
 
 def test_second_call_failure_retains_and_resumes_checkpoint(tmp_path) -> None:
     first, second = outputs()
@@ -73,6 +109,7 @@ def test_second_call_failure_retains_and_resumes_checkpoint(tmp_path) -> None:
         packet(),
         output_dir=tmp_path,
         producer_revision="b" * 40,
+        observed_run=ObservedRunStub("whygame-reboot/test-resume-attempt-1"),
         caller=failing,
         run_id="whygame-reboot/test-resume",
     )
@@ -86,6 +123,7 @@ def test_second_call_failure_retains_and_resumes_checkpoint(tmp_path) -> None:
         packet(),
         output_dir=tmp_path,
         producer_revision="b" * 40,
+        observed_run=ObservedRunStub("whygame-reboot/test-resume-attempt-2"),
         caller=resumed_caller,
         run_id="whygame-reboot/test-resume",
     )
@@ -102,6 +140,7 @@ def test_corrupt_checkpoint_fails_before_dispatch(tmp_path) -> None:
         packet(),
         output_dir=tmp_path,
         producer_revision="c" * 40,
+        observed_run=ObservedRunStub("whygame-reboot/test-corrupt-attempt-1"),
         caller=failing,
         run_id="whygame-reboot/test-corrupt",
     )
@@ -116,6 +155,7 @@ def test_corrupt_checkpoint_fails_before_dispatch(tmp_path) -> None:
         packet(),
         output_dir=tmp_path,
         producer_revision="c" * 40,
+        observed_run=ObservedRunStub("whygame-reboot/test-corrupt-attempt-2"),
         caller=should_not_call,
         run_id="whygame-reboot/test-corrupt",
     )
@@ -130,6 +170,7 @@ def test_checkpoint_cannot_be_rebound_to_another_run_id(tmp_path) -> None:
         packet(),
         output_dir=tmp_path,
         producer_revision="e" * 40,
+        observed_run=ObservedRunStub("whygame-reboot/test-rebind-attempt-1"),
         caller=failing,
         run_id="whygame-reboot/original-run",
     )
@@ -141,6 +182,7 @@ def test_checkpoint_cannot_be_rebound_to_another_run_id(tmp_path) -> None:
         packet(),
         output_dir=tmp_path,
         producer_revision="e" * 40,
+        observed_run=ObservedRunStub("whygame-reboot/test-rebind-attempt-2"),
         caller=should_not_call,
         run_id="whygame-reboot/different-run",
     )

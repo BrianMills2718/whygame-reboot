@@ -8,7 +8,7 @@ import time
 import uuid
 from collections.abc import Callable
 from pathlib import Path
-from typing import Any, TypeVar
+from typing import Any, Protocol, TypeVar
 
 from llm_client import call_llm_structured, get_llm_call_receipts
 from pydantic import BaseModel
@@ -44,6 +44,13 @@ MODEL_JUSTIFICATION = (
 
 StructuredCaller = Callable[..., tuple[Any, Any]]
 StructuredResult = TypeVar("StructuredResult", bound=BaseModel)
+
+
+class ObservedRunLike(Protocol):
+    run_id: str
+    root_trace_id: str
+
+    def child_trace_id(self, segment: str) -> str: ...
 
 PROPOSAL_PROMPT = """You are the proposal stage in a bounded causal reasoning loop.
 Use only the supplied observations. Return 2-6 typed claims. Include at least one
@@ -119,13 +126,13 @@ def _receipt(trace_id: str, result: Any, *, elapsed_s: float) -> CallReceipt:
 def _call_stage(
     *,
     caller: StructuredCaller,
-    run_id: str,
+    observed_run: ObservedRunLike,
     stage: str,
     system_prompt: str,
     payload: dict[str, Any],
     response_model: type[StructuredResult],
 ) -> tuple[StructuredResult, CallReceipt]:
-    trace_id = f"{run_id}/{stage}"
+    trace_id = observed_run.child_trace_id(stage)
     started = time.monotonic()
     structured, result = caller(
         MODEL,
@@ -152,7 +159,7 @@ def _call_stage(
     return structured, _receipt(trace_id, result, elapsed_s=time.monotonic() - started)
 
 
-def _config_sha256() -> str:
+def config_sha256() -> str:
     return sha256_value(
         {
             "model": MODEL,
@@ -252,11 +259,45 @@ def _load_checkpoint(
     return loaded[0], loaded[1], loaded[2]
 
 
+def _prepare_output_dir(
+    output_dir: Path,
+    *,
+    dry_run: bool,
+    resume: bool,
+) -> tuple[Any, ...]:
+    """Create a new run directory or admit only a digest-checked partial resume."""
+
+    if not output_dir.exists():
+        output_dir.mkdir(parents=True)
+        return ()
+    if not output_dir.is_dir():
+        raise FileExistsError(f"run output path exists and is not a directory: {output_dir}")
+    if not any(output_dir.iterdir()):
+        return ()
+    if dry_run or not resume:
+        raise FileExistsError(f"run output directory is not empty: {output_dir}")
+
+    run_path = output_dir / "run.json"
+    manifest_path = output_dir / "checkpoint-manifest.json"
+    if not run_path.is_file() or not manifest_path.is_file():
+        raise FileExistsError(
+            "existing run directory is not a resumable proposal checkpoint; "
+            "choose a new output directory"
+        )
+    existing = LoopRun.model_validate_json(run_path.read_text(encoding="utf-8"))
+    if existing.status not in {"blocked", "error"}:
+        raise FileExistsError(
+            f"existing run is terminal ({existing.status}); choose a new output directory"
+        )
+    return existing.outer_runs
+
+
 def run_loop(
     packet: QuestionPacket,
     *,
     output_dir: Path,
     producer_revision: str,
+    observed_run: ObservedRunLike | None = None,
     dry_run: bool = False,
     caller: StructuredCaller = call_llm_structured,
     run_id: str | None = None,
@@ -265,14 +306,15 @@ def run_loop(
     """Execute or resume the exact two-call graph-adversary loop."""
 
     stable_id = run_id or f"whygame-reboot/{uuid.uuid4().hex}"
-    output_dir.mkdir(parents=True, exist_ok=True)
+    prior_outer_runs = _prepare_output_dir(output_dir, dry_run=dry_run, resume=resume)
     input_sha256 = sha256_value(packet)
-    config_sha256 = _config_sha256()
+    resolved_config_sha256 = config_sha256()
     common = {
         "run_id": stable_id,
         "input_sha256": input_sha256,
-        "config_sha256": config_sha256,
+        "config_sha256": resolved_config_sha256,
         "producer_revision": producer_revision,
+        "outer_runs": prior_outer_runs,
     }
     if len({item.id for item in packet.observations}) != len(packet.observations):
         run = _base_run(packet, status="blocked", issues=("observation IDs must be unique",), **common)
@@ -280,6 +322,14 @@ def run_loop(
         return run
     if dry_run:
         run = _base_run(packet, status="dry_run", **common)
+        return run
+    if observed_run is None:
+        run = _base_run(
+            packet,
+            status="error",
+            issues=("non-dry execution requires outer-run custody",),
+            **common,
+        )
         _write_json(output_dir / "run.json", run)
         return run
 
@@ -294,7 +344,7 @@ def run_loop(
                 run_id=stable_id,
                 packet=packet,
                 input_sha256=input_sha256,
-                config_sha256=config_sha256,
+                config_sha256=resolved_config_sha256,
                 producer_revision=producer_revision,
             )
             if resume
@@ -307,7 +357,7 @@ def run_loop(
         else:
             response, receipt = _call_stage(
                 caller=caller,
-                run_id=stable_id,
+                observed_run=observed_run,
                 stage="proposal",
                 system_prompt=PROPOSAL_PROMPT,
                 payload={"question_packet": packet.model_dump(mode="json")},
@@ -339,7 +389,7 @@ def run_loop(
                     packet=packet,
                     run_id=stable_id,
                     input_sha256=input_sha256,
-                    config_sha256=config_sha256,
+                    config_sha256=resolved_config_sha256,
                     producer_revision=producer_revision,
                     proposal_path=proposal_path,
                     finding_path=finding_path,
@@ -349,7 +399,7 @@ def run_loop(
 
         revision, receipt = _call_stage(
             caller=caller,
-            run_id=stable_id,
+            observed_run=observed_run,
             stage="revision",
             system_prompt=REVISION_PROMPT,
             payload={
@@ -378,7 +428,6 @@ def run_loop(
         )
         _write_json(output_dir / "revision-plan.json", plan)
         _write_json(output_dir / "revision-event.json", event)
-        _write_json(output_dir / "run.json", run)
         return run
     except Exception as exc:  # noqa: BLE001 - retain a truthful terminal partial artifact
         run = _base_run(

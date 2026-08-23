@@ -164,6 +164,25 @@ class CallReceipt(Contract):
     response_sha256: str | None = None
 
 
+class OuterRunReceipt(Contract):
+    run_id: str
+    root_trace_id: str
+    status: Literal[
+        "completed",
+        "failed_before_call_start",
+        "failed_after_call_start",
+        "cancelled",
+    ]
+    linked_call_count: int = Field(ge=0)
+    runtime_revision: str | None
+    config_sha256: str | None
+    requested_model: str | None
+    reasoning_effort: str | None
+    max_budget: float | None
+    error_type: str | None
+    error_phase: str | None
+
+
 class LoopRun(Contract):
     schema_version: Literal["1.0"] = "1.0"
     run_id: str
@@ -179,6 +198,7 @@ class LoopRun(Contract):
     revision_events: tuple[RevisionEvent, ...] = ()
     active_projection: ActiveProjection | None = None
     receipts: tuple[CallReceipt, ...] = ()
+    outer_runs: tuple[OuterRunReceipt, ...] = ()
     issues: tuple[str, ...] = ()
     resumed_stages: tuple[str, ...] = ()
     report_sha256: str | None = None
