@@ -1,0 +1,25 @@
+governance:
+  - source: docs/topics/graph-adversary.md
+    docs:
+      - CLAUDE.md
+      - README.md
+      - roadmap/README.md
+      - docs/plans/0.1-graph-adversary.md
+      - policy/current-claims.json
+      - evidence/README.md
+  - source: docs/plans/0.1-graph-adversary.md
+    docs:
+      - docs/plans/CLAUDE.md
+      - roadmap/README.md
+      - policy/current-claims.json
+couplings:
+  - source: pyproject.toml
+    docs:
+      - CLAUDE.md
+      - README.md
+architecture:
+  - source: src/whygame_reboot
+    docs:
+      - docs/topics/graph-adversary.md
+      - roadmap/README.md
+adrs: {}

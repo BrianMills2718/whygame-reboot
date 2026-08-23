@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "generated": false,
+  "as_of": "2026-08-23T13:17:22Z",
+  "claims": [
+    {
+      "id": "canonical-private-custody",
+      "status": "observed",
+      "statement": "BrianMills2718/whygame-reboot exists as a private repository with main as its default branch.",
+      "evidence": "GitHub repository metadata and initial main commit 4c3f3d82b361cc4e2270a4d209213a493d2099a5"
+    },
+    {
+      "id": "graph-adversary-product",
+      "status": "unobserved",
+      "statement": "The typed propose-to-revise loop is implemented and authentically executed.",
+      "evidence": null
+    },
+    {
+      "id": "aes-external-adoption",
+      "status": "unobserved",
+      "statement": "Installed AES evaluates the immutable product baseline and discriminates BLOCK from ALLOW.",
+      "evidence": null
+    },
+    {
+      "id": "legacy-replacement",
+      "status": "unobserved",
+      "statement": "WhyGame Reboot supersedes the legacy whygame4 implementation.",
+      "evidence": null
+    }
+  ]
+}
