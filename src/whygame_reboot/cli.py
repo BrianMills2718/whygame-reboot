@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import subprocess
 from pathlib import Path
@@ -10,7 +11,6 @@ from pathlib import Path
 import yaml
 
 from whygame_reboot.contracts import QuestionPacket
-from whygame_reboot.engine import sha256_value
 from whygame_reboot.render import render_report
 from whygame_reboot.runner import run_loop
 
@@ -47,7 +47,7 @@ def main() -> int:
         resume=not args.no_resume,
     )
     report = render_report(run)
-    report_sha256 = sha256_value(report)
+    report_sha256 = hashlib.sha256(report.encode("utf-8")).hexdigest()
     run = run.model_copy(update={"report_sha256": report_sha256})
     (args.output / "run.json").write_text(
         json.dumps(run.model_dump(mode="json"), indent=2, sort_keys=True) + "\n",
