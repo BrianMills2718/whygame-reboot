@@ -88,8 +88,9 @@ Fixtures establish contract behavior but cannot complete the vertical.
 
 ## Exact next action
 
-Resume the exact authentic run after Luna capacity returns, or amend the route
-only if Brian explicitly selects an alternate model. The provider-free
-implementation is frozen at `fe794234629172c806834825db37dcd1a69b1799`; the
+Land the provider-free PR only after its immutable-output, source-revision, and
+outer-run-custody negative controls pass, then resume the exact authentic run
+after Luna capacity returns. Amend the route only if Brian explicitly selects
+an alternate model. The clean-room repair is retained through `9b8566c`; the
 zero-usage failed attempt is retained under
 `evidence/runs/2026-08-23-luna-capacity-blocked/`.
