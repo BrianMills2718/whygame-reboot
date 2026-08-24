@@ -1,0 +1,6 @@
+# Portable AES consumer identity. AES joins this stable repository ID to a
+# physical checkout through an operator-local machine mapping; no absolute path
+# is recorded here.
+schema_version: "1.0"
+repository_record_id: whygame-reboot
+relationships_path: scripts/relationships.yaml
