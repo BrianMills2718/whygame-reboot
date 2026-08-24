@@ -16,10 +16,12 @@ resulting active graph in both immutable JSON and a readable static report.
 
 ## Current state
 
-Repository custody and documentation authority are being established. Product
-behavior, a live model run, AES admission, and replacement of the legacy
-WhyGame remain unobserved. See [current claims](../policy/current-claims.json)
-for the machine-readable statement.
+The first product vertical is observed: the exact two-call Luna run produced a
+digest-bound append-only revision and a directly inspected static report, and
+installed AES discriminated `BLOCK` from `ALLOW` against that immutable result.
+Replacement of the legacy WhyGame remains unobserved and belongs to Project
+Meta. See [current claims](../policy/current-claims.json) for the
+machine-readable statement.
 
 ## Authority map
 

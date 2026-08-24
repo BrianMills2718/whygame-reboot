@@ -5,9 +5,10 @@ testable product idea: a graph is useful when it acts as an adversary that
 forces a proposed causal explanation to be revised, not when it merely stores
 and expands claims.
 
-Start at the [project roadmap](roadmap/README.md). The first vertical is under
-active proof: its provider-free contracts and recovery checks pass, while the
-authentic two-call run and separate AES admission remain acceptance gates.
+Start at the [project roadmap](roadmap/README.md). The first vertical is
+accepted: its exact two-call Luna run, rendered report, explicit account
+binding, and separate installed-AES `BLOCK -> recovery -> ALLOW` admission are
+retained under `evidence/runs/2026-08-23-account-bound-live/`.
 
 ## Development
 
@@ -38,4 +39,4 @@ and `report.html`; a failed second stage retains the committed proposal and
 finding and can resume only when their digests still match.
 
 The legacy `whygame4` repository is a read-only salvage source. It remains the
-incumbent until the first replacement vertical is accepted.
+incumbent until Project Meta separately accepts the replacement claim.

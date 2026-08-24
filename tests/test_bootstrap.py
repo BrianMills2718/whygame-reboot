@@ -26,8 +26,8 @@ def test_bootstrap_claims_do_not_overstate_adoption() -> None:
     statuses = {claim["id"]: claim["status"] for claim in current["claims"]}
     assert statuses == {
         "canonical-private-custody": "observed",
-        "graph-adversary-product": "unobserved",
-        "aes-external-adoption": "unobserved",
+        "graph-adversary-product": "observed",
+        "aes-external-adoption": "observed",
         "legacy-replacement": "unobserved",
     }
 

@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "generated": false,
-  "as_of": "2026-08-23T13:17:22Z",
+  "as_of": "2026-08-24T00:55:37.165824Z",
   "claims": [
     {
       "id": "canonical-private-custody",
@@ -11,15 +11,15 @@
     },
     {
       "id": "graph-adversary-product",
-      "status": "unobserved",
+      "status": "observed",
       "statement": "The typed propose-to-revise loop is implemented and authentically executed.",
-      "evidence": null
+      "evidence": "evidence/runs/2026-08-23-account-bound-live/run.json (SHA-256 bc8b0348cff345937e4992fbd11425ec694ea4238628c9676f256e224b0c3231) and report.html (SHA-256 93b5adc2f0ea578557421d25f637db5046b7ac0687d6cf8489230d22d9eec7ec)"
     },
     {
       "id": "aes-external-adoption",
-      "status": "unobserved",
+      "status": "observed",
       "statement": "Installed AES evaluates the immutable product baseline and discriminates BLOCK from ALLOW.",
-      "evidence": null
+      "evidence": "evidence/runs/2026-08-23-account-bound-live/aes-admission.json: installed AES ce866efd2855318570034a39343dace73f243352 returned BLOCK, attached exact candidate bytes, then returned ALLOW on consumer d6e157cd55c099f0090f3d0767219da76a6b1634"
     },
     {
       "id": "legacy-replacement",

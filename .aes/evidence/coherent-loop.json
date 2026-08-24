@@ -1,0 +1,39 @@
+{
+  "checker_timeout_seconds": 5,
+  "client_wiring_observed": true,
+  "judged_sample_count": 5,
+  "negative_control_observed": true,
+  "observer_command": [
+    "python3",
+    "checks/coherent_loop.py",
+    "--run",
+    "evidence/runs/2026-08-23-account-bound-live/run.json",
+    "--report",
+    "evidence/runs/2026-08-23-account-bound-live/report.html",
+    "--lifecycle",
+    "evidence/runs/2026-08-23-account-bound-live/lifecycle-account-binding.json"
+  ],
+  "owner_artifacts": [
+    {
+      "relative_path": "evidence/runs/2026-08-23-account-bound-live/run.json",
+      "repository_record_id": "whygame-reboot",
+      "revision": "sha256:bc8b0348cff345937e4992fbd11425ec694ea4238628c9676f256e224b0c3231",
+      "schema_version": "1.0"
+    }
+  ],
+  "policy_id": "coherent-loop-evidence",
+  "policy_recovery": {
+    "action_id": "verify-coherent-loop-evidence",
+    "command": [
+      "uv",
+      "run",
+      "python",
+      "-m",
+      "pytest",
+      "-q",
+      "tests/test_aes_admission.py"
+    ],
+    "summary": "Re-run the accepted-loop positive and negative controls"
+  },
+  "schema_version": "1.0"
+}
