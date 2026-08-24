@@ -1,10 +1,10 @@
 # Plan #1: Graph-Adversary Vertical
 
-**Status:** In progress — authentic product run accepted; separate AES admission pending
-**Status ID:** in_progress
+**Status:** Completed — authentic product accepted and installed AES admission observed
+**Status ID:** completed
 **Type:** standard product vertical
 **Priority:** Critical
-**Blocked By:** Nothing; product acceptance is complete and AES admission is the next gate
+**Blocked By:** Nothing; legacy replacement remains a separate Project Meta decision
 **Created:** 2026-08-23
 **Updated:** 2026-08-23
 
@@ -86,15 +86,18 @@ billing mode, and settled cost. The report and run JSON must bind those receipts
 to exact input, source, proposal, finding, revision-plan, and replay digests.
 Fixtures establish contract behavior but cannot complete the vertical.
 
-## Exact next action
+## Completion and handoff
 
-Evaluate the immutable accepted baseline through the separately pinned AES
-public entrypoint, retaining distinct BLOCK and ALLOW receipts. The authentic
-two-call product evidence is retained under
-`evidence/runs/2026-08-23-account-bound-live/`: both Luna-medium calls completed
+The accepted evidence is retained under
+`evidence/runs/2026-08-23-account-bound-live/`. Both Luna-medium calls completed
 from canonical `main`, with zero retries, no fallback, subscription-included
-billing, and lifecycle proof of one explicit account binding. The earlier
-zero-usage failure remains under
+billing, and lifecycle proof of one explicit account binding. Installed AES at
+the exact adopted revision evaluated the clean consumer baseline, returned
+`BLOCK`, executed its returned byte-preserving attachment recovery, and returned
+`ALLOW` for the identical revision and request. Project Meta Plan 246 now owns
+any Gate 2 or legacy-replacement judgment; this plan does not make that claim.
+
+The earlier zero-usage failure remains under
 `evidence/runs/2026-08-23-luna-capacity-blocked/`, but its former "capacity until
 2026-08-28" interpretation is withdrawn: the observed evidence only established
 an unpinned account route, not Luna-wide capacity exhaustion.

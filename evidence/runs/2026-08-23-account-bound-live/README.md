@@ -21,3 +21,10 @@ model, independent criticism, or general contradiction detection.
 privacy-bounded projection of the shared-client lifecycle rows for this run.
 It proves that both public call boundaries used one explicit account binding;
 it deliberately retains no profile path, raw account ID, or credential.
+
+[`aes-admission.json`](aes-admission.json) separately proves that installed AES
+at `ce866efd2855318570034a39343dace73f243352` evaluated clean WhyGame revision
+`d6e157cd55c099f0090f3d0767219da76a6b1634`, returned `BLOCK`, executed its
+returned immutable evidence-attachment recovery, and returned `ALLOW` for the
+identical revision and request. The attached candidate is retained at
+`.aes/evidence/coherent-loop.json`; it does not alter the run or report bytes.

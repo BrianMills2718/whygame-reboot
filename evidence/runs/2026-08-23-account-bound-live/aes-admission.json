@@ -1,0 +1,61 @@
+{
+  "behavioral_result": {
+    "account_id_sha256": "sha256:dfc316ae7b16c90fa21f4485f35d377548437eaeb40cbfa02186bc4a89e71779",
+    "auth_binding": "explicit",
+    "call_count": 2,
+    "model": "codex/gpt-5.6-luna",
+    "producer_revision": "0f07a07c81cde9624a036d1f91f384a4299b4598",
+    "reasoning_effort": "medium",
+    "report_sha256": "93b5adc2f0ea578557421d25f637db5046b7ac0687d6cf8489230d22d9eec7ec",
+    "retry_count": 0,
+    "run_id": "whygame-reboot/2026-08-23-aes-mission-drift-account-bound",
+    "run_sha256": "bc8b0348cff345937e4992fbd11425ec694ea4238628c9676f256e224b0c3231",
+    "terminal_status": "accepted"
+  },
+  "consumer": {
+    "repository_record_id": "whygame-reboot",
+    "revision": "d6e157cd55c099f0090f3d0767219da76a6b1634"
+  },
+  "evidence_kind": "aes_external_behavioral_consumer_admission",
+  "initial_decision": {
+    "decision": "BLOCK",
+    "reason_code": "QUALIFYING_EVIDENCE_REQUIRED",
+    "recovery_returned": true
+  },
+  "installed_aes": {
+    "installation_kind": "exact_git_pin",
+    "revision": "ce866efd2855318570034a39343dace73f243352",
+    "source_checkout_used": false,
+    "version": "0.1.0.dev0"
+  },
+  "nonclaims": [
+    "One bounded question does not establish general causal reasoning or truth discovery.",
+    "The proposal and revision used the same Luna route and are not independent-model criticism.",
+    "This proves adoption of one AES policy seam, not fleet-wide AES operation or legacy replacement."
+  ],
+  "observed_at": "2026-08-24T00:55:37.165824Z",
+  "policy_id": "coherent-loop-evidence",
+  "recovery": {
+    "attached_path": ".aes/evidence/coherent-loop.json",
+    "attached_sha256": "bf819c3fc2d078477b5da241515cc160f051f8075c760650cdb9c34c200099c7",
+    "operation": "codex.attach_evidence",
+    "status": "ATTACHED"
+  },
+  "request_path": "policy/promotion.json",
+  "retry_decision": {
+    "decision": "ALLOW",
+    "evidence_ref": {
+      "relative_path": "evidence/runs/2026-08-23-account-bound-live/run.json",
+      "repository_record_id": "whygame-reboot",
+      "revision": "sha256:bc8b0348cff345937e4992fbd11425ec694ea4238628c9676f256e224b0c3231",
+      "schema_version": "1.0"
+    },
+    "reason_code": "QUALIFYING_EVIDENCE_OBSERVED"
+  },
+  "schema_version": "1.0",
+  "verification_replay": {
+    "boundary": "same immutable consumer revision and request",
+    "with_attached_behavioral_evidence": "ALLOW",
+    "without_attached_behavioral_evidence": "BLOCK"
+  }
+}
