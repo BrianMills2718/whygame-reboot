@@ -1,0 +1,9 @@
+{
+  "attached_evidence_path": ".aes/evidence/coherent-loop.json",
+  "candidate_evidence_path": "evidence/candidates/coherent-loop.json",
+  "current_tier": "measured",
+  "policy_id": "coherent-loop-evidence",
+  "request_id": "promote-coherent-loop-evidence",
+  "requested_tier": "blocking",
+  "schema_version": "1.0"
+}
