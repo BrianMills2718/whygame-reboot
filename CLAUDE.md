@@ -14,10 +14,13 @@ The first stable example asks why a system intended to prevent engineering
 drift can drift away from its own mission. Preserve that example until the
 first vertical is authentically observed.
 
-Project Meta Plan 246 owns portfolio selection and promotion. The legacy
-`whygame4` repository is read-only salvage and remains the incumbent until
-Project Meta accepts replacement evidence. Do not claim that this repository
-supersedes it based on scaffolding, tests, or a scripted run.
+Project Meta Plan 246 owned portfolio selection and promotion. Project Meta has
+accepted the replacement evidence, and `PROJECT_GRAPH.json` now records this
+repository as the active canonical WhyGame generation that supersedes
+`whygame4`. The legacy repository remains read-only salvage with its own Git
+history; do not merge, rewrite, or delete it as cleanup. Supersession establishes
+current product direction, not feature parity with every legacy capability or a
+broader truth-discovery claim.
 
 ## Documentation lineage
 
