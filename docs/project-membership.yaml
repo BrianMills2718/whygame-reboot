@@ -1,0 +1,42 @@
+schema_version: 1.0.0
+project_id: project-whygame-reboot
+display_name: WhyGame Reboot
+context_epoch: 1
+revision_policy:
+  development: moving_checkout
+  evidence: exact_revision
+repositories:
+  - repository_id: whygame-reboot
+    role: primary
+    workspace: default
+    authority_entrypoints:
+      - CLAUDE.md
+      - README.md
+      - roadmap/README.md
+      - docs/plans/1_graph-adversary-vertical.md
+      - docs/topics/graph-adversary.md
+    contract_seams: []
+  - repository_id: llm_client
+    role: supporting
+    workspace: on_claim
+    authority_entrypoints:
+      - CLAUDE.md
+      - README.md
+    contract_seams:
+      - python-package:llm_client
+  - repository_id: agentic-engineering-system
+    role: supporting
+    workspace: on_claim
+    authority_entrypoints:
+      - CLAUDE.md
+      - README.md
+      - docs/decisions/0009-two-shots-one-autonomous-coding-outcome.md
+    contract_seams:
+      - revision-bound-admission
+  - repository_id: whygame4
+    role: retained_predecessor
+    workspace: hidden
+    authority_entrypoints:
+      - CLAUDE.md
+      - README.md
+    contract_seams: []
