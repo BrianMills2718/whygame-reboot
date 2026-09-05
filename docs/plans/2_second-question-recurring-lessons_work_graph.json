@@ -7,7 +7,7 @@
       "initiative_id": "whygame-reboot-plan-2",
       "goal_id": "second-question-recurring-lessons",
       "design_revision": "whygame-reboot-plan-2-second-question@1",
-      "spec_revision": "WGR-WU02@1",
+      "spec_revision": "WGR-WU02@2",
       "title": "Run a second question through the graph adversary and judge it beside the first",
       "class": "implementation",
       "objective": "Execute the existing two-call propose-commit-stress-test-revise-persist loop on a second, different question packet, retain the immutable run and static report, and record whether the challenge and revision were specific to the question or the same shape as Plan 1's with the nouns swapped.",
@@ -98,20 +98,34 @@
         }
       ],
       "readiness": {
-        "status": "blocked",
+        "status": "ready",
         "required_approval_types": [
           "design",
           "spend"
         ],
-        "approvals": [],
-        "failed_guards": [
-          "Brian has not yet confirmed the question packet (design) or authorized the two Luna-medium calls (spend); the dry run may proceed without either"
-        ]
+        "approvals": [
+          {
+            "approval_type": "design",
+            "role": "owner",
+            "approver_id": "Brian Mills",
+            "approved_revision": "whygame-reboot-plan-2-second-question@1",
+            "approved_at": "2026-09-05T21:00:00Z"
+          },
+          {
+            "approval_type": "spend",
+            "role": "owner",
+            "approver_id": "Brian Mills",
+            "approved_revision": "whygame-reboot-plan-2-second-question@1",
+            "approved_at": "2026-09-05T21:00:00Z",
+            "note": "Two Luna-medium calls, ceiling USD 0.25 per stage and USD 0.50 per run"
+          }
+        ],
+        "failed_guards": []
       },
-      "status": "planned",
-      "record_version": 1,
+      "status": "ready",
+      "record_version": 2,
       "created_at": "2026-09-05T20:30:00Z",
-      "updated_at": "2026-09-05T20:30:00Z"
+      "updated_at": "2026-09-05T21:00:00Z"
     }
   ]
 }

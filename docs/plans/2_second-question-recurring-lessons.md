@@ -1,12 +1,12 @@
 # Plan #2: A second question through the graph adversary
 
-**Status:** Planned — awaiting Brian's confirmation of the question and the
-two-call spend
-**Status ID:** planned
+**Status:** Ready — question packet and two-call spend approved by Brian on
+2026-09-05 ("i approve"); awaiting an implementing agent
+**Status ID:** ready
 **Type:** standard product vertical
 **Priority:** High
-**Blocked By:** Nothing in this repository. Brian confirms the question packet
-and authorizes two Luna-medium calls; an implementing agent then runs it.
+**Blocked By:** Nothing. Brian confirmed the packet and authorized the two
+Luna-medium calls on 2026-09-05; an implementing agent runs it from this page.
 **Created:** 2026-09-05
 **Updated:** 2026-09-05
 `trace_evaluable: true`
@@ -106,8 +106,10 @@ model or higher spend requires Brian. The dry run costs nothing and comes
 first. A failed stage stops visibly and retains every earlier digest-valid
 checkpoint; a changed or corrupted checkpoint requires a new run.
 
-**Spend authority:** the two live calls are authorized when Brian confirms this
-plan. Until then the implementing agent may run only the dry run.
+**Spend authority:** Brian approved this plan, its packet, and the two live
+calls at the USD 0.50 ceiling on 2026-09-05 in the planning conversation that
+produced it. The implementing agent may run the live journey after the dry run
+passes; no further approval is needed unless the ceiling or model changes.
 
 ## Non-goals
 
