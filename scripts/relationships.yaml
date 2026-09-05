@@ -17,6 +17,15 @@ governance:
       - docs/plans/1_graph-adversary-vertical.md
       - docs/plans/CLAUDE.md
       - roadmap/README.md
+  - source: docs/plans/2_second-question-recurring-lessons.md
+    docs:
+      - docs/plans/CLAUDE.md
+      - roadmap/README.md
+      - examples/recurring-lessons/question.yaml
+  - source: docs/plans/2_second-question-recurring-lessons_work_graph.json
+    docs:
+      - docs/plans/2_second-question-recurring-lessons.md
+      - docs/plans/CLAUDE.md
 couplings:
   - source: pyproject.toml
     docs:

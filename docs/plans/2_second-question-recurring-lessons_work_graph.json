@@ -1,0 +1,117 @@
+{
+  "units": [
+    {
+      "schema_version": "1.0",
+      "record_type": "work_unit",
+      "id": "WGR-WU02",
+      "initiative_id": "whygame-reboot-plan-2",
+      "goal_id": "second-question-recurring-lessons",
+      "design_revision": "whygame-reboot-plan-2-second-question@1",
+      "spec_revision": "WGR-WU02@1",
+      "title": "Run a second question through the graph adversary and judge it beside the first",
+      "class": "implementation",
+      "objective": "Execute the existing two-call propose-commit-stress-test-revise-persist loop on a second, different question packet, retain the immutable run and static report, and record whether the challenge and revision were specific to the question or the same shape as Plan 1's with the nouns swapped.",
+      "profile": "standard",
+      "execution_class": "independently_executable",
+      "claimability": "claimable",
+      "authorization_mode": "registry_claim",
+      "scope": {
+        "included": [
+          "The packet at examples/recurring-lessons/question.yaml, unchanged",
+          "One dry run, then exactly two Luna-medium shared-client calls with rooted receipts and no retry or fallback",
+          "Immutable run.json, report.html, call receipts, and a direct-inspection record under evidence/runs/",
+          "A written comparison with Plan 1's accepted report",
+          "One new claim, second-question-observed, in policy/current-claims.json"
+        ],
+        "excluded": [
+          "Engine, contract, evaluator, renderer, or CLI changes to accommodate the packet; a needed change is recorded as a generalisation finding, not made silently",
+          "A third call, a second revision round, further questions, a question-authoring tool, installed AES admission, or any legacy-replacement claim"
+        ]
+      },
+      "inputs": [
+        {
+          "kind": "repository_revision",
+          "id": "whygame-reboot",
+          "revision": "4c9f0ea2c398138f04e7e0c4e54d674a9a083433"
+        },
+        {
+          "kind": "dependency_revision",
+          "id": "agentic-engineering-system",
+          "revision": "e7ca726df3cacf31b8671f96672e52200031bf66"
+        },
+        {
+          "kind": "dependency_revision",
+          "id": "llm_client",
+          "revision": "c171d542658402f7de4d99a2d3f3bf085b7b3c00"
+        }
+      ],
+      "outputs": [
+        "evidence/runs/<date>-recurring-lessons-live/ with run.json, report.html, receipts, and inspection.md",
+        "The comparison section inside inspection.md",
+        "policy/current-claims.json carrying second-question-observed with evidence or reason",
+        "This plan's Completion section updated with the terminal state"
+      ],
+      "dependencies": [],
+      "conflict_surfaces": [
+        {
+          "kind": "repository_path",
+          "target": "evidence, policy claims, local plan, and the example packet",
+          "repository": "whygame-reboot",
+          "access": "exclusive",
+          "coordination_key": "whygame-reboot-second-question"
+        },
+        {
+          "kind": "route",
+          "target": "shared llm_client codex/gpt-5.6-luna medium route and traces",
+          "access": "write",
+          "coordination_key": "whygame-reboot-luna-run"
+        }
+      ],
+      "acceptance": [
+        {
+          "id": "WGR-WU02-AC1",
+          "criterion": "The dry run accepts the packet unchanged, and both live calls complete under the cost contract with two rooted child traces bound to the exact input, source, proposal, finding, revision-plan, and replay digests.",
+          "evidence_required": [
+            "Exact lane command, packet digest, and terminal artifacts",
+            "Two rooted child traces with model, effort, tokens, latency, attempts, fallback, billing, and settled cost",
+            "Replay proof that the active graph and artifact digest reproduce"
+          ],
+          "negative_control": "A fixture caller, a dry run alone, a one-call proposal, or a changed packet cannot satisfy this criterion."
+        },
+        {
+          "id": "WGR-WU02-AC2",
+          "criterion": "report.html was opened and read by the implementing agent, and the inspection record states in plain words what was proposed, what challenged it, what changed, and whether the change was specific to this question rather than Plan 1's shape with the nouns swapped.",
+          "evidence_required": [
+            "inspection.md with the four answers and the Plan 1 comparison",
+            "The specific-or-generic verdict stated either way, with the claims it rests on"
+          ],
+          "negative_control": "Raw JSON, a passing suite, or a report nobody read cannot satisfy this criterion; a same-shape verdict is a valid outcome and must not be softened."
+        },
+        {
+          "id": "WGR-WU02-AC3",
+          "criterion": "A failed stage retains truthful partial state, resumes only from the first incomplete stage when every prior digest matches, and the run never retries or falls back.",
+          "evidence_required": [
+            "Checkpoint state after any failure, or a statement that no stage failed",
+            "Proof of no automatic retry, fallback, or duplicate first-stage dispatch"
+          ],
+          "negative_control": "Rerunning the call graph, erasing valid work, or accepting changed checkpoint bytes invalidates recovery."
+        }
+      ],
+      "readiness": {
+        "status": "blocked",
+        "required_approval_types": [
+          "design",
+          "spend"
+        ],
+        "approvals": [],
+        "failed_guards": [
+          "Brian has not yet confirmed the question packet (design) or authorized the two Luna-medium calls (spend); the dry run may proceed without either"
+        ]
+      },
+      "status": "planned",
+      "record_version": 1,
+      "created_at": "2026-09-05T20:30:00Z",
+      "updated_at": "2026-09-05T20:30:00Z"
+    }
+  ]
+}
