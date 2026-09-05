@@ -1,0 +1,47 @@
+id: recurring-lessons
+question: >-
+  Why do recorded lessons in an agentic engineering system recur without ever
+  binding?
+observations:
+  - id: repeats-recorded-not-bound
+    text: >-
+      Of 1,321 entries in the learnings register, 638 describe themselves as a
+      repeat of something already recorded, and zero have been promoted into a
+      check that binds.
+    source_ref: agentic-engineering-system:docs/designs/RECURSIVE_FEEDBACK_2026-09-05.md#the-evidence-this-was-written-from
+    source_revision: e7ca726df3cacf31b8671f96672e52200031bf66
+  - id: delivered-then-violated
+    text: >-
+      A lesson recorded at 21:58 was surfaced at the top of a later turn by the
+      recall mechanism, and the agent receiving it committed that exact failure
+      inside the same turn. The loop collects and delivers; it does not bind.
+    source_ref: agentic-engineering-system:docs/designs/RECURSIVE_FEEDBACK_2026-09-05.md#the-evidence-this-was-written-from
+    source_revision: e7ca726df3cacf31b8671f96672e52200031bf66
+  - id: recurrence-is-not-mechanisability
+    text: >-
+      Recurring lessons are not more mechanisable than average: 35 percent of
+      repeats name something runnable against 30 percent of non-repeats.
+      Recurrence tells you what a failure costs, not whether it can be automated.
+    source_ref: agentic-engineering-system:docs/designs/RECURSIVE_FEEDBACK_2026-09-05.md#two-signals-not-one
+    source_revision: e7ca726df3cacf31b8671f96672e52200031bf66
+  - id: promotion-machinery-unfed
+    text: >-
+      The promotion machinery that would turn a stable finding into a
+      deterministic check exists, and its input has never been produced.
+    source_ref: agentic-engineering-system:docs/designs/RECURSIVE_FEEDBACK_2026-09-05.md#the-evidence-this-was-written-from
+    source_revision: e7ca726df3cacf31b8671f96672e52200031bf66
+  - id: installer-defect-recurred
+    text: >-
+      An installer defect that writes byte-identical duplicate scripts into
+      every governed repository was recorded twice on 2026-08-21, and a new
+      governed repository received it unchanged eight days later.
+    source_ref: agentic-engineering-system:docs/AUDITS.md#audit-at-aa5f76a
+    source_revision: e7ca726df3cacf31b8671f96672e52200031bf66
+  - id: meta-level-must-be-same-mechanism
+    text: >-
+      A feedback mechanism that watches work needs something watching it, and
+      the regress is affordable only when each meta-level is the same mechanism
+      applied to its own output rather than a new system built to supervise the
+      old one.
+    source_ref: agentic-engineering-system:docs/designs/RECURSIVE_FEEDBACK_2026-09-05.md#the-insight
+    source_revision: e7ca726df3cacf31b8671f96672e52200031bf66

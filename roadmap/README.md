@@ -23,11 +23,19 @@ Replacement of the legacy WhyGame remains unobserved and belongs to Project
 Meta. See [current claims](../policy/current-claims.json) for the
 machine-readable statement.
 
+The next product goal is [Plan 2](../docs/plans/2_second-question-recurring-lessons.md):
+a second, different question through the same two-call loop, judged from the
+static report beside Plan 1's. It is also the first consumer run observed by the
+Agentic Engineering System's Plan #8; that observation is AES's, not this
+repository's claim.
+
 ## Authority map
 
 - [Normative graph-adversary contract](../docs/topics/graph-adversary.md)
-- [Adopted first-vertical plan](../docs/plans/1_graph-adversary-vertical.md)
-- [Machine-consumed local work graph](../docs/plans/1_graph-adversary-vertical_work_graph.json)
+- [Active plan: a second question](../docs/plans/2_second-question-recurring-lessons.md)
+- [Plan 2 work graph](../docs/plans/2_second-question-recurring-lessons_work_graph.json)
+- [Completed first-vertical plan](../docs/plans/1_graph-adversary-vertical.md)
+- [Plan 1 work graph](../docs/plans/1_graph-adversary-vertical_work_graph.json)
 - [Current claims](../policy/current-claims.json)
 - [Evidence policy](../evidence/README.md)
 - [Documentation relationships](../scripts/relationships.yaml)
