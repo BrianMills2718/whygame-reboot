@@ -1,0 +1,35 @@
+{
+  "account_digest_consistent": true,
+  "account_id_sha256": "sha256:dfc316ae7b16c90fa21f4485f35d377548437eaeb40cbfa02186bc4a89e71779",
+  "auth_binding": "explicit",
+  "events": [
+    {
+      "phase": "started",
+      "trace_id": "whygame-reboot:5f74059f57eb9378:db0fbd914961460487153b2bfc40e7f6/proposal"
+    },
+    {
+      "phase": "completed",
+      "trace_id": "whygame-reboot:5f74059f57eb9378:db0fbd914961460487153b2bfc40e7f6/proposal"
+    },
+    {
+      "phase": "started",
+      "trace_id": "whygame-reboot:5f74059f57eb9378:db0fbd914961460487153b2bfc40e7f6/revision"
+    },
+    {
+      "phase": "completed",
+      "trace_id": "whygame-reboot:5f74059f57eb9378:db0fbd914961460487153b2bfc40e7f6/revision"
+    }
+  ],
+  "plan1_account_id_sha256_ref": "evidence/runs/2026-08-23-account-bound-live/lifecycle-account-binding.json",
+  "privacy_checks": {
+    "auth_or_profile_path_retained": false,
+    "raw_account_id_retained": false,
+    "token_or_credential_retained": false
+  },
+  "project": "whygame-reboot",
+  "queried_at": "2026-09-05T20:56:36Z",
+  "root_trace_id": "whygame-reboot:5f74059f57eb9378:db0fbd914961460487153b2bfc40e7f6",
+  "same_account_as_plan1": true,
+  "schema_version": "1.0",
+  "source": "llm_client.call_lifecycle_events payload projection"
+}

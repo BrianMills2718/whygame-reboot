@@ -1,0 +1,334 @@
+{
+  "active_projection": {
+    "active_claims": [
+      {
+        "claim_id": "claim-3c3d4dd427c13db5",
+        "confidence": "asserted",
+        "content_sha256": "3c3d4dd427c13db5ecd4f1c92c8ceb52a21911fea7af83a71ff6de086731a61a",
+        "normalized_object": "the assumption that the lesson is readily automatable",
+        "normalized_subject": "recurrence of a lesson",
+        "object": "the assumption that the lesson is readily automatable",
+        "observation_ids": [
+          "recurrence-is-not-mechanisability"
+        ],
+        "proposal_local_id": "claim-3",
+        "rationale": "Repeats name runnable mechanisms at 35%, only modestly above 30% for non-repeats; recurrence indicates cost, not mechanisability.",
+        "relation": "constrains",
+        "subject": "recurrence of a lesson"
+      },
+      {
+        "claim_id": "claim-85075dbf05f3e283",
+        "confidence": "provisional",
+        "content_sha256": "85075dbf05f3e283dd8a52e25b3259369ac8c4d7d99b1cadc670b78cb22a246a",
+        "normalized_object": "recurrence without binding",
+        "normalized_subject": "a feedback mechanism that only collects and delivers lessons",
+        "object": "recurrence without binding",
+        "observation_ids": [
+          "installer-defect-recurred",
+          "meta-level-must-be-same-mechanism"
+        ],
+        "proposal_local_id": "claim-4",
+        "rationale": "The recorded installer defect recurred and reached a new repository unchanged, while the proposed recursive design says each meta-level must watch its own output using the same mechanism.",
+        "relation": "contributes_to",
+        "subject": "a feedback mechanism that only collects and delivers lessons"
+      },
+      {
+        "claim_id": "claim-875edddf1dd2a5fc",
+        "confidence": "provisional",
+        "content_sha256": "875edddf1dd2a5fc41d2ce2d544efbb0bc5fb82ea271750e01832f22ca402539",
+        "normalized_object": "interrupting recurrence without binding",
+        "normalized_subject": "deterministic promotion of recorded lessons into binding checks",
+        "object": "interrupting recurrence without binding",
+        "observation_ids": [
+          "delivered-then-violated",
+          "promotion-machinery-unfed",
+          "repeats-recorded-not-bound"
+        ],
+        "proposal_local_id": "revision:claim-fd2fc2045281fe2b",
+        "rationale": "The promotion machinery is described as capable of turning stable findings into deterministic checks, but its input has never been produced. Therefore its contribution to interrupting recurrence is provisional, not observed.",
+        "relation": "contributes_to",
+        "subject": "deterministic promotion of recorded lessons into binding checks"
+      },
+      {
+        "claim_id": "claim-92950a7635448632",
+        "confidence": "provisional",
+        "content_sha256": "92950a7635448632a7453d6764cb1b97d28d70e7726887854ef46d7276c99fe8",
+        "normalized_object": "recurrence without binding",
+        "normalized_subject": "recorded lessons without deterministic promotion into binding checks",
+        "object": "recurrence without binding",
+        "observation_ids": [
+          "delivered-then-violated",
+          "repeats-recorded-not-bound"
+        ],
+        "proposal_local_id": "claim-1",
+        "rationale": "638 of 1,321 entries identify repeats, none became binding checks; a surfaced lesson was still violated in the same turn.",
+        "relation": "causes",
+        "subject": "recorded lessons without deterministic promotion into binding checks"
+      }
+    ],
+    "projection_sha256": "6bbba19b12c273cf77b732ddcfcb32f307d6f9bc71544c73d775fd14be97481d",
+    "superseded_claim_ids": [
+      "claim-fd2fc2045281fe2b"
+    ]
+  },
+  "config_sha256": "e640aea5daee8995795056706e168dfb4976bb412d2a8a1d3d94b90ee50ae33b",
+  "finding": {
+    "explanation": "The committed claims use the same normalized subject and object but make opposed direct causal assertions (causes versus prevents).",
+    "finding_id": "finding-a88e5eb178d42c0f",
+    "finding_sha256": "a88e5eb178d42c0f0eecd637bc1be6b45cddd4733f0d60aaf45cfba59de9b5e7",
+    "kind": "direct_causal_conflict",
+    "left_claim_id": "claim-92950a7635448632",
+    "proposal_sha256": "e34191019aac147fb51ba54a7c82623f5252cf36b0e43f4b6885600fa8e53bf7",
+    "right_claim_id": "claim-fd2fc2045281fe2b"
+  },
+  "input_sha256": "333dc81c653282dc7098615b06daeae8f1204ddea4bfb8069e6135c68ff8fb0c",
+  "issues": [],
+  "observations": [
+    {
+      "id": "repeats-recorded-not-bound",
+      "source_ref": "agentic-engineering-system:docs/designs/RECURSIVE_FEEDBACK_2026-09-05.md#the-evidence-this-was-written-from",
+      "source_revision": "e7ca726df3cacf31b8671f96672e52200031bf66",
+      "text": "Of 1,321 entries in the learnings register, 638 describe themselves as a repeat of something already recorded, and zero have been promoted into a check that binds."
+    },
+    {
+      "id": "delivered-then-violated",
+      "source_ref": "agentic-engineering-system:docs/designs/RECURSIVE_FEEDBACK_2026-09-05.md#the-evidence-this-was-written-from",
+      "source_revision": "e7ca726df3cacf31b8671f96672e52200031bf66",
+      "text": "A lesson recorded at 21:58 was surfaced at the top of a later turn by the recall mechanism, and the agent receiving it committed that exact failure inside the same turn. The loop collects and delivers; it does not bind."
+    },
+    {
+      "id": "recurrence-is-not-mechanisability",
+      "source_ref": "agentic-engineering-system:docs/designs/RECURSIVE_FEEDBACK_2026-09-05.md#two-signals-not-one",
+      "source_revision": "e7ca726df3cacf31b8671f96672e52200031bf66",
+      "text": "Recurring lessons are not more mechanisable than average: 35 percent of repeats name something runnable against 30 percent of non-repeats. Recurrence tells you what a failure costs, not whether it can be automated."
+    },
+    {
+      "id": "promotion-machinery-unfed",
+      "source_ref": "agentic-engineering-system:docs/designs/RECURSIVE_FEEDBACK_2026-09-05.md#the-evidence-this-was-written-from",
+      "source_revision": "e7ca726df3cacf31b8671f96672e52200031bf66",
+      "text": "The promotion machinery that would turn a stable finding into a deterministic check exists, and its input has never been produced."
+    },
+    {
+      "id": "installer-defect-recurred",
+      "source_ref": "agentic-engineering-system:docs/AUDITS.md#audit-at-aa5f76a",
+      "source_revision": "e7ca726df3cacf31b8671f96672e52200031bf66",
+      "text": "An installer defect that writes byte-identical duplicate scripts into every governed repository was recorded twice on 2026-08-21, and a new governed repository received it unchanged eight days later."
+    },
+    {
+      "id": "meta-level-must-be-same-mechanism",
+      "source_ref": "agentic-engineering-system:docs/designs/RECURSIVE_FEEDBACK_2026-09-05.md#the-insight",
+      "source_revision": "e7ca726df3cacf31b8671f96672e52200031bf66",
+      "text": "A feedback mechanism that watches work needs something watching it, and the regress is affordable only when each meta-level is the same mechanism applied to its own output rather than a new system built to supervise the old one."
+    }
+  ],
+  "outer_runs": [
+    {
+      "config_sha256": "sha256:e640aea5daee8995795056706e168dfb4976bb412d2a8a1d3d94b90ee50ae33b",
+      "error_phase": null,
+      "error_type": null,
+      "linked_call_count": 2,
+      "max_budget": 0.5,
+      "reasoning_effort": "medium",
+      "requested_model": "codex/gpt-5.6-luna",
+      "root_trace_id": "whygame-reboot:5f74059f57eb9378:db0fbd914961460487153b2bfc40e7f6",
+      "run_id": "whygame-reboot-attempt-db0fbd914961460487153b2bfc40e7f6",
+      "runtime_revision": "d707597e3b2e89ff485ef6e2c1fd6e105efbeaa9",
+      "status": "completed"
+    }
+  ],
+  "producer_revision": "d707597e3b2e89ff485ef6e2c1fd6e105efbeaa9",
+  "proposal": {
+    "answer": "The supplied observations support a bounded proposal: lessons recur because collection and recall do not transform them into binding checks, while the available promotion machinery remains unfed. This is a stress-test proposal, not a factual certification.",
+    "claims": [
+      {
+        "claim_id": "claim-92950a7635448632",
+        "confidence": "provisional",
+        "content_sha256": "92950a7635448632a7453d6764cb1b97d28d70e7726887854ef46d7276c99fe8",
+        "normalized_object": "recurrence without binding",
+        "normalized_subject": "recorded lessons without deterministic promotion into binding checks",
+        "object": "recurrence without binding",
+        "observation_ids": [
+          "delivered-then-violated",
+          "repeats-recorded-not-bound"
+        ],
+        "proposal_local_id": "claim-1",
+        "rationale": "638 of 1,321 entries identify repeats, none became binding checks; a surfaced lesson was still violated in the same turn.",
+        "relation": "causes",
+        "subject": "recorded lessons without deterministic promotion into binding checks"
+      },
+      {
+        "claim_id": "claim-fd2fc2045281fe2b",
+        "confidence": "provisional",
+        "content_sha256": "fd2fc2045281fe2bdff05fc9d3d0210cba94c891168fced2074286a4d9398506",
+        "normalized_object": "recurrence without binding",
+        "normalized_subject": "recorded lessons without deterministic promotion into binding checks",
+        "object": "recurrence without binding",
+        "observation_ids": [
+          "delivered-then-violated",
+          "promotion-machinery-unfed"
+        ],
+        "proposal_local_id": "claim-2",
+        "rationale": "If lessons were transformed into deterministic checks that bind execution, the observed collect-and-deliver-only behavior would be interrupted. This is a proposed mechanism, not an observed result.",
+        "relation": "prevents",
+        "subject": "recorded lessons without deterministic promotion into binding checks"
+      },
+      {
+        "claim_id": "claim-3c3d4dd427c13db5",
+        "confidence": "asserted",
+        "content_sha256": "3c3d4dd427c13db5ecd4f1c92c8ceb52a21911fea7af83a71ff6de086731a61a",
+        "normalized_object": "the assumption that the lesson is readily automatable",
+        "normalized_subject": "recurrence of a lesson",
+        "object": "the assumption that the lesson is readily automatable",
+        "observation_ids": [
+          "recurrence-is-not-mechanisability"
+        ],
+        "proposal_local_id": "claim-3",
+        "rationale": "Repeats name runnable mechanisms at 35%, only modestly above 30% for non-repeats; recurrence indicates cost, not mechanisability.",
+        "relation": "constrains",
+        "subject": "recurrence of a lesson"
+      },
+      {
+        "claim_id": "claim-85075dbf05f3e283",
+        "confidence": "provisional",
+        "content_sha256": "85075dbf05f3e283dd8a52e25b3259369ac8c4d7d99b1cadc670b78cb22a246a",
+        "normalized_object": "recurrence without binding",
+        "normalized_subject": "a feedback mechanism that only collects and delivers lessons",
+        "object": "recurrence without binding",
+        "observation_ids": [
+          "installer-defect-recurred",
+          "meta-level-must-be-same-mechanism"
+        ],
+        "proposal_local_id": "claim-4",
+        "rationale": "The recorded installer defect recurred and reached a new repository unchanged, while the proposed recursive design says each meta-level must watch its own output using the same mechanism.",
+        "relation": "contributes_to",
+        "subject": "a feedback mechanism that only collects and delivers lessons"
+      }
+    ],
+    "model_competing_pair": {
+      "disagreement": "The same subject and object are paired as causing versus preventing recurrence without binding; claim-2 is a deliberate counterfactual stress-test proposal, not an observed conclusion.",
+      "left_local_id": "claim-1",
+      "right_local_id": "claim-2"
+    },
+    "proposal_sha256": "e34191019aac147fb51ba54a7c82623f5252cf36b0e43f4b6885600fa8e53bf7",
+    "unresolved_questions": [
+      "What exact transformation makes a lesson a deterministic binding check?",
+      "Which mechanism would detect and block a violation after a lesson is surfaced?"
+    ]
+  },
+  "question": "Why do recorded lessons in an agentic engineering system recur without ever binding?",
+  "receipts": [
+    {
+      "billing_mode": "subscription_included",
+      "completion_tokens": 619,
+      "cost_source": "subscription_included",
+      "cost_usd": 0.0,
+      "fallback_used": false,
+      "latency_s": 19.677,
+      "logical_call_id": "llmcall_80f6de6462144fb9ab9cbfc98932bd0e",
+      "prompt_tokens": 25059,
+      "reasoning_effort": "medium",
+      "request_fingerprint": "70c42cd2b5b4a78b8492f06f632cc53ac4156a26629af48a424c610edf716151",
+      "requested_model": "codex/gpt-5.6-luna",
+      "resolved_model": "codex/gpt-5.6-luna",
+      "response_sha256": "65c8b01c42b7be536c04947441f294e72360520b12674204c8fa8f2b3f45fc3d",
+      "retry_count": 0,
+      "total_tokens": 25678,
+      "trace_id": "whygame-reboot:5f74059f57eb9378:db0fbd914961460487153b2bfc40e7f6/proposal"
+    },
+    {
+      "billing_mode": "subscription_included",
+      "completion_tokens": 382,
+      "cost_source": "subscription_included",
+      "cost_usd": 0.0,
+      "fallback_used": false,
+      "latency_s": 16.402,
+      "logical_call_id": "llmcall_2f2a8eaa5e3f4bf790ff8b0fd687b568",
+      "prompt_tokens": 25556,
+      "reasoning_effort": "medium",
+      "request_fingerprint": "20f7d75e157198ecd6b841d94e4ea7125c22639b23e2a7a6894543aff93c52b3",
+      "requested_model": "codex/gpt-5.6-luna",
+      "resolved_model": "codex/gpt-5.6-luna",
+      "response_sha256": "343e601446de01a0ff9fbcecca60a3380e1b17a5e83e5afd8e99447904dd7db2",
+      "retry_count": 0,
+      "total_tokens": 25938,
+      "trace_id": "whygame-reboot:5f74059f57eb9378:db0fbd914961460487153b2bfc40e7f6/revision"
+    }
+  ],
+  "report_sha256": "1929bafa8361a868f017c9433bc41c4553beab771e03a5a990bae0700d27d7b1",
+  "resumed_stages": [],
+  "revision_events": [
+    {
+      "added_claims": [
+        {
+          "claim_id": "claim-875edddf1dd2a5fc",
+          "confidence": "provisional",
+          "content_sha256": "875edddf1dd2a5fc41d2ce2d544efbb0bc5fb82ea271750e01832f22ca402539",
+          "normalized_object": "interrupting recurrence without binding",
+          "normalized_subject": "deterministic promotion of recorded lessons into binding checks",
+          "object": "interrupting recurrence without binding",
+          "observation_ids": [
+            "delivered-then-violated",
+            "promotion-machinery-unfed",
+            "repeats-recorded-not-bound"
+          ],
+          "proposal_local_id": "revision:claim-fd2fc2045281fe2b",
+          "rationale": "The promotion machinery is described as capable of turning stable findings into deterministic checks, but its input has never been produced. Therefore its contribution to interrupting recurrence is provisional, not observed.",
+          "relation": "contributes_to",
+          "subject": "deterministic promotion of recorded lessons into binding checks"
+        }
+      ],
+      "event_id": "event-574b391b15589c5d",
+      "event_sha256": "574b391b15589c5d3a02e206a093bb232c627e57fcc189e283b9fb7362ae644f",
+      "finding_sha256": "a88e5eb178d42c0f0eecd637bc1be6b45cddd4733f0d60aaf45cfba59de9b5e7",
+      "plan_sha256": "3314ac37f77ace30e42e0d872396e246b5f3eab4dc24b376a9c1fb13ad814d8f",
+      "superseded_claim_ids": [
+        "claim-fd2fc2045281fe2b"
+      ]
+    }
+  ],
+  "revision_plan": {
+    "decisions": [
+      {
+        "action": "retain",
+        "rationale": "The observed repeat count, absence of promoted checks, and same-turn violation after recall support retaining this bounded causal claim.",
+        "replacement": null,
+        "target_claim_id": "claim-92950a7635448632"
+      },
+      {
+        "action": "supersede",
+        "rationale": "The original prevents relation states an unobserved counterfactual as a direct prevention claim. The observations support only a qualified mechanism hypothesis.",
+        "replacement": {
+          "claim_id": "claim-875edddf1dd2a5fc",
+          "confidence": "provisional",
+          "content_sha256": "875edddf1dd2a5fc41d2ce2d544efbb0bc5fb82ea271750e01832f22ca402539",
+          "normalized_object": "interrupting recurrence without binding",
+          "normalized_subject": "deterministic promotion of recorded lessons into binding checks",
+          "object": "interrupting recurrence without binding",
+          "observation_ids": [
+            "delivered-then-violated",
+            "promotion-machinery-unfed",
+            "repeats-recorded-not-bound"
+          ],
+          "proposal_local_id": "revision:claim-fd2fc2045281fe2b",
+          "rationale": "The promotion machinery is described as capable of turning stable findings into deterministic checks, but its input has never been produced. Therefore its contribution to interrupting recurrence is provisional, not observed.",
+          "relation": "contributes_to",
+          "subject": "deterministic promotion of recorded lessons into binding checks"
+        },
+        "target_claim_id": "claim-fd2fc2045281fe2b"
+      }
+    ],
+    "finding_id": "finding-a88e5eb178d42c0f",
+    "finding_sha256": "a88e5eb178d42c0f0eecd637bc1be6b45cddd4733f0d60aaf45cfba59de9b5e7",
+    "plan_sha256": "3314ac37f77ace30e42e0d872396e246b5f3eab4dc24b376a9c1fb13ad814d8f",
+    "proposal_sha256": "e34191019aac147fb51ba54a7c82623f5252cf36b0e43f4b6885600fa8e53bf7",
+    "revised_answer": "The observations provisionally support that recorded lessons recur without binding when collection and recall are not transformed into deterministic checks. Promotion machinery exists but remains unfed; transforming lessons may contribute to interrupting recurrence, but the exact transformation and blocking mechanism remain unresolved.",
+    "unresolved_questions": [
+      "What exact transformation makes a lesson a deterministic binding check?",
+      "Which mechanism would detect and block a violation after a lesson is surfaced?",
+      "Whether deterministic promotion would actually interrupt recurrence remains unverified."
+    ]
+  },
+  "run_id": "whygame-reboot/2026-09-05-recurring-lessons",
+  "schema_version": "1.0",
+  "status": "accepted"
+}

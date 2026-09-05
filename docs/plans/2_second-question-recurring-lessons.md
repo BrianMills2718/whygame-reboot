@@ -1,14 +1,13 @@
 # Plan #2: A second question through the graph adversary
 
-**Status:** Ready — question packet and two-call spend approved by Brian on
-2026-09-05 ("i approve"); awaiting an implementing agent
-**Status ID:** ready
+**Status:** Delivered — run observed 2026-09-05; Brian's judgement from the
+report is still pending
+**Status ID:** delivered
 **Type:** standard product vertical
 **Priority:** High
-**Blocked By:** Nothing. Brian confirmed the packet and authorized the two
-Luna-medium calls on 2026-09-05; an implementing agent runs it from this page.
+**Blocked By:** Nothing. Delivered; only Brian's judgement remains.
 **Created:** 2026-09-05
-**Updated:** 2026-09-05
+**Updated:** 2026-09-05 (delivered)
 `trace_evaluable: true`
 
 ## Authority and handoff
@@ -160,3 +159,40 @@ state here, updates `docs/plans/CLAUDE.md` and `roadmap/README.md` through the
 declared couplings, and closes the lane through the sanctioned route. The
 judgement of whether the graph changed the explanation is Brian's, made from
 `report.html`; the plan records his answer when he gives it.
+
+## Completion record
+
+**Terminal state:** `DELIVERED`, 2026-09-05, by the implementing agent
+(Claude Code) in lane `plan-2-run`.
+
+**Evidence:** `evidence/runs/2026-09-05-recurring-lessons-live/` holds
+`run.json` (SHA-256 `4a1b1fcc…dded280f`), `report.html` (SHA-256
+`1929bafa…0d27d7b1`), the checkpoint files and both call receipts,
+`lifecycle-account-binding.json`, and `inspection.md`, which carries the four
+answers, the Plan 1 comparison, and the replay verification.
+
+**Acceptance, observed:** the dry run accepted the packet unchanged; both live
+calls completed at USD 0.00 settled cost with rooted receipts, zero retries, no
+fallback; every accepted-artifact condition reproduced from the retained run;
+the report was opened and read; the comparison is written;
+`policy/current-claims.json` carries `second-question-observed` as `observed`;
+`uv run python -m pytest -q` (23 passed) and `uv run ruff check .` pass in the
+lane. No engine, contract, evaluator, renderer, or CLI change was needed.
+
+**Comparison verdict:** same shape with the nouns swapped. The proposal prompt
+solicits the causes-versus-prevents pair, the evaluator recognizes only that
+pair, and the revision prompt prescribes the `contributes_to` or `constrains`
+replacement; both runs did exactly that. What differed was content: claim
+wording, citations, reworded endpoints on the replacement claim, and one added
+uncertainty. This is recorded, not softened, in `inspection.md`.
+
+**Deviations, recorded:** two attempts failed before any model request and are
+retained as `…-guard-blocked/` and `…-auth-revoked/`. The first was a local
+Codex history guard that cannot find the binary under a caller-owned profile,
+fixed with a symlink. The second was the dedicated profile's revoked refresh
+token; the run then used the default profile root as an explicit
+`--codex-home`, the recorded fallback this plan permits, after the shared
+client's identity function proved both profiles carry the account digest Plan
+1 retained. The "inferred, not proven" profile note above is now proven.
+
+**Brian's judgement:** pending. When given, record it here.

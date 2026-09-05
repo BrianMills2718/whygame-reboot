@@ -1,0 +1,42 @@
+{
+  "decisions": [
+    {
+      "action": "retain",
+      "rationale": "The observed repeat count, absence of promoted checks, and same-turn violation after recall support retaining this bounded causal claim.",
+      "replacement": null,
+      "target_claim_id": "claim-92950a7635448632"
+    },
+    {
+      "action": "supersede",
+      "rationale": "The original prevents relation states an unobserved counterfactual as a direct prevention claim. The observations support only a qualified mechanism hypothesis.",
+      "replacement": {
+        "claim_id": "claim-875edddf1dd2a5fc",
+        "confidence": "provisional",
+        "content_sha256": "875edddf1dd2a5fc41d2ce2d544efbb0bc5fb82ea271750e01832f22ca402539",
+        "normalized_object": "interrupting recurrence without binding",
+        "normalized_subject": "deterministic promotion of recorded lessons into binding checks",
+        "object": "interrupting recurrence without binding",
+        "observation_ids": [
+          "delivered-then-violated",
+          "promotion-machinery-unfed",
+          "repeats-recorded-not-bound"
+        ],
+        "proposal_local_id": "revision:claim-fd2fc2045281fe2b",
+        "rationale": "The promotion machinery is described as capable of turning stable findings into deterministic checks, but its input has never been produced. Therefore its contribution to interrupting recurrence is provisional, not observed.",
+        "relation": "contributes_to",
+        "subject": "deterministic promotion of recorded lessons into binding checks"
+      },
+      "target_claim_id": "claim-fd2fc2045281fe2b"
+    }
+  ],
+  "finding_id": "finding-a88e5eb178d42c0f",
+  "finding_sha256": "a88e5eb178d42c0f0eecd637bc1be6b45cddd4733f0d60aaf45cfba59de9b5e7",
+  "plan_sha256": "3314ac37f77ace30e42e0d872396e246b5f3eab4dc24b376a9c1fb13ad814d8f",
+  "proposal_sha256": "e34191019aac147fb51ba54a7c82623f5252cf36b0e43f4b6885600fa8e53bf7",
+  "revised_answer": "The observations provisionally support that recorded lessons recur without binding when collection and recall are not transformed into deterministic checks. Promotion machinery exists but remains unfed; transforming lessons may contribute to interrupting recurrence, but the exact transformation and blocking mechanism remain unresolved.",
+  "unresolved_questions": [
+    "What exact transformation makes a lesson a deterministic binding check?",
+    "Which mechanism would detect and block a violation after a lesson is surfaced?",
+    "Whether deterministic promotion would actually interrupt recurrence remains unverified."
+  ]
+}

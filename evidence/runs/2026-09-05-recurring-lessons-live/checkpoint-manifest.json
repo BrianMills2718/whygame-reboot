@@ -1,0 +1,13 @@
+{
+  "config_sha256": "e640aea5daee8995795056706e168dfb4976bb412d2a8a1d3d94b90ee50ae33b",
+  "files": {
+    "finding.json": "38b09835f419bee952779bdcabc4a33efed8088c0a8aac60d2a4630085774a4c",
+    "proposal-receipt.json": "7076720b7d83704a45ea6908f320881a135948d4d29e38dba08cf4b64e92bd09",
+    "proposal.json": "b20a75c461b93e6820ded5f67a6d0b220188150e789fdf409cdb5a0211bc12e0"
+  },
+  "input_sha256": "333dc81c653282dc7098615b06daeae8f1204ddea4bfb8069e6135c68ff8fb0c",
+  "producer_revision": "d707597e3b2e89ff485ef6e2c1fd6e105efbeaa9",
+  "question_id": "recurring-lessons",
+  "run_id": "whygame-reboot/2026-09-05-recurring-lessons",
+  "schema_version": "1.0"
+}

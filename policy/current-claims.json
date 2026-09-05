@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "generated": false,
-  "as_of": "2026-08-24T00:55:37.165824Z",
+  "as_of": "2026-09-05T21:10:00.000000Z",
   "claims": [
     {
       "id": "canonical-private-custody",
@@ -26,6 +26,12 @@
       "status": "unobserved",
       "statement": "WhyGame Reboot supersedes the legacy whygame4 implementation.",
       "evidence": null
+    },
+    {
+      "id": "second-question-observed",
+      "status": "observed",
+      "statement": "A second, different question ran end to end through the same two-call loop, and its report was read beside Plan 1's; the challenge and revision were the same shape with the nouns swapped.",
+      "evidence": "evidence/runs/2026-09-05-recurring-lessons-live/run.json (SHA-256 4a1b1fccf86bd579c5551e0ea2cb8bf3032923f2bee9cbcd1f933263dded280f), report.html (SHA-256 1929bafa8361a868f017c9433bc41c4553beab771e03a5a990bae0700d27d7b1), and inspection.md with the Plan 1 comparison and the same-shape verdict"
     }
   ]
 }
