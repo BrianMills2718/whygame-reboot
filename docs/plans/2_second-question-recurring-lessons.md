@@ -74,12 +74,22 @@ change and why; it does not license widening the contract.
 
 ## Canonical journey
 
-1. From a claimed lane, validate the packet without spend:
+1. From a claimed lane (created from the workspace root with
+   `enforced-planning/scripts/claim_bootstrap.py`, as `CLAUDE.md` requires;
+   AES Plan #8's handoff quotes the exact request), validate the packet
+   without spend:
    `uv run whygame-reboot examples/recurring-lessons/question.yaml --output artifacts/recurring-lessons-dry-run --dry-run`.
    A contract rejection here ends the slice `LEARNED` with the exact error.
 2. Run the adopted two-call Luna-medium journey bound to the caller-owned
-   Codex profile, exactly as `README.md` documents for the first example, with
-   `--output artifacts/recurring-lessons-live`.
+   Codex profile. `README.md` shows the shape with a placeholder; the concrete
+   command on this machine is:
+   `uv run whygame-reboot examples/recurring-lessons/question.yaml --output evidence/runs/<YYYY-MM-DD>-recurring-lessons-live --run-id whygame-reboot/<YYYY-MM-DD>-recurring-lessons --codex-home /home/brian/.codex-profiles/dfc316ae7b16c90f`.
+   The `--codex-home` value is a profile root containing `.codex/auth.json`
+   (a path, not a credential; never copy or print the file it points at). It
+   is the only dedicated profile on this machine and is inferred, not proven,
+   to be the one Plan 1 used, because Plan 1's evidence deliberately retains
+   no path. If the CLI rejects it, stop and report; do not fall back to the
+   default `~/.codex` profile without recording that you did.
 3. Confirm the accepted-artifact conditions from the normative topic: two
    rooted child traces, strict contracts validate, the finding reproduces from
    the committed proposal, the revision plan binds to the exact digests, replay
