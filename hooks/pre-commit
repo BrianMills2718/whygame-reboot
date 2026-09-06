@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+# Run this repository's declared verification before a commit becomes durable.
+#
+# WHY THIS EXISTS (observed 2026-09-05)
+#
+# An agent finishing this repository's Plan 2 verified its work with:
+#
+#   uv run python -m pytest -q 2>&1 | tail -2 && uv run ruff check . 2>&1 | tail -1 && git commit ...
+#
+# `| tail -2` makes the pipeline's exit status tail's, which is 0. pytest
+# reported `1 failed, 22 passed`, the && chain continued anyway, ruff printed
+# "All checks passed!" on the next line, and a commit was created over a red
+# tree. It was caught and repaired inside the same pull request, so nothing red
+# reached main -- but nothing here caught it. CLAUDE.md declared the checks and
+# no hook ran them.
+#
+# The lesson is not "do not pipe into tail". An exit status can be discarded in
+# unlimited ways and each would need its own rule after its own incident. The
+# lesson is that verification which depends on how an agent composed a shell
+# line is advisory. It belongs where the work becomes durable.
+#
+# Enforced upstream as agentic-engineering-system AES-INV-004
+# (docs/topics/verification-at-the-commit.md there).
+#
+# `pipefail` is set here for the same reason this hook exists: without it, a
+# status in this file could be lost exactly the way the one above was.
+set -euo pipefail
+
+repo_root="$(git rev-parse --show-toplevel)"
+cd "$repo_root"
+
+echo "Running declared verification (CLAUDE.md)..."
+uv run python -m pytest -q
+uv run ruff check .
+echo "Declared verification passed."
+
+# Chain forward to the global hook, which a local core.hooksPath would otherwise
+# replace entirely. The global hook's own recursion guard makes this safe.
+global_hook="$(git config --global core.hooksPath 2>/dev/null || true)/pre-commit"
+if [ -x "$global_hook" ]; then
+    "$global_hook" "$@"
+fi
