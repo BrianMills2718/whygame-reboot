@@ -29,6 +29,7 @@ def test_bootstrap_claims_do_not_overstate_adoption() -> None:
         "graph-adversary-product": "observed",
         "aes-external-adoption": "observed",
         "legacy-replacement": "unobserved",
+        "second-question-observed": "observed",
     }
 
 
