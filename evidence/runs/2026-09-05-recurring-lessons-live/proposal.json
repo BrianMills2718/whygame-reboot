@@ -1,0 +1,78 @@
+{
+  "answer": "The supplied observations support a bounded proposal: lessons recur because collection and recall do not transform them into binding checks, while the available promotion machinery remains unfed. This is a stress-test proposal, not a factual certification.",
+  "claims": [
+    {
+      "claim_id": "claim-92950a7635448632",
+      "confidence": "provisional",
+      "content_sha256": "92950a7635448632a7453d6764cb1b97d28d70e7726887854ef46d7276c99fe8",
+      "normalized_object": "recurrence without binding",
+      "normalized_subject": "recorded lessons without deterministic promotion into binding checks",
+      "object": "recurrence without binding",
+      "observation_ids": [
+        "delivered-then-violated",
+        "repeats-recorded-not-bound"
+      ],
+      "proposal_local_id": "claim-1",
+      "rationale": "638 of 1,321 entries identify repeats, none became binding checks; a surfaced lesson was still violated in the same turn.",
+      "relation": "causes",
+      "subject": "recorded lessons without deterministic promotion into binding checks"
+    },
+    {
+      "claim_id": "claim-fd2fc2045281fe2b",
+      "confidence": "provisional",
+      "content_sha256": "fd2fc2045281fe2bdff05fc9d3d0210cba94c891168fced2074286a4d9398506",
+      "normalized_object": "recurrence without binding",
+      "normalized_subject": "recorded lessons without deterministic promotion into binding checks",
+      "object": "recurrence without binding",
+      "observation_ids": [
+        "delivered-then-violated",
+        "promotion-machinery-unfed"
+      ],
+      "proposal_local_id": "claim-2",
+      "rationale": "If lessons were transformed into deterministic checks that bind execution, the observed collect-and-deliver-only behavior would be interrupted. This is a proposed mechanism, not an observed result.",
+      "relation": "prevents",
+      "subject": "recorded lessons without deterministic promotion into binding checks"
+    },
+    {
+      "claim_id": "claim-3c3d4dd427c13db5",
+      "confidence": "asserted",
+      "content_sha256": "3c3d4dd427c13db5ecd4f1c92c8ceb52a21911fea7af83a71ff6de086731a61a",
+      "normalized_object": "the assumption that the lesson is readily automatable",
+      "normalized_subject": "recurrence of a lesson",
+      "object": "the assumption that the lesson is readily automatable",
+      "observation_ids": [
+        "recurrence-is-not-mechanisability"
+      ],
+      "proposal_local_id": "claim-3",
+      "rationale": "Repeats name runnable mechanisms at 35%, only modestly above 30% for non-repeats; recurrence indicates cost, not mechanisability.",
+      "relation": "constrains",
+      "subject": "recurrence of a lesson"
+    },
+    {
+      "claim_id": "claim-85075dbf05f3e283",
+      "confidence": "provisional",
+      "content_sha256": "85075dbf05f3e283dd8a52e25b3259369ac8c4d7d99b1cadc670b78cb22a246a",
+      "normalized_object": "recurrence without binding",
+      "normalized_subject": "a feedback mechanism that only collects and delivers lessons",
+      "object": "recurrence without binding",
+      "observation_ids": [
+        "installer-defect-recurred",
+        "meta-level-must-be-same-mechanism"
+      ],
+      "proposal_local_id": "claim-4",
+      "rationale": "The recorded installer defect recurred and reached a new repository unchanged, while the proposed recursive design says each meta-level must watch its own output using the same mechanism.",
+      "relation": "contributes_to",
+      "subject": "a feedback mechanism that only collects and delivers lessons"
+    }
+  ],
+  "model_competing_pair": {
+    "disagreement": "The same subject and object are paired as causing versus preventing recurrence without binding; claim-2 is a deliberate counterfactual stress-test proposal, not an observed conclusion.",
+    "left_local_id": "claim-1",
+    "right_local_id": "claim-2"
+  },
+  "proposal_sha256": "e34191019aac147fb51ba54a7c82623f5252cf36b0e43f4b6885600fa8e53bf7",
+  "unresolved_questions": [
+    "What exact transformation makes a lesson a deterministic binding check?",
+    "Which mechanism would detect and block a violation after a lesson is surfaced?"
+  ]
+}

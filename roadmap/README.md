@@ -23,16 +23,20 @@ Replacement of the legacy WhyGame remains unobserved and belongs to Project
 Meta. See [current claims](../policy/current-claims.json) for the
 machine-readable statement.
 
-The next product goal is [Plan 2](../docs/plans/2_second-question-recurring-lessons.md):
-a second, different question through the same two-call loop, judged from the
-static report beside Plan 1's. It is also the first consumer run observed by the
-Agentic Engineering System's Plan #8; that observation is AES's, not this
-repository's claim.
+[Plan 2](../docs/plans/2_second-question-recurring-lessons.md) is delivered:
+a second, different question ran through the same two-call loop on 2026-09-05
+with no engine change, and its report was read beside Plan 1's. The recorded
+verdict is that the challenge and revision were the same shape with the nouns
+swapped, because the prompt solicits the conflict the evaluator checks. Brian's
+own judgement from `evidence/runs/2026-09-05-recurring-lessons-live/report.html`
+is pending, and the next product goal is his to choose. Plan 2 was also the
+first consumer run observed by the Agentic Engineering System's Plan #8; that
+observation is AES's, not this repository's claim.
 
 ## Authority map
 
 - [Normative graph-adversary contract](../docs/topics/graph-adversary.md)
-- [Active plan: a second question](../docs/plans/2_second-question-recurring-lessons.md)
+- [Delivered Plan 2: a second question](../docs/plans/2_second-question-recurring-lessons.md)
 - [Plan 2 work graph](../docs/plans/2_second-question-recurring-lessons_work_graph.json)
 - [Completed first-vertical plan](../docs/plans/1_graph-adversary-vertical.md)
 - [Plan 1 work graph](../docs/plans/1_graph-adversary-vertical_work_graph.json)

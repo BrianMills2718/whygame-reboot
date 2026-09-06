@@ -4,9 +4,13 @@ Repository-local plans own target-repository work claims and implementation.
 Project Meta Plan 246 owns portfolio status and promotion. A local accepted unit
 does not independently advance the upstream portfolio unit.
 
-Active plan: [Plan 2 a second question through the graph adversary](2_second-question-recurring-lessons.md)
-— approved by Brian 2026-09-05 (packet and two-call spend); ready for an
-implementing agent to run from this page alone.
+Active plan: none. The next product goal is Brian's to choose after judging
+Plan 2's report.
+
+Delivered, awaiting Brian's judgement: [Plan 2 a second question through the
+graph adversary](2_second-question-recurring-lessons.md) — run observed
+2026-09-05; the report and comparison live under
+`evidence/runs/2026-09-05-recurring-lessons-live/`.
 
 Machine work graph: [Plan 2 work graph](2_second-question-recurring-lessons_work_graph.json).
 
