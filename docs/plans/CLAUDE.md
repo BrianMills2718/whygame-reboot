@@ -4,13 +4,15 @@ Repository-local plans own target-repository work claims and implementation.
 Project Meta Plan 246 owns portfolio status and promotion. A local accepted unit
 does not independently advance the upstream portfolio unit.
 
-Active plan: none. The next product goal is Brian's to choose after judging
-Plan 2's report.
+Active plan: none. Brian's judgement on Plan 2 is recorded; WhyGame's own next
+product goal is undecided and not currently on any critical path.
 
-Delivered, awaiting Brian's judgement: [Plan 2 a second question through the
-graph adversary](2_second-question-recurring-lessons.md) — run observed
-2026-09-05; the report and comparison live under
-`evidence/runs/2026-09-05-recurring-lessons-live/`.
+Complete: [Plan 2 a second question through the graph adversary](2_second-question-recurring-lessons.md)
+— run observed 2026-09-05; report and comparison under
+`evidence/runs/2026-09-05-recurring-lessons-live/`. Brian's judgement (recorded
+2026-09-07): accepted as diagnostic evidence for AES's own loop, not a WhyGame
+product decision — the challenge/revision shape is prescribed by the prompts,
+not discovered by the model, on both runs to date.
 
 Machine work graph: [Plan 2 work graph](2_second-question-recurring-lessons_work_graph.json).
 

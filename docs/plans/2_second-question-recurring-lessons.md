@@ -1,13 +1,13 @@
 # Plan #2: A second question through the graph adversary
 
-**Status:** Delivered — run observed 2026-09-05; Brian's judgement from the
-report is still pending
-**Status ID:** delivered
+**Status:** Complete — run observed 2026-09-05; Brian's judgement recorded
+2026-09-07 (accepted as AES diagnostic; no WhyGame product action follows)
+**Status ID:** complete
 **Type:** standard product vertical
 **Priority:** High
-**Blocked By:** Nothing. Delivered; only Brian's judgement remains.
+**Blocked By:** Nothing. Complete.
 **Created:** 2026-09-05
-**Updated:** 2026-09-05 (delivered)
+**Updated:** 2026-09-07 (Brian's judgement recorded)
 `trace_evaluable: true`
 
 ## Authority and handoff
@@ -195,4 +195,15 @@ token; the run then used the default profile root as an explicit
 client's identity function proved both profiles carry the account digest Plan
 1 retained. The "inferred, not proven" profile note above is now proven.
 
-**Brian's judgement:** pending. When given, record it here.
+**Brian's judgement (2026-09-07):** Accepted as diagnostic evidence for the AES
+loop, not as a product decision about WhyGame. The run itself is real (two
+authentic model calls, correctly recorded, replayable) and the report's own
+comparison to Plan 1 is correct: the challenge-and-revision shape (plant a
+`causes`/`prevents` pair, retain the first, soften the second into
+`contributes_to`) is prescribed by the proposal and revision prompts, not
+discovered by the model, and both runs took that same shape on different
+questions. That is noted and explicitly not treated as a blocker or a call to
+fix WhyGame's evaluator now — it does not change AES's own outcome from this
+cycle, which already landed independently (`AES-INV-004`). WhyGame's own next
+product goal (e.g. an evaluator that can find its own conflicts rather than a
+planted one) is deferred, undecided, and off AES's critical path.
