@@ -54,8 +54,35 @@ def test_local_work_unit_lifecycle_is_bound_to_upstream() -> None:
 
 
 def test_cross_project_dependencies_are_revision_pinned() -> None:
-    project = tomllib.loads((ROOT / "pyproject.toml").read_text())["project"]
+    manifest = tomllib.loads((ROOT / "pyproject.toml").read_text())
+    project = manifest["project"]
     dependencies = "\n".join(project["dependencies"])
-    governance = "\n".join(project["optional-dependencies"]["governance"])
+    dev = "\n".join(manifest["dependency-groups"]["dev"])
     assert "llm_client.git@c171d542658402f7de4d99a2d3f3bf085b7b3c00" in dependencies
-    assert "agentic-engineering-system.git@ce866efd2855318570034a39343dace73f243352" in governance
+    assert (
+        "agentic-engineering-system.git@"
+        "11507833b71af1d5331d3085723555bf24537541" in dev
+    )
+
+
+def test_aes_is_installed_by_a_plain_sync_not_an_opt_in_extra() -> None:
+    """AES must sit where `uv sync` with no flags will install it.
+
+    It sat in an optional `governance` extra instead, from the day it was first
+    pinned. Nothing named that extra, so on 2026-09-06 the live virtualenvs of
+    all three repositories pinning AES held no `aes` package: the pin was real
+    and the controls were absent. `dependency-groups.dev` is installed by
+    default, so a developer checkout gets them without remembering a flag.
+    """
+    manifest = tomllib.loads((ROOT / "pyproject.toml").read_text())
+    extras = manifest["project"].get("optional-dependencies", {})
+    for name, requirements in extras.items():
+        for requirement in requirements:
+            assert "agentic-engineering-system" not in requirement, (
+                f"AES is back in the optional `{name}` extra; a plain "
+                "`uv sync` will not install it and the controls stop arriving"
+            )
+    assert any(
+        "agentic-engineering-system" in requirement
+        for requirement in manifest["dependency-groups"]["dev"]
+    )
