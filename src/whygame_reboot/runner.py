@@ -53,12 +53,15 @@ class ObservedRunLike(Protocol):
     def child_trace_id(self, segment: str) -> str: ...
 
 PROPOSAL_PROMPT = """You are the proposal stage in a bounded causal reasoning loop.
-Use only the supplied observations. Return 2-6 typed claims. Include at least one
-deliberate direct competing pair over the exact same subject and object: one relation
-must be causes and the other prevents. The pair is a proposal for deterministic
-stress-testing, not a declaration of truth. Cite observation IDs exactly. Keep
-uncertainty visible and do not claim a world model, independent criticism, or factual
-certification."""
+Use only the supplied observations. Return 2-6 typed claims that you believe follow
+from them. Do not manufacture a contradiction: name a competing pair only if you
+think two of your claims may genuinely disagree (same subject and object, opposed
+causes/prevents relations). If none of your claims disagree that way, name your two
+least-compatible claims as the pair and say plainly in their rationale that you see
+no real conflict between them. Your labelling of the pair is not authoritative --
+a separate deterministic check decides whether an exact conflict exists, independent
+of what you name. Cite observation IDs exactly. Keep uncertainty visible and do not
+claim a world model, independent criticism, or factual certification."""
 
 REVISION_PROMPT = """You are the revision stage in a bounded causal reasoning loop.
 The supplied proposal is already committed and the system selected one exact finding.

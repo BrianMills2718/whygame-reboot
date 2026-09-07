@@ -1,0 +1,73 @@
+{
+  "active_projection": null,
+  "config_sha256": "e640aea5daee8995795056706e168dfb4976bb412d2a8a1d3d94b90ee50ae33b",
+  "finding": null,
+  "input_sha256": "333dc81c653282dc7098615b06daeae8f1204ddea4bfb8069e6135c68ff8fb0c",
+  "issues": [
+    "ThreadRunError: You've hit your usage limit. Visit https://chatgpt.com/codex/settings/usage to purchase more credits or try again at Sep 8th, 2026 8:03 AM."
+  ],
+  "observations": [
+    {
+      "id": "repeats-recorded-not-bound",
+      "source_ref": "agentic-engineering-system:docs/designs/RECURSIVE_FEEDBACK_2026-09-05.md#the-evidence-this-was-written-from",
+      "source_revision": "e7ca726df3cacf31b8671f96672e52200031bf66",
+      "text": "Of 1,321 entries in the learnings register, 638 describe themselves as a repeat of something already recorded, and zero have been promoted into a check that binds."
+    },
+    {
+      "id": "delivered-then-violated",
+      "source_ref": "agentic-engineering-system:docs/designs/RECURSIVE_FEEDBACK_2026-09-05.md#the-evidence-this-was-written-from",
+      "source_revision": "e7ca726df3cacf31b8671f96672e52200031bf66",
+      "text": "A lesson recorded at 21:58 was surfaced at the top of a later turn by the recall mechanism, and the agent receiving it committed that exact failure inside the same turn. The loop collects and delivers; it does not bind."
+    },
+    {
+      "id": "recurrence-is-not-mechanisability",
+      "source_ref": "agentic-engineering-system:docs/designs/RECURSIVE_FEEDBACK_2026-09-05.md#two-signals-not-one",
+      "source_revision": "e7ca726df3cacf31b8671f96672e52200031bf66",
+      "text": "Recurring lessons are not more mechanisable than average: 35 percent of repeats name something runnable against 30 percent of non-repeats. Recurrence tells you what a failure costs, not whether it can be automated."
+    },
+    {
+      "id": "promotion-machinery-unfed",
+      "source_ref": "agentic-engineering-system:docs/designs/RECURSIVE_FEEDBACK_2026-09-05.md#the-evidence-this-was-written-from",
+      "source_revision": "e7ca726df3cacf31b8671f96672e52200031bf66",
+      "text": "The promotion machinery that would turn a stable finding into a deterministic check exists, and its input has never been produced."
+    },
+    {
+      "id": "installer-defect-recurred",
+      "source_ref": "agentic-engineering-system:docs/AUDITS.md#audit-at-aa5f76a",
+      "source_revision": "e7ca726df3cacf31b8671f96672e52200031bf66",
+      "text": "An installer defect that writes byte-identical duplicate scripts into every governed repository was recorded twice on 2026-08-21, and a new governed repository received it unchanged eight days later."
+    },
+    {
+      "id": "meta-level-must-be-same-mechanism",
+      "source_ref": "agentic-engineering-system:docs/designs/RECURSIVE_FEEDBACK_2026-09-05.md#the-insight",
+      "source_revision": "e7ca726df3cacf31b8671f96672e52200031bf66",
+      "text": "A feedback mechanism that watches work needs something watching it, and the regress is affordable only when each meta-level is the same mechanism applied to its own output rather than a new system built to supervise the old one."
+    }
+  ],
+  "outer_runs": [
+    {
+      "config_sha256": "sha256:e640aea5daee8995795056706e168dfb4976bb412d2a8a1d3d94b90ee50ae33b",
+      "error_phase": "proposal_and_revision",
+      "error_type": "_TerminalRunError",
+      "linked_call_count": 1,
+      "max_budget": 0.5,
+      "reasoning_effort": "medium",
+      "requested_model": "codex/gpt-5.6-luna",
+      "root_trace_id": "whygame-reboot:931e43f3c864245f:7f09824b7dee4ad58042d71a6e4c0030",
+      "run_id": "whygame-reboot-attempt-7f09824b7dee4ad58042d71a6e4c0030",
+      "runtime_revision": "33c81eaed6837725b214ab0481b8af2e55ae7540",
+      "status": "failed_after_call_start"
+    }
+  ],
+  "producer_revision": "33c81eaed6837725b214ab0481b8af2e55ae7540",
+  "proposal": null,
+  "question": "Why do recorded lessons in an agentic engineering system recur without ever binding?",
+  "receipts": [],
+  "report_sha256": "756809d56c7db27b4332e6be7bdd6e9877876119e8e8a30909f29d7024af194c",
+  "resumed_stages": [],
+  "revision_events": [],
+  "revision_plan": null,
+  "run_id": "whygame-reboot/plan3-organic-recurring-lessons",
+  "schema_version": "1.0",
+  "status": "error"
+}

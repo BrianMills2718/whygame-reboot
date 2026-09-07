@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WhyGame · Graph-adversary result</title>
+  <style>
+    :root { color-scheme: light; --ink:#17211b; --muted:#607067; --paper:#f4f1e8;
+      --panel:#fffdf7; --line:#d7d2c4; --green:#246b4b; --red:#a43f35;
+      --amber:#a46618; --blue:#315f78; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--paper); color:var(--ink); font:16px/1.55
+      ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    main { width:min(1100px,calc(100% - 32px)); margin:32px auto 72px; }
+    header,.panel { background:var(--panel); border:1px solid var(--line); border-radius:18px; }
+    header { padding:clamp(24px,5vw,56px); box-shadow:0 18px 50px #372e1b12; }
+    .eyebrow { color:var(--green); font-size:.75rem; font-weight:800; letter-spacing:.12em;
+      text-transform:uppercase; }
+    h1 { margin:.35rem 0 .75rem; font:700 clamp(2rem,5vw,4.4rem)/1.02 Georgia,serif;
+      max-width:16ch; }
+    h2 { margin:0 0 1rem; font:700 1.55rem/1.2 Georgia,serif; }
+    h3 { font-size:.86rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
+    .answer { max-width:78ch; font-size:1.15rem; }
+    .status { display:inline-flex; margin-top:1rem; padding:.35rem .7rem; border-radius:99px;
+      color:white; background:var(--red); font-weight:750; }
+    .grid { display:grid; grid-template-columns:minmax(0,1.5fr) minmax(260px,.7fr); gap:18px;
+      margin-top:18px; }
+    .panel { padding:24px; min-width:0; }
+    .timeline { list-style:none; padding:0; margin:0; }
+    .stage { display:grid; grid-template-columns:18px 1fr; gap:10px; padding:0 0 15px; }
+    .stage p { margin:.15rem 0 0; color:var(--muted); font-size:.9rem; }
+    .dot { width:11px; height:11px; margin-top:6px; border-radius:50%; background:var(--line); }
+    .complete .dot { background:var(--green); box-shadow:0 0 0 4px #246b4b18; }
+    .claims { display:grid; gap:12px; }
+    .claim { border:1px solid var(--line); border-left:5px solid var(--blue); padding:16px;
+      border-radius:12px; background:white; }
+    .claim.superseded { border-left-color:var(--red); opacity:.72; }
+    .claim.replacement { border-left-color:var(--green); }
+    .claim-meta { display:flex; justify-content:space-between; gap:12px; color:var(--muted);
+      font-size:.76rem; text-transform:uppercase; letter-spacing:.07em; }
+    .edge { display:flex; flex-wrap:wrap; align-items:center; gap:8px; font-size:1.04rem; }
+    .relation { color:var(--blue); background:#315f7812; padding:.2rem .5rem; border-radius:6px; }
+    .evidence,small { display:block; color:var(--muted); font-size:.82rem; }
+    .finding { border:1px solid #a43f3544; background:#fff4f1; border-radius:12px; padding:18px; }
+    .versus { padding:0 .55rem; color:var(--red); font-weight:700; }
+    code { overflow-wrap:anywhere; font-size:.82em; }
+    .observations li,.decisions li,.issues li,.uncertainty li { margin:.65rem 0; }
+    .decisions p { margin:.2rem 0 .8rem; }
+    .table-wrap { overflow-x:auto; }
+    table { width:100%; border-collapse:collapse; font-size:.88rem; }
+    th,td { border-bottom:1px solid var(--line); padding:9px 7px; text-align:left; }
+    .nonclaim { color:var(--muted); border-left:3px solid var(--amber); padding-left:14px; }
+    @media (max-width:760px) { main { width:min(100% - 20px,1100px); margin-top:10px; }
+      .grid { grid-template-columns:1fr; } header,.panel { border-radius:12px; }
+      .claim-meta { display:block; } }
+  </style>
+</head>
+<body><main>
+  <header>
+    <span class="eyebrow">WhyGame · graph as adversary</span>
+    <h1>Why do recorded lessons in an agentic engineering system recur without ever binding?</h1>
+    <p class="answer">Why do recorded lessons in an agentic engineering system recur without ever binding?</p>
+    <span class="status">error</span>
+  </header>
+  <div class="grid">
+    <section class="panel"><h2>What the loop did</h2><ol class="timeline"><li class="stage complete"><span class="dot"></span><div><strong>Plan</strong><p>Question and observations are revision-bound.</p></div></li><li class="stage pending"><span class="dot"></span><div><strong>Execute</strong><p>Luna proposed typed causal claims.</p></div></li><li class="stage pending"><span class="dot"></span><div><strong>Observe</strong><p>The system selected an exact conflict.</p></div></li><li class="stage pending"><span class="dot"></span><div><strong>Evaluate</strong><p>Feedback became a digest-bound plan.</p></div></li><li class="stage pending"><span class="dot"></span><div><strong>Replan + apply</strong><p>Append-only replay changed active state.</p></div></li></ol></section>
+    <aside class="panel"><h2>Run identity</h2><p><code>whygame-reboot/plan3-organic-recurring-lessons</code></p>
+      <p class="evidence">Source 33c81eaed6837725b214ab0481b8af2e55ae7540<br>Input 333dc81c653282dc…
+      <br>Config e640aea5daee8995…</p></aside>
+    <section class="panel"><h2>1. Committed proposal</h2><div class="claims"></div></section>
+    <section class="panel"><h2>2. Selected challenge</h2><p class=empty>No deterministic finding was committed.</p></section>
+    <section class="panel"><h2>3. Applied revision</h2><ol class="decisions"></ol></section>
+    <section class="panel"><h2>4. Active explanation</h2><div class="claims"></div></section>
+    <section class="panel"><h2>Source observations</h2><ol class="observations"><li><strong>repeats-recorded-not-bound</strong> — Of 1,321 entries in the learnings register, 638 describe themselves as a repeat of something already recorded, and zero have been promoted into a check that binds.
+        <small>agentic-engineering-system:docs/designs/RECURSIVE_FEEDBACK_2026-09-05.md#the-evidence-this-was-written-from @ e7ca726df3cacf31b8671f96672e52200031bf66</small></li><li><strong>delivered-then-violated</strong> — A lesson recorded at 21:58 was surfaced at the top of a later turn by the recall mechanism, and the agent receiving it committed that exact failure inside the same turn. The loop collects and delivers; it does not bind.
+        <small>agentic-engineering-system:docs/designs/RECURSIVE_FEEDBACK_2026-09-05.md#the-evidence-this-was-written-from @ e7ca726df3cacf31b8671f96672e52200031bf66</small></li><li><strong>recurrence-is-not-mechanisability</strong> — Recurring lessons are not more mechanisable than average: 35 percent of repeats name something runnable against 30 percent of non-repeats. Recurrence tells you what a failure costs, not whether it can be automated.
+        <small>agentic-engineering-system:docs/designs/RECURSIVE_FEEDBACK_2026-09-05.md#two-signals-not-one @ e7ca726df3cacf31b8671f96672e52200031bf66</small></li><li><strong>promotion-machinery-unfed</strong> — The promotion machinery that would turn a stable finding into a deterministic check exists, and its input has never been produced.
+        <small>agentic-engineering-system:docs/designs/RECURSIVE_FEEDBACK_2026-09-05.md#the-evidence-this-was-written-from @ e7ca726df3cacf31b8671f96672e52200031bf66</small></li><li><strong>installer-defect-recurred</strong> — An installer defect that writes byte-identical duplicate scripts into every governed repository was recorded twice on 2026-08-21, and a new governed repository received it unchanged eight days later.
+        <small>agentic-engineering-system:docs/AUDITS.md#audit-at-aa5f76a @ e7ca726df3cacf31b8671f96672e52200031bf66</small></li><li><strong>meta-level-must-be-same-mechanism</strong> — A feedback mechanism that watches work needs something watching it, and the regress is affordable only when each meta-level is the same mechanism applied to its own output rather than a new system built to supervise the old one.
+        <small>agentic-engineering-system:docs/designs/RECURSIVE_FEEDBACK_2026-09-05.md#the-insight @ e7ca726df3cacf31b8671f96672e52200031bf66</small></li></ol></section>
+    <section class="panel"><h2>Unresolved uncertainty</h2><ul class="uncertainty"></ul></section>
+    <section class="panel"><h2>Execution receipts</h2><div class="table-wrap"><table>
+      <thead><tr><th>Stage</th><th>Model</th><th>Tokens</th><th>Latency</th><th>Cost</th><th>Retries</th><th>Fallback</th></tr></thead>
+      <tbody></tbody></table></div></section>
+    <section class="panel"><h2>Issues / stopped state</h2><ul class="issues"><li>ThreadRunError: You&#x27;ve hit your usage limit. Visit https://chatgpt.com/codex/settings/usage to purchase more credits or try again at Sep 8th, 2026 8:03 AM.</li></ul>
+      <p class="nonclaim">This report shows a bounded model proposal challenged by a deterministic rule.
+      It does not certify truth, a world model, independent criticism, or general contradiction detection.</p></section>
+  </div>
+</main></body></html>

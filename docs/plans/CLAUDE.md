@@ -4,8 +4,10 @@ Repository-local plans own target-repository work claims and implementation.
 Project Meta Plan 246 owns portfolio status and promotion. A local accepted unit
 does not independently advance the upstream portfolio unit.
 
-Active plan: none. Brian's judgement on Plan 2 is recorded; WhyGame's own next
-product goal is undecided and not currently on any critical path.
+Active plan: [Plan 3 organic conflict check](3_organic-conflict-check.md) — an
+AES diagnostic slice, not a WhyGame product commitment. Code change and unit
+tests done; live diagnostic run blocked on a ChatGPT/Codex account usage
+limit, retry after 2026-09-08 08:03.
 
 Complete: [Plan 2 a second question through the graph adversary](2_second-question-recurring-lessons.md)
 — run observed 2026-09-05; report and comparison under
