@@ -61,7 +61,7 @@ def test_cross_project_dependencies_are_revision_pinned() -> None:
     assert "llm_client.git@c171d542658402f7de4d99a2d3f3bf085b7b3c00" in dependencies
     assert (
         "agentic-engineering-system.git@"
-        "11507833b71af1d5331d3085723555bf24537541" in dev
+        "089bc6a57baee6f4d949cc2abe0dfef22ad62b18" in dev
     )
 
 

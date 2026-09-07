@@ -5,7 +5,7 @@ requires-python = ">=3.11"
 [[package]]
 name = "agentic-engineering-system"
 version = "0.2.0.dev0"
-source = { git = "https://github.com/BrianMills2718/agentic-engineering-system.git?rev=11507833b71af1d5331d3085723555bf24537541#11507833b71af1d5331d3085723555bf24537541" }
+source = { git = "https://github.com/BrianMills2718/agentic-engineering-system.git?rev=089bc6a57baee6f4d949cc2abe0dfef22ad62b18#089bc6a57baee6f4d949cc2abe0dfef22ad62b18" }
 dependencies = [
     { name = "pydantic" },
     { name = "pyyaml" },
@@ -2029,7 +2029,7 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "agentic-engineering-system", git = "https://github.com/BrianMills2718/agentic-engineering-system.git?rev=11507833b71af1d5331d3085723555bf24537541" },
+    { name = "agentic-engineering-system", git = "https://github.com/BrianMills2718/agentic-engineering-system.git?rev=089bc6a57baee6f4d949cc2abe0dfef22ad62b18" },
     { name = "pytest", specifier = ">=8.4,<9" },
     { name = "ruff", specifier = ">=0.12,<1" },
 ]
