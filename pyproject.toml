@@ -14,11 +14,6 @@ dependencies = [
   "pyyaml>=6.0,<7",
 ]
 
-[project.optional-dependencies]
-governance = [
-  "agentic-engineering-system @ git+https://github.com/BrianMills2718/agentic-engineering-system.git@ce866efd2855318570034a39343dace73f243352",
-]
-
 [project.scripts]
 whygame-reboot = "whygame_reboot.cli:main"
 
@@ -26,6 +21,16 @@ whygame-reboot = "whygame_reboot.cli:main"
 dev = [
   "pytest>=8.4,<9",
   "ruff>=0.12,<1",
+  # AES sat in an optional `governance` extra from the day it was first pinned.
+  # Nothing named that extra -- not this repository's pre-commit hook, not a
+  # Makefile, not CI -- so `uv sync` never installed it, and on 2026-09-06 the
+  # live virtualenvs of all three repositories that pin AES contained no `aes`
+  # package at all. A pin that nothing installs is not adoption; the controls
+  # were unreachable here for the entire time this repository claimed to use
+  # them. `dev` is the right home: `uv sync` installs it by default, so a
+  # developer checkout gets the controls, while `pip install whygame-reboot`
+  # still does not drag a governance system into a product install.
+  "agentic-engineering-system @ git+https://github.com/BrianMills2718/agentic-engineering-system.git@11507833b71af1d5331d3085723555bf24537541",
 ]
 
 [tool.hatch.build.targets.wheel]
