@@ -1,0 +1,312 @@
+{
+  "active_projection": {
+    "active_claims": [
+      {
+        "claim_id": "claim-1b95ac8e623e48a8",
+        "confidence": "provisional",
+        "content_sha256": "1b95ac8e623e48a83fc8eb2095887f199a1a5940f7b881a0d932f5ace28ea1e0",
+        "normalized_object": "drift away from the complete product mission",
+        "normalized_subject": "treating sequencing constraints as scope authorization",
+        "object": "drift away from the complete product mission",
+        "observation_ids": [
+          "sequencing-not-scope"
+        ],
+        "proposal_local_id": "claim-3",
+        "rationale": "The observation explicitly distinguishes avoiding speculative infrastructure from permission to narrow the complete mission, suggesting that conflating them can produce mission loss.",
+        "relation": "causes",
+        "subject": "Treating sequencing constraints as scope authorization"
+      },
+      {
+        "claim_id": "claim-1d3a5eb977113f40",
+        "confidence": "contested",
+        "content_sha256": "1d3a5eb977113f4037a2d8ac0262545905d1190fed10f0d6f61fe08ad20b0f97",
+        "normalized_object": "drift away from the complete product mission",
+        "normalized_subject": "relationship checks protecting the registered policy admission island",
+        "object": "drift away from the complete product mission",
+        "observation_ids": [
+          "registered-island"
+        ],
+        "proposal_local_id": "claim-2a",
+        "rationale": "If checks protect only registered intent, unregistered mission intent can remain outside the evidence that appears green; this is a deliberate causal stress-test proposal.",
+        "relation": "causes",
+        "subject": "Relationship checks protecting the registered policy-admission island"
+      },
+      {
+        "claim_id": "claim-994cabb98a400542",
+        "confidence": "provisional",
+        "content_sha256": "994cabb98a400542afdb403c1258b87cef3c6f8f01ec09f651e2a37aaffc42e7",
+        "normalized_object": "drift away from the complete product mission",
+        "normalized_subject": "relationship checks protecting the registered policy admission island",
+        "object": "drift away from the complete product mission",
+        "observation_ids": [
+          "registered-island"
+        ],
+        "proposal_local_id": "revision:claim-6e0564ec80f3aad4",
+        "rationale": "By validating only registered intent, the checks can contribute to mission drift when complete mission intent is not registered; the observation does not establish universal prevention or direct causation.",
+        "relation": "contributes_to",
+        "subject": "Relationship checks protecting the registered policy-admission island"
+      },
+      {
+        "claim_id": "claim-b2125473c6161a12",
+        "confidence": "provisional",
+        "content_sha256": "b2125473c6161a1265f81429894517389c4ead9188c83671c876316d16b6fe3c",
+        "normalized_object": "drift away from the complete product mission",
+        "normalized_subject": "a deliberately narrow gate 1 implementation boundary",
+        "object": "drift away from the complete product mission",
+        "observation_ids": [
+          "gate-became-identity",
+          "green-but-incomplete"
+        ],
+        "proposal_local_id": "claim-1",
+        "rationale": "When the boundary became the repository\u2019s product identity, the documentation remained coherent and green while omitting the complete outcome.",
+        "relation": "causes",
+        "subject": "A deliberately narrow Gate 1 implementation boundary"
+      }
+    ],
+    "projection_sha256": "e58f9357084733dc184319142c9f1ceebec7bda1cb8c491b3d654e8ac58e4b79",
+    "superseded_claim_ids": [
+      "claim-6e0564ec80f3aad4"
+    ]
+  },
+  "config_sha256": "e640aea5daee8995795056706e168dfb4976bb412d2a8a1d3d94b90ee50ae33b",
+  "finding": {
+    "explanation": "The committed claims use the same normalized subject and object but make opposed direct causal assertions (causes versus prevents).",
+    "finding_id": "finding-157be3c4e9700ce5",
+    "finding_sha256": "157be3c4e9700ce5ea39502fb91a73ac8af82346d7c049f5cd0fc0e37f539531",
+    "kind": "direct_causal_conflict",
+    "left_claim_id": "claim-1d3a5eb977113f40",
+    "proposal_sha256": "0e5435c4d50378e2c6468cfa775d2ecf696d6fda037c6c2e347e6784c40bd82e",
+    "right_claim_id": "claim-6e0564ec80f3aad4"
+  },
+  "input_sha256": "0cdcf8202f4224591a03c4953ec7cad5e8e9d5d94bebe4e227f4ab0a082ee80c",
+  "issues": [],
+  "observations": [
+    {
+      "id": "gate-became-identity",
+      "source_ref": "docs/decisions/0003-full-product-mission-and-documentation-dogfood.md#context",
+      "source_revision": "ce866efd2855318570034a39343dace73f243352",
+      "text": "A deliberately narrow Gate 1 implementation boundary became the repository's product identity during an authority migration."
+    },
+    {
+      "id": "green-but-incomplete",
+      "source_ref": "docs/decisions/0003-full-product-mission-and-documentation-dogfood.md#context",
+      "source_revision": "ce866efd2855318570034a39343dace73f243352",
+      "text": "The resulting documentation was internally coherent and mechanically green while omitting the complete product outcome."
+    },
+    {
+      "id": "registered-island",
+      "source_ref": "docs/decisions/0003-full-product-mission-and-documentation-dogfood.md#context",
+      "source_revision": "ce866efd2855318570034a39343dace73f243352",
+      "text": "Relationship checks protected only the registered policy-admission island, so unregistered mission intent was outside the green checks."
+    },
+    {
+      "id": "sequencing-not-scope",
+      "source_ref": "docs/decisions/0003-full-product-mission-and-documentation-dogfood.md#what-no-speculative-universal-platform-means",
+      "source_revision": "ce866efd2855318570034a39343dace73f243352",
+      "text": "Avoiding speculative universal infrastructure is a sequencing constraint, not authorization to narrow the complete product mission."
+    }
+  ],
+  "outer_runs": [
+    {
+      "config_sha256": "sha256:e640aea5daee8995795056706e168dfb4976bb412d2a8a1d3d94b90ee50ae33b",
+      "error_phase": null,
+      "error_type": null,
+      "linked_call_count": 2,
+      "max_budget": 0.5,
+      "reasoning_effort": "medium",
+      "requested_model": "codex/gpt-5.6-luna",
+      "root_trace_id": "whygame-reboot:5bf56da304563bab:bbc4f2532d274c3993f8c2a43569da41",
+      "run_id": "whygame-reboot-attempt-bbc4f2532d274c3993f8c2a43569da41",
+      "runtime_revision": "2d8065f57477f81640fb4d77373c04adf0507477",
+      "status": "completed"
+    }
+  ],
+  "producer_revision": "2d8065f57477f81640fb4d77373c04adf0507477",
+  "proposal": {
+    "answer": "The observations support a bounded proposal: drift can occur when a narrow implementation boundary becomes the system\u2019s identity, while green checks cover only a registered subset of mission intent. The competing pair below is deliberate stress-testing, not a truth claim.",
+    "claims": [
+      {
+        "claim_id": "claim-b2125473c6161a12",
+        "confidence": "provisional",
+        "content_sha256": "b2125473c6161a1265f81429894517389c4ead9188c83671c876316d16b6fe3c",
+        "normalized_object": "drift away from the complete product mission",
+        "normalized_subject": "a deliberately narrow gate 1 implementation boundary",
+        "object": "drift away from the complete product mission",
+        "observation_ids": [
+          "gate-became-identity",
+          "green-but-incomplete"
+        ],
+        "proposal_local_id": "claim-1",
+        "rationale": "When the boundary became the repository\u2019s product identity, the documentation remained coherent and green while omitting the complete outcome.",
+        "relation": "causes",
+        "subject": "A deliberately narrow Gate 1 implementation boundary"
+      },
+      {
+        "claim_id": "claim-1d3a5eb977113f40",
+        "confidence": "contested",
+        "content_sha256": "1d3a5eb977113f4037a2d8ac0262545905d1190fed10f0d6f61fe08ad20b0f97",
+        "normalized_object": "drift away from the complete product mission",
+        "normalized_subject": "relationship checks protecting the registered policy admission island",
+        "object": "drift away from the complete product mission",
+        "observation_ids": [
+          "registered-island"
+        ],
+        "proposal_local_id": "claim-2a",
+        "rationale": "If checks protect only registered intent, unregistered mission intent can remain outside the evidence that appears green; this is a deliberate causal stress-test proposal.",
+        "relation": "causes",
+        "subject": "Relationship checks protecting the registered policy-admission island"
+      },
+      {
+        "claim_id": "claim-6e0564ec80f3aad4",
+        "confidence": "contested",
+        "content_sha256": "6e0564ec80f3aad4bb39eaf2e27edb57bf0c8baa534edc1d051b3ef337c90b95",
+        "normalized_object": "drift away from the complete product mission",
+        "normalized_subject": "relationship checks protecting the registered policy admission island",
+        "object": "drift away from the complete product mission",
+        "observation_ids": [
+          "registered-island"
+        ],
+        "proposal_local_id": "claim-2b",
+        "rationale": "As a competing proposal, the checks may prevent drift within the intent they register, though the observation limits that protection and leaves unregistered mission intent uncovered.",
+        "relation": "prevents",
+        "subject": "Relationship checks protecting the registered policy-admission island"
+      },
+      {
+        "claim_id": "claim-1b95ac8e623e48a8",
+        "confidence": "provisional",
+        "content_sha256": "1b95ac8e623e48a83fc8eb2095887f199a1a5940f7b881a0d932f5ace28ea1e0",
+        "normalized_object": "drift away from the complete product mission",
+        "normalized_subject": "treating sequencing constraints as scope authorization",
+        "object": "drift away from the complete product mission",
+        "observation_ids": [
+          "sequencing-not-scope"
+        ],
+        "proposal_local_id": "claim-3",
+        "rationale": "The observation explicitly distinguishes avoiding speculative infrastructure from permission to narrow the complete mission, suggesting that conflating them can produce mission loss.",
+        "relation": "causes",
+        "subject": "Treating sequencing constraints as scope authorization"
+      }
+    ],
+    "model_competing_pair": {
+      "disagreement": "Whether protecting only the registered policy-admission island contributes to mission drift or prevents it.",
+      "left_local_id": "claim-2a",
+      "right_local_id": "claim-2b"
+    },
+    "proposal_sha256": "0e5435c4d50378e2c6468cfa775d2ecf696d6fda037c6c2e347e6784c40bd82e",
+    "unresolved_questions": [
+      "What mechanism should ensure complete mission intent is registered before relationship checks can appear green?",
+      "How should the system distinguish sequencing limits from unauthorized scope reduction?"
+    ]
+  },
+  "question": "Why can an agentic engineering system designed to prevent drift drift away from its own mission?",
+  "receipts": [
+    {
+      "billing_mode": "subscription_included",
+      "completion_tokens": 846,
+      "cost_source": "subscription_included",
+      "cost_usd": 0.0,
+      "fallback_used": false,
+      "latency_s": 29.453,
+      "logical_call_id": "llmcall_e940247baa074f08bcc682874d79bfa0",
+      "prompt_tokens": 24970,
+      "reasoning_effort": "medium",
+      "request_fingerprint": "db5d4c6af0fb30e12d1fc483ce0e5e3c79956d4421cae2dacb618d55c0369476",
+      "requested_model": "codex/gpt-5.6-luna",
+      "resolved_model": "codex/gpt-5.6-luna",
+      "response_sha256": "c27313e34d172a01a4fabd765e8007a3410a273b6d10897aaee5c746ccee4733",
+      "retry_count": 0,
+      "total_tokens": 25816,
+      "trace_id": "whygame-reboot:5bf56da304563bab:bbc4f2532d274c3993f8c2a43569da41/proposal"
+    },
+    {
+      "billing_mode": "subscription_included",
+      "completion_tokens": 532,
+      "cost_source": "subscription_included",
+      "cost_usd": 0.0,
+      "fallback_used": false,
+      "latency_s": 21.965,
+      "logical_call_id": "llmcall_0cfd6dbeb3d04e979be3c6b0dc2d9bd6",
+      "prompt_tokens": 25486,
+      "reasoning_effort": "medium",
+      "request_fingerprint": "9f87fb85c328eef2eb3ffa9c3d2b300ce62733c9a3ce2f4d59b5232ecc111408",
+      "requested_model": "codex/gpt-5.6-luna",
+      "resolved_model": "codex/gpt-5.6-luna",
+      "response_sha256": "26fbb6910c4f11c0e072e9f5e35b041663aca3fd9d1586feb63df8047cf33a4f",
+      "retry_count": 0,
+      "total_tokens": 26018,
+      "trace_id": "whygame-reboot:5bf56da304563bab:bbc4f2532d274c3993f8c2a43569da41/revision"
+    }
+  ],
+  "report_sha256": "7c5f0ae680ea2486afc7fa963b34c7047471298d5fcb8564f59a6135b448fa82",
+  "resumed_stages": [],
+  "revision_events": [
+    {
+      "added_claims": [
+        {
+          "claim_id": "claim-994cabb98a400542",
+          "confidence": "provisional",
+          "content_sha256": "994cabb98a400542afdb403c1258b87cef3c6f8f01ec09f651e2a37aaffc42e7",
+          "normalized_object": "drift away from the complete product mission",
+          "normalized_subject": "relationship checks protecting the registered policy admission island",
+          "object": "drift away from the complete product mission",
+          "observation_ids": [
+            "registered-island"
+          ],
+          "proposal_local_id": "revision:claim-6e0564ec80f3aad4",
+          "rationale": "By validating only registered intent, the checks can contribute to mission drift when complete mission intent is not registered; the observation does not establish universal prevention or direct causation.",
+          "relation": "contributes_to",
+          "subject": "Relationship checks protecting the registered policy-admission island"
+        }
+      ],
+      "event_id": "event-1f8746186b1b972d",
+      "event_sha256": "1f8746186b1b972d34da86943e11f9c86b73f1036fb45e9f9ceb7f4c48cefcb1",
+      "finding_sha256": "157be3c4e9700ce5ea39502fb91a73ac8af82346d7c049f5cd0fc0e37f539531",
+      "plan_sha256": "8c9c5f8f4b0b2c6d369cb5e0f85ee382bd08b533d4e93cc87c1014d5f6624dd7",
+      "superseded_claim_ids": [
+        "claim-6e0564ec80f3aad4"
+      ]
+    }
+  ],
+  "revision_plan": {
+    "decisions": [
+      {
+        "action": "retain",
+        "rationale": "Retain the provisional causal stress-test that checks protecting only registered intent can leave unregistered mission intent outside the evidence that appears green.",
+        "replacement": null,
+        "target_claim_id": "claim-1d3a5eb977113f40"
+      },
+      {
+        "action": "supersede",
+        "rationale": "The observation does not support a direct prevention claim. It shows bounded protection of registered intent while unregistered mission intent remains outside the checks, so the claim should be qualified.",
+        "replacement": {
+          "claim_id": "claim-994cabb98a400542",
+          "confidence": "provisional",
+          "content_sha256": "994cabb98a400542afdb403c1258b87cef3c6f8f01ec09f651e2a37aaffc42e7",
+          "normalized_object": "drift away from the complete product mission",
+          "normalized_subject": "relationship checks protecting the registered policy admission island",
+          "object": "drift away from the complete product mission",
+          "observation_ids": [
+            "registered-island"
+          ],
+          "proposal_local_id": "revision:claim-6e0564ec80f3aad4",
+          "rationale": "By validating only registered intent, the checks can contribute to mission drift when complete mission intent is not registered; the observation does not establish universal prevention or direct causation.",
+          "relation": "contributes_to",
+          "subject": "Relationship checks protecting the registered policy-admission island"
+        },
+        "target_claim_id": "claim-6e0564ec80f3aad4"
+      }
+    ],
+    "finding_id": "finding-157be3c4e9700ce5",
+    "finding_sha256": "157be3c4e9700ce5ea39502fb91a73ac8af82346d7c049f5cd0fc0e37f539531",
+    "plan_sha256": "8c9c5f8f4b0b2c6d369cb5e0f85ee382bd08b533d4e93cc87c1014d5f6624dd7",
+    "proposal_sha256": "0e5435c4d50378e2c6468cfa775d2ecf696d6fda037c6c2e347e6784c40bd82e",
+    "revised_answer": "The observations support a bounded proposal that protecting only registered policy intent can contribute to mission drift by leaving unregistered intent outside green checks. The evidence does not establish that the checks directly cause or prevent drift in general; their effect is limited by what has been registered.",
+    "unresolved_questions": [
+      "What mechanism should ensure complete mission intent is registered before relationship checks can appear green?",
+      "How should the system distinguish sequencing limits from unauthorized scope reduction?"
+    ]
+  },
+  "run_id": "whygame-reboot/ui-live-195d685770e3",
+  "schema_version": "1.0",
+  "status": "accepted"
+}

@@ -1,0 +1,26 @@
+{
+  "added_claims": [
+    {
+      "claim_id": "claim-994cabb98a400542",
+      "confidence": "provisional",
+      "content_sha256": "994cabb98a400542afdb403c1258b87cef3c6f8f01ec09f651e2a37aaffc42e7",
+      "normalized_object": "drift away from the complete product mission",
+      "normalized_subject": "relationship checks protecting the registered policy admission island",
+      "object": "drift away from the complete product mission",
+      "observation_ids": [
+        "registered-island"
+      ],
+      "proposal_local_id": "revision:claim-6e0564ec80f3aad4",
+      "rationale": "By validating only registered intent, the checks can contribute to mission drift when complete mission intent is not registered; the observation does not establish universal prevention or direct causation.",
+      "relation": "contributes_to",
+      "subject": "Relationship checks protecting the registered policy-admission island"
+    }
+  ],
+  "event_id": "event-1f8746186b1b972d",
+  "event_sha256": "1f8746186b1b972d34da86943e11f9c86b73f1036fb45e9f9ceb7f4c48cefcb1",
+  "finding_sha256": "157be3c4e9700ce5ea39502fb91a73ac8af82346d7c049f5cd0fc0e37f539531",
+  "plan_sha256": "8c9c5f8f4b0b2c6d369cb5e0f85ee382bd08b533d4e93cc87c1014d5f6624dd7",
+  "superseded_claim_ids": [
+    "claim-6e0564ec80f3aad4"
+  ]
+}

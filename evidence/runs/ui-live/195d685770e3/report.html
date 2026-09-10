@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WhyGame · Graph-adversary result</title>
+  <style>
+    :root { color-scheme: light; --ink:#17211b; --muted:#607067; --paper:#f4f1e8;
+      --panel:#fffdf7; --line:#d7d2c4; --green:#246b4b; --red:#a43f35;
+      --amber:#a46618; --blue:#315f78; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--paper); color:var(--ink); font:16px/1.55
+      ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    main { width:min(1100px,calc(100% - 32px)); margin:32px auto 72px; }
+    header,.panel { background:var(--panel); border:1px solid var(--line); border-radius:18px; }
+    header { padding:clamp(24px,5vw,56px); box-shadow:0 18px 50px #372e1b12; }
+    .eyebrow { color:var(--green); font-size:.75rem; font-weight:800; letter-spacing:.12em;
+      text-transform:uppercase; }
+    h1 { margin:.35rem 0 .75rem; font:700 clamp(2rem,5vw,4.4rem)/1.02 Georgia,serif;
+      max-width:16ch; }
+    h2 { margin:0 0 1rem; font:700 1.55rem/1.2 Georgia,serif; }
+    h3 { font-size:.86rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
+    .answer { max-width:78ch; font-size:1.15rem; }
+    .status { display:inline-flex; margin-top:1rem; padding:.35rem .7rem; border-radius:99px;
+      color:white; background:var(--green); font-weight:750; }
+    .grid { display:grid; grid-template-columns:minmax(0,1.5fr) minmax(260px,.7fr); gap:18px;
+      margin-top:18px; }
+    .panel { padding:24px; min-width:0; }
+    .timeline { list-style:none; padding:0; margin:0; }
+    .stage { display:grid; grid-template-columns:18px 1fr; gap:10px; padding:0 0 15px; }
+    .stage p { margin:.15rem 0 0; color:var(--muted); font-size:.9rem; }
+    .dot { width:11px; height:11px; margin-top:6px; border-radius:50%; background:var(--line); }
+    .complete .dot { background:var(--green); box-shadow:0 0 0 4px #246b4b18; }
+    .claims { display:grid; gap:12px; }
+    .claim { border:1px solid var(--line); border-left:5px solid var(--blue); padding:16px;
+      border-radius:12px; background:white; }
+    .claim.superseded { border-left-color:var(--red); opacity:.72; }
+    .claim.replacement { border-left-color:var(--green); }
+    .claim-meta { display:flex; justify-content:space-between; gap:12px; color:var(--muted);
+      font-size:.76rem; text-transform:uppercase; letter-spacing:.07em; }
+    .edge { display:flex; flex-wrap:wrap; align-items:center; gap:8px; font-size:1.04rem; }
+    .relation { color:var(--blue); background:#315f7812; padding:.2rem .5rem; border-radius:6px; }
+    .evidence,small { display:block; color:var(--muted); font-size:.82rem; }
+    .finding { border:1px solid #a43f3544; background:#fff4f1; border-radius:12px; padding:18px; }
+    .versus { padding:0 .55rem; color:var(--red); font-weight:700; }
+    code { overflow-wrap:anywhere; font-size:.82em; }
+    .observations li,.decisions li,.issues li,.uncertainty li { margin:.65rem 0; }
+    .decisions p { margin:.2rem 0 .8rem; }
+    .table-wrap { overflow-x:auto; }
+    table { width:100%; border-collapse:collapse; font-size:.88rem; }
+    th,td { border-bottom:1px solid var(--line); padding:9px 7px; text-align:left; }
+    .nonclaim { color:var(--muted); border-left:3px solid var(--amber); padding-left:14px; }
+    @media (max-width:760px) { main { width:min(100% - 20px,1100px); margin-top:10px; }
+      .grid { grid-template-columns:1fr; } header,.panel { border-radius:12px; }
+      .claim-meta { display:block; } }
+  </style>
+</head>
+<body><main>
+  <header>
+    <span class="eyebrow">WhyGame · graph as adversary</span>
+    <h1>Why can an agentic engineering system designed to prevent drift drift away from its own mission?</h1>
+    <p class="answer">The observations support a bounded proposal that protecting only registered policy intent can contribute to mission drift by leaving unregistered intent outside green checks. The evidence does not establish that the checks directly cause or prevent drift in general; their effect is limited by what has been registered.</p>
+    <span class="status">accepted</span>
+  </header>
+  <div class="grid">
+    <section class="panel"><h2>What the loop did</h2><ol class="timeline"><li class="stage complete"><span class="dot"></span><div><strong>Plan</strong><p>Question and observations are revision-bound.</p></div></li><li class="stage complete"><span class="dot"></span><div><strong>Execute</strong><p>Luna proposed typed causal claims.</p></div></li><li class="stage complete"><span class="dot"></span><div><strong>Observe</strong><p>The system selected an exact conflict.</p></div></li><li class="stage complete"><span class="dot"></span><div><strong>Evaluate</strong><p>Feedback became a digest-bound plan.</p></div></li><li class="stage complete"><span class="dot"></span><div><strong>Replan + apply</strong><p>Append-only replay changed active state.</p></div></li></ol></section>
+    <aside class="panel"><h2>Run identity</h2><p><code>whygame-reboot/ui-live-195d685770e3</code></p>
+      <p class="evidence">Source 2d8065f57477f81640fb4d77373c04adf0507477<br>Input 0cdcf8202f422459…
+      <br>Config e640aea5daee8995…</p></aside>
+    <section class="panel"><h2>1. Committed proposal</h2><div class="claims">
+      <article class="claim retained">
+        <div class="claim-meta"><span>retained</span><code>claim-b2125473c6161a12</code></div>
+        <p class="edge"><strong>A deliberately narrow Gate 1 implementation boundary</strong>
+          <span class="relation">causes</span>
+          <strong>drift away from the complete product mission</strong></p>
+        <p>When the boundary became the repository’s product identity, the documentation remained coherent and green while omitting the complete outcome.</p>
+        <p class="evidence">Confidence: provisional · observations:
+          gate-became-identity, green-but-incomplete</p>
+      </article>
+      <article class="claim retained">
+        <div class="claim-meta"><span>retained</span><code>claim-1d3a5eb977113f40</code></div>
+        <p class="edge"><strong>Relationship checks protecting the registered policy-admission island</strong>
+          <span class="relation">causes</span>
+          <strong>drift away from the complete product mission</strong></p>
+        <p>If checks protect only registered intent, unregistered mission intent can remain outside the evidence that appears green; this is a deliberate causal stress-test proposal.</p>
+        <p class="evidence">Confidence: contested · observations:
+          registered-island</p>
+      </article>
+      <article class="claim superseded">
+        <div class="claim-meta"><span>superseded</span><code>claim-6e0564ec80f3aad4</code></div>
+        <p class="edge"><strong>Relationship checks protecting the registered policy-admission island</strong>
+          <span class="relation">prevents</span>
+          <strong>drift away from the complete product mission</strong></p>
+        <p>As a competing proposal, the checks may prevent drift within the intent they register, though the observation limits that protection and leaves unregistered mission intent uncovered.</p>
+        <p class="evidence">Confidence: contested · observations:
+          registered-island</p>
+      </article>
+      <article class="claim retained">
+        <div class="claim-meta"><span>retained</span><code>claim-1b95ac8e623e48a8</code></div>
+        <p class="edge"><strong>Treating sequencing constraints as scope authorization</strong>
+          <span class="relation">causes</span>
+          <strong>drift away from the complete product mission</strong></p>
+        <p>The observation explicitly distinguishes avoiding speculative infrastructure from permission to narrow the complete mission, suggesting that conflating them can produce mission loss.</p>
+        <p class="evidence">Confidence: provisional · observations:
+          sequencing-not-scope</p>
+      </article></div></section>
+    <section class="panel"><h2>2. Selected challenge</h2><div class="finding">
+          <span class="eyebrow">Direct causal conflict</span>
+          <p>The committed claims use the same normalized subject and object but make opposed direct causal assertions (causes versus prevents).</p>
+          <code>claim-1d3a5eb977113f40</code>
+          <span class="versus">versus</span>
+          <code>claim-6e0564ec80f3aad4</code>
+        </div></section>
+    <section class="panel"><h2>3. Applied revision</h2><ol class="decisions"><li><strong>Retain</strong>
+            <code>claim-1d3a5eb977113f40</code><p>Retain the provisional causal stress-test that checks protecting only registered intent can leave unregistered mission intent outside the evidence that appears green.</p></li><li><strong>Supersede</strong>
+            <code>claim-6e0564ec80f3aad4</code><p>The observation does not support a direct prevention claim. It shows bounded protection of registered intent while unregistered mission intent remains outside the checks, so the claim should be qualified.</p></li></ol></section>
+    <section class="panel"><h2>4. Active explanation</h2><div class="claims">
+      <article class="claim retained">
+        <div class="claim-meta"><span>retained</span><code>claim-1b95ac8e623e48a8</code></div>
+        <p class="edge"><strong>Treating sequencing constraints as scope authorization</strong>
+          <span class="relation">causes</span>
+          <strong>drift away from the complete product mission</strong></p>
+        <p>The observation explicitly distinguishes avoiding speculative infrastructure from permission to narrow the complete mission, suggesting that conflating them can produce mission loss.</p>
+        <p class="evidence">Confidence: provisional · observations:
+          sequencing-not-scope</p>
+      </article>
+      <article class="claim retained">
+        <div class="claim-meta"><span>retained</span><code>claim-1d3a5eb977113f40</code></div>
+        <p class="edge"><strong>Relationship checks protecting the registered policy-admission island</strong>
+          <span class="relation">causes</span>
+          <strong>drift away from the complete product mission</strong></p>
+        <p>If checks protect only registered intent, unregistered mission intent can remain outside the evidence that appears green; this is a deliberate causal stress-test proposal.</p>
+        <p class="evidence">Confidence: contested · observations:
+          registered-island</p>
+      </article>
+      <article class="claim replacement">
+        <div class="claim-meta"><span>replacement</span><code>claim-994cabb98a400542</code></div>
+        <p class="edge"><strong>Relationship checks protecting the registered policy-admission island</strong>
+          <span class="relation">contributes to</span>
+          <strong>drift away from the complete product mission</strong></p>
+        <p>By validating only registered intent, the checks can contribute to mission drift when complete mission intent is not registered; the observation does not establish universal prevention or direct causation.</p>
+        <p class="evidence">Confidence: provisional · observations:
+          registered-island</p>
+      </article>
+      <article class="claim retained">
+        <div class="claim-meta"><span>retained</span><code>claim-b2125473c6161a12</code></div>
+        <p class="edge"><strong>A deliberately narrow Gate 1 implementation boundary</strong>
+          <span class="relation">causes</span>
+          <strong>drift away from the complete product mission</strong></p>
+        <p>When the boundary became the repository’s product identity, the documentation remained coherent and green while omitting the complete outcome.</p>
+        <p class="evidence">Confidence: provisional · observations:
+          gate-became-identity, green-but-incomplete</p>
+      </article></div></section>
+    <section class="panel"><h2>Source observations</h2><ol class="observations"><li><strong>gate-became-identity</strong> — A deliberately narrow Gate 1 implementation boundary became the repository&#x27;s product identity during an authority migration.
+        <small>docs/decisions/0003-full-product-mission-and-documentation-dogfood.md#context @ ce866efd2855318570034a39343dace73f243352</small></li><li><strong>green-but-incomplete</strong> — The resulting documentation was internally coherent and mechanically green while omitting the complete product outcome.
+        <small>docs/decisions/0003-full-product-mission-and-documentation-dogfood.md#context @ ce866efd2855318570034a39343dace73f243352</small></li><li><strong>registered-island</strong> — Relationship checks protected only the registered policy-admission island, so unregistered mission intent was outside the green checks.
+        <small>docs/decisions/0003-full-product-mission-and-documentation-dogfood.md#context @ ce866efd2855318570034a39343dace73f243352</small></li><li><strong>sequencing-not-scope</strong> — Avoiding speculative universal infrastructure is a sequencing constraint, not authorization to narrow the complete product mission.
+        <small>docs/decisions/0003-full-product-mission-and-documentation-dogfood.md#what-no-speculative-universal-platform-means @ ce866efd2855318570034a39343dace73f243352</small></li></ol></section>
+    <section class="panel"><h2>Unresolved uncertainty</h2><ul class="uncertainty"><li>What mechanism should ensure complete mission intent is registered before relationship checks can appear green?</li><li>How should the system distinguish sequencing limits from unauthorized scope reduction?</li></ul></section>
+    <section class="panel"><h2>Execution receipts</h2><div class="table-wrap"><table>
+      <thead><tr><th>Stage</th><th>Model</th><th>Tokens</th><th>Latency</th><th>Cost</th><th>Retries</th><th>Fallback</th></tr></thead>
+      <tbody><tr><td>proposal</td>
+        <td><code>codex/gpt-5.6-luna</code></td><td>25,816</td>
+        <td>29.45s</td><td>$0.0000</td>
+        <td>0</td><td>no</td></tr><tr><td>revision</td>
+        <td><code>codex/gpt-5.6-luna</code></td><td>26,018</td>
+        <td>21.96s</td><td>$0.0000</td>
+        <td>0</td><td>no</td></tr></tbody></table></div></section>
+    <section class="panel"><h2>Issues / stopped state</h2><ul class="issues"></ul>
+      <p class="nonclaim">This report shows a bounded model proposal challenged by a deterministic rule.
+      It does not certify truth, a world model, independent criticism, or general contradiction detection.</p></section>
+  </div>
+</main></body></html>

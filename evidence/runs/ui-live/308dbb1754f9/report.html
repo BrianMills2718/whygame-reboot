@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WhyGame · Graph-adversary result</title>
+  <style>
+    :root { color-scheme: light; --ink:#17211b; --muted:#607067; --paper:#f4f1e8;
+      --panel:#fffdf7; --line:#d7d2c4; --green:#246b4b; --red:#a43f35;
+      --amber:#a46618; --blue:#315f78; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--paper); color:var(--ink); font:16px/1.55
+      ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    main { width:min(1100px,calc(100% - 32px)); margin:32px auto 72px; }
+    header,.panel { background:var(--panel); border:1px solid var(--line); border-radius:18px; }
+    header { padding:clamp(24px,5vw,56px); box-shadow:0 18px 50px #372e1b12; }
+    .eyebrow { color:var(--green); font-size:.75rem; font-weight:800; letter-spacing:.12em;
+      text-transform:uppercase; }
+    h1 { margin:.35rem 0 .75rem; font:700 clamp(2rem,5vw,4.4rem)/1.02 Georgia,serif;
+      max-width:16ch; }
+    h2 { margin:0 0 1rem; font:700 1.55rem/1.2 Georgia,serif; }
+    h3 { font-size:.86rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
+    .answer { max-width:78ch; font-size:1.15rem; }
+    .status { display:inline-flex; margin-top:1rem; padding:.35rem .7rem; border-radius:99px;
+      color:white; background:var(--green); font-weight:750; }
+    .grid { display:grid; grid-template-columns:minmax(0,1.5fr) minmax(260px,.7fr); gap:18px;
+      margin-top:18px; }
+    .panel { padding:24px; min-width:0; }
+    .timeline { list-style:none; padding:0; margin:0; }
+    .stage { display:grid; grid-template-columns:18px 1fr; gap:10px; padding:0 0 15px; }
+    .stage p { margin:.15rem 0 0; color:var(--muted); font-size:.9rem; }
+    .dot { width:11px; height:11px; margin-top:6px; border-radius:50%; background:var(--line); }
+    .complete .dot { background:var(--green); box-shadow:0 0 0 4px #246b4b18; }
+    .claims { display:grid; gap:12px; }
+    .claim { border:1px solid var(--line); border-left:5px solid var(--blue); padding:16px;
+      border-radius:12px; background:white; }
+    .claim.superseded { border-left-color:var(--red); opacity:.72; }
+    .claim.replacement { border-left-color:var(--green); }
+    .claim-meta { display:flex; justify-content:space-between; gap:12px; color:var(--muted);
+      font-size:.76rem; text-transform:uppercase; letter-spacing:.07em; }
+    .edge { display:flex; flex-wrap:wrap; align-items:center; gap:8px; font-size:1.04rem; }
+    .relation { color:var(--blue); background:#315f7812; padding:.2rem .5rem; border-radius:6px; }
+    .evidence,small { display:block; color:var(--muted); font-size:.82rem; }
+    .finding { border:1px solid #a43f3544; background:#fff4f1; border-radius:12px; padding:18px; }
+    .versus { padding:0 .55rem; color:var(--red); font-weight:700; }
+    code { overflow-wrap:anywhere; font-size:.82em; }
+    .observations li,.decisions li,.issues li,.uncertainty li { margin:.65rem 0; }
+    .decisions p { margin:.2rem 0 .8rem; }
+    .table-wrap { overflow-x:auto; }
+    table { width:100%; border-collapse:collapse; font-size:.88rem; }
+    th,td { border-bottom:1px solid var(--line); padding:9px 7px; text-align:left; }
+    .nonclaim { color:var(--muted); border-left:3px solid var(--amber); padding-left:14px; }
+    @media (max-width:760px) { main { width:min(100% - 20px,1100px); margin-top:10px; }
+      .grid { grid-template-columns:1fr; } header,.panel { border-radius:12px; }
+      .claim-meta { display:block; } }
+  </style>
+</head>
+<body><main>
+  <header>
+    <span class="eyebrow">WhyGame · graph as adversary</span>
+    <h1>Why does a local UI let you rerun a cached analysis instead of just showing it?</h1>
+    <p class="answer">Based on the supplied observations, the local UI&#x27;s default behavior prevents the existing cached report from being shown first. The rerun may contribute to that outcome, but the observations do not establish whether missing lookup, intentional product choice, or routing/display behavior is responsible.</p>
+    <span class="status">accepted</span>
+  </header>
+  <div class="grid">
+    <section class="panel"><h2>What the loop did</h2><ol class="timeline"><li class="stage complete"><span class="dot"></span><div><strong>Plan</strong><p>Question and observations are revision-bound.</p></div></li><li class="stage complete"><span class="dot"></span><div><strong>Execute</strong><p>Luna proposed typed causal claims.</p></div></li><li class="stage complete"><span class="dot"></span><div><strong>Observe</strong><p>The system selected an exact conflict.</p></div></li><li class="stage complete"><span class="dot"></span><div><strong>Evaluate</strong><p>Feedback became a digest-bound plan.</p></div></li><li class="stage complete"><span class="dot"></span><div><strong>Replan + apply</strong><p>Append-only replay changed active state.</p></div></li></ol></section>
+    <aside class="panel"><h2>Run identity</h2><p><code>whygame-reboot/ui-live-308dbb1754f9</code></p>
+      <p class="evidence">Source 2d8065f57477f81640fb4d77373c04adf0507477<br>Input 290304210f6c579f…
+      <br>Config e640aea5daee8995…</p></aside>
+    <section class="panel"><h2>1. Committed proposal</h2><div class="claims">
+      <article class="claim superseded">
+        <div class="claim-meta"><span>superseded</span><code>claim-fd36d0e3603068db</code></div>
+        <p class="edge"><strong>local UI rerunning a cached analysis</strong>
+          <span class="relation">causes</span>
+          <strong>showing the existing cached report first</strong></p>
+        <p>The first UI version always started a brand-new paid run even when a finished report already existed for the question.</p>
+        <p class="evidence">Confidence: provisional · observations:
+          obs-1</p>
+      </article>
+      <article class="claim retained">
+        <div class="claim-meta"><span>retained</span><code>claim-a240e8717aa7e4cd</code></div>
+        <p class="edge"><strong>local UI rerunning a cached analysis</strong>
+          <span class="relation">prevents</span>
+          <strong>showing the existing cached report first</strong></p>
+        <p>Starting a new paid run means the existing finished report is not shown first; the user explicitly questioned why cached runs were not cached or surfaced.</p>
+        <p class="evidence">Confidence: provisional · observations:
+          obs-1, obs-2</p>
+      </article>
+      <article class="claim retained">
+        <div class="claim-meta"><span>retained</span><code>claim-84082818d1967c5a</code></div>
+        <p class="edge"><strong>user expectation of cached-run visibility</strong>
+          <span class="relation">constrains</span>
+          <strong>local UI behavior</strong></p>
+        <p>The immediate question about caching and showing existing runs first identifies a user expectation that the current behavior does not satisfy.</p>
+        <p class="evidence">Confidence: contested · observations:
+          obs-2</p>
+      </article></div></section>
+    <section class="panel"><h2>2. Selected challenge</h2><div class="finding">
+          <span class="eyebrow">Direct causal conflict</span>
+          <p>The committed claims use the same normalized subject and object but make opposed direct causal assertions (causes versus prevents).</p>
+          <code>claim-a240e8717aa7e4cd</code>
+          <span class="versus">versus</span>
+          <code>claim-fd36d0e3603068db</code>
+        </div></section>
+    <section class="panel"><h2>3. Applied revision</h2><ol class="decisions"><li><strong>Retain</strong>
+            <code>claim-a240e8717aa7e4cd</code><p>Observation obs-1 states that the UI started a new paid run despite an existing finished report, and obs-2 records the user&#x27;s question about why existing runs were not shown first. Together these support that rerunning prevents first display of the cached report.</p></li><li><strong>Supersede</strong>
+            <code>claim-fd36d0e3603068db</code><p>The direct causes relation conflicts with the retained prevents claim and overstates what the observations establish. The evidence supports a qualified contribution to the failure to show the cached report first, not that rerunning causes the display outcome itself.</p></li></ol></section>
+    <section class="panel"><h2>4. Active explanation</h2><div class="claims">
+      <article class="claim replacement">
+        <div class="claim-meta"><span>replacement</span><code>claim-6eee9c0ef2c83eed</code></div>
+        <p class="edge"><strong>local UI rerunning a cached analysis</strong>
+          <span class="relation">contributes to</span>
+          <strong>failure to show the existing cached report first</strong></p>
+        <p>Starting a new paid run while a finished report exists may contribute to the cached report not being surfaced first, but the observations leave the underlying mechanism unresolved.</p>
+        <p class="evidence">Confidence: provisional · observations:
+          obs-1, obs-2</p>
+      </article>
+      <article class="claim retained">
+        <div class="claim-meta"><span>retained</span><code>claim-84082818d1967c5a</code></div>
+        <p class="edge"><strong>user expectation of cached-run visibility</strong>
+          <span class="relation">constrains</span>
+          <strong>local UI behavior</strong></p>
+        <p>The immediate question about caching and showing existing runs first identifies a user expectation that the current behavior does not satisfy.</p>
+        <p class="evidence">Confidence: contested · observations:
+          obs-2</p>
+      </article>
+      <article class="claim retained">
+        <div class="claim-meta"><span>retained</span><code>claim-a240e8717aa7e4cd</code></div>
+        <p class="edge"><strong>local UI rerunning a cached analysis</strong>
+          <span class="relation">prevents</span>
+          <strong>showing the existing cached report first</strong></p>
+        <p>Starting a new paid run means the existing finished report is not shown first; the user explicitly questioned why cached runs were not cached or surfaced.</p>
+        <p class="evidence">Confidence: provisional · observations:
+          obs-1, obs-2</p>
+      </article></div></section>
+    <section class="panel"><h2>Source observations</h2><ol class="observations"><li><strong>obs-1</strong> — The first UI version always started a brand-new paid run even when a finished report already existed for that question.
+        <small>this conversation @ user-provided</small></li><li><strong>obs-2</strong> — A user immediately asked why the existing runs were not cached or shown first.
+        <small>this conversation @ user-provided</small></li></ol></section>
+    <section class="panel"><h2>Unresolved uncertainty</h2><ul class="uncertainty"><li>Whether the rerun is caused by missing cache lookup, an intentional product choice, or a routing/display defect.</li><li>Whether the existing report is technically available to the UI at the time of the new run.</li></ul></section>
+    <section class="panel"><h2>Execution receipts</h2><div class="table-wrap"><table>
+      <thead><tr><th>Stage</th><th>Model</th><th>Tokens</th><th>Latency</th><th>Cost</th><th>Retries</th><th>Fallback</th></tr></thead>
+      <tbody><tr><td>proposal</td>
+        <td><code>codex/gpt-5.6-luna</code></td><td>24,425</td>
+        <td>17.92s</td><td>$0.0000</td>
+        <td>0</td><td>no</td></tr><tr><td>revision</td>
+        <td><code>codex/gpt-5.6-luna</code></td><td>26,187</td>
+        <td>19.50s</td><td>$0.0000</td>
+        <td>0</td><td>no</td></tr></tbody></table></div></section>
+    <section class="panel"><h2>Issues / stopped state</h2><ul class="issues"></ul>
+      <p class="nonclaim">This report shows a bounded model proposal challenged by a deterministic rule.
+      It does not certify truth, a world model, independent criticism, or general contradiction detection.</p></section>
+  </div>
+</main></body></html>

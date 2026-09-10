@@ -1,0 +1,27 @@
+{
+  "added_claims": [
+    {
+      "claim_id": "claim-6eee9c0ef2c83eed",
+      "confidence": "provisional",
+      "content_sha256": "6eee9c0ef2c83eed0cf83ec5049a433b739d7d737c0aa02e14c007f7213ae1d2",
+      "normalized_object": "failure to show the existing cached report first",
+      "normalized_subject": "local ui rerunning a cached analysis",
+      "object": "failure to show the existing cached report first",
+      "observation_ids": [
+        "obs-1",
+        "obs-2"
+      ],
+      "proposal_local_id": "revision:claim-fd36d0e3603068db",
+      "rationale": "Starting a new paid run while a finished report exists may contribute to the cached report not being surfaced first, but the observations leave the underlying mechanism unresolved.",
+      "relation": "contributes_to",
+      "subject": "local UI rerunning a cached analysis"
+    }
+  ],
+  "event_id": "event-5711419d09d63358",
+  "event_sha256": "5711419d09d63358276240b1ecdf0c5df0944a9455f7816d4ca9790b6da6e40d",
+  "finding_sha256": "662365d80efa12ca5a8fed7db021a47f3108199d80692997a37eace374221d94",
+  "plan_sha256": "f43955662fe8bc9273569b3006c8ffa134c5b44f3578b358f63a097991603eea",
+  "superseded_claim_ids": [
+    "claim-fd36d0e3603068db"
+  ]
+}

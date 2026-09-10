@@ -1,0 +1,18 @@
+{
+  "billing_mode": "subscription_included",
+  "completion_tokens": 846,
+  "cost_source": "subscription_included",
+  "cost_usd": 0.0,
+  "fallback_used": false,
+  "latency_s": 29.453,
+  "logical_call_id": "llmcall_e940247baa074f08bcc682874d79bfa0",
+  "prompt_tokens": 24970,
+  "reasoning_effort": "medium",
+  "request_fingerprint": "db5d4c6af0fb30e12d1fc483ce0e5e3c79956d4421cae2dacb618d55c0369476",
+  "requested_model": "codex/gpt-5.6-luna",
+  "resolved_model": "codex/gpt-5.6-luna",
+  "response_sha256": "c27313e34d172a01a4fabd765e8007a3410a273b6d10897aaee5c746ccee4733",
+  "retry_count": 0,
+  "total_tokens": 25816,
+  "trace_id": "whygame-reboot:5bf56da304563bab:bbc4f2532d274c3993f8c2a43569da41/proposal"
+}

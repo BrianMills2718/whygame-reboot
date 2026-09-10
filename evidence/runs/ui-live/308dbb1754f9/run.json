@@ -1,0 +1,273 @@
+{
+  "active_projection": {
+    "active_claims": [
+      {
+        "claim_id": "claim-6eee9c0ef2c83eed",
+        "confidence": "provisional",
+        "content_sha256": "6eee9c0ef2c83eed0cf83ec5049a433b739d7d737c0aa02e14c007f7213ae1d2",
+        "normalized_object": "failure to show the existing cached report first",
+        "normalized_subject": "local ui rerunning a cached analysis",
+        "object": "failure to show the existing cached report first",
+        "observation_ids": [
+          "obs-1",
+          "obs-2"
+        ],
+        "proposal_local_id": "revision:claim-fd36d0e3603068db",
+        "rationale": "Starting a new paid run while a finished report exists may contribute to the cached report not being surfaced first, but the observations leave the underlying mechanism unresolved.",
+        "relation": "contributes_to",
+        "subject": "local UI rerunning a cached analysis"
+      },
+      {
+        "claim_id": "claim-84082818d1967c5a",
+        "confidence": "contested",
+        "content_sha256": "84082818d1967c5a5654db51e75ecf2df76039820ba048615b3eb8fa6c1f9183",
+        "normalized_object": "local ui behavior",
+        "normalized_subject": "user expectation of cached run visibility",
+        "object": "local UI behavior",
+        "observation_ids": [
+          "obs-2"
+        ],
+        "proposal_local_id": "claim-3",
+        "rationale": "The immediate question about caching and showing existing runs first identifies a user expectation that the current behavior does not satisfy.",
+        "relation": "constrains",
+        "subject": "user expectation of cached-run visibility"
+      },
+      {
+        "claim_id": "claim-a240e8717aa7e4cd",
+        "confidence": "provisional",
+        "content_sha256": "a240e8717aa7e4cd28cebda7686a6b6faf100560bc42d94586479dca976c9d65",
+        "normalized_object": "showing the existing cached report first",
+        "normalized_subject": "local ui rerunning a cached analysis",
+        "object": "showing the existing cached report first",
+        "observation_ids": [
+          "obs-1",
+          "obs-2"
+        ],
+        "proposal_local_id": "claim-2",
+        "rationale": "Starting a new paid run means the existing finished report is not shown first; the user explicitly questioned why cached runs were not cached or surfaced.",
+        "relation": "prevents",
+        "subject": "local UI rerunning a cached analysis"
+      }
+    ],
+    "projection_sha256": "eb91036a280aa52cba52bcef64a90bc68db8a86dd828bcf71784ecff52f8f2ed",
+    "superseded_claim_ids": [
+      "claim-fd36d0e3603068db"
+    ]
+  },
+  "config_sha256": "e640aea5daee8995795056706e168dfb4976bb412d2a8a1d3d94b90ee50ae33b",
+  "finding": {
+    "explanation": "The committed claims use the same normalized subject and object but make opposed direct causal assertions (causes versus prevents).",
+    "finding_id": "finding-662365d80efa12ca",
+    "finding_sha256": "662365d80efa12ca5a8fed7db021a47f3108199d80692997a37eace374221d94",
+    "kind": "direct_causal_conflict",
+    "left_claim_id": "claim-a240e8717aa7e4cd",
+    "proposal_sha256": "2e88d6225c8d3b79eb3c88db8f45485c2d910000c78db0e0a2b8aacaa453e117",
+    "right_claim_id": "claim-fd36d0e3603068db"
+  },
+  "input_sha256": "290304210f6c579fd1a2095be21bffd9543ef6a4c398f07a13471b117e585638",
+  "issues": [],
+  "observations": [
+    {
+      "id": "obs-1",
+      "source_ref": "this conversation",
+      "source_revision": "user-provided",
+      "text": "The first UI version always started a brand-new paid run even when a finished report already existed for that question."
+    },
+    {
+      "id": "obs-2",
+      "source_ref": "this conversation",
+      "source_revision": "user-provided",
+      "text": "A user immediately asked why the existing runs were not cached or shown first."
+    }
+  ],
+  "outer_runs": [
+    {
+      "config_sha256": "sha256:e640aea5daee8995795056706e168dfb4976bb412d2a8a1d3d94b90ee50ae33b",
+      "error_phase": null,
+      "error_type": null,
+      "linked_call_count": 2,
+      "max_budget": 0.5,
+      "reasoning_effort": "medium",
+      "requested_model": "codex/gpt-5.6-luna",
+      "root_trace_id": "whygame-reboot:6bea4b535bbdc50e:5c9c60081d9f421e80f47d869446f00d",
+      "run_id": "whygame-reboot-attempt-5c9c60081d9f421e80f47d869446f00d",
+      "runtime_revision": "2d8065f57477f81640fb4d77373c04adf0507477",
+      "status": "completed"
+    }
+  ],
+  "producer_revision": "2d8065f57477f81640fb4d77373c04adf0507477",
+  "proposal": {
+    "answer": "This is a bounded proposal based only on the supplied observations: the UI may rerun cached analyses because it initiates a new paid run by default instead of surfacing an existing report first. The competing pair is deliberate for deterministic stress-testing.",
+    "claims": [
+      {
+        "claim_id": "claim-fd36d0e3603068db",
+        "confidence": "provisional",
+        "content_sha256": "fd36d0e3603068dbf0ea1e05860ce04ed5a51e6a00fc8d0e19ebb215968316e4",
+        "normalized_object": "showing the existing cached report first",
+        "normalized_subject": "local ui rerunning a cached analysis",
+        "object": "showing the existing cached report first",
+        "observation_ids": [
+          "obs-1"
+        ],
+        "proposal_local_id": "claim-1",
+        "rationale": "The first UI version always started a brand-new paid run even when a finished report already existed for the question.",
+        "relation": "causes",
+        "subject": "local UI rerunning a cached analysis"
+      },
+      {
+        "claim_id": "claim-a240e8717aa7e4cd",
+        "confidence": "provisional",
+        "content_sha256": "a240e8717aa7e4cd28cebda7686a6b6faf100560bc42d94586479dca976c9d65",
+        "normalized_object": "showing the existing cached report first",
+        "normalized_subject": "local ui rerunning a cached analysis",
+        "object": "showing the existing cached report first",
+        "observation_ids": [
+          "obs-1",
+          "obs-2"
+        ],
+        "proposal_local_id": "claim-2",
+        "rationale": "Starting a new paid run means the existing finished report is not shown first; the user explicitly questioned why cached runs were not cached or surfaced.",
+        "relation": "prevents",
+        "subject": "local UI rerunning a cached analysis"
+      },
+      {
+        "claim_id": "claim-84082818d1967c5a",
+        "confidence": "contested",
+        "content_sha256": "84082818d1967c5a5654db51e75ecf2df76039820ba048615b3eb8fa6c1f9183",
+        "normalized_object": "local ui behavior",
+        "normalized_subject": "user expectation of cached run visibility",
+        "object": "local UI behavior",
+        "observation_ids": [
+          "obs-2"
+        ],
+        "proposal_local_id": "claim-3",
+        "rationale": "The immediate question about caching and showing existing runs first identifies a user expectation that the current behavior does not satisfy.",
+        "relation": "constrains",
+        "subject": "user expectation of cached-run visibility"
+      }
+    ],
+    "model_competing_pair": {
+      "disagreement": "The same UI behavior is proposed as both causing and preventing the exact same outcome: showing the existing cached report first.",
+      "left_local_id": "claim-1",
+      "right_local_id": "claim-2"
+    },
+    "proposal_sha256": "2e88d6225c8d3b79eb3c88db8f45485c2d910000c78db0e0a2b8aacaa453e117",
+    "unresolved_questions": [
+      "Whether the rerun is caused by missing cache lookup, an intentional product choice, or a routing/display defect.",
+      "Whether the existing report is technically available to the UI at the time of the new run."
+    ]
+  },
+  "question": "Why does a local UI let you rerun a cached analysis instead of just showing it?",
+  "receipts": [
+    {
+      "billing_mode": "subscription_included",
+      "completion_tokens": 451,
+      "cost_source": "subscription_included",
+      "cost_usd": 0.0,
+      "fallback_used": false,
+      "latency_s": 17.918,
+      "logical_call_id": "llmcall_bba29fdd858b4579b11fed164221360b",
+      "prompt_tokens": 23974,
+      "reasoning_effort": "medium",
+      "request_fingerprint": "6218bfa333610f24ad6ea9de4911ef90e94043a93e8d001e79065c4d189a5142",
+      "requested_model": "codex/gpt-5.6-luna",
+      "resolved_model": "codex/gpt-5.6-luna",
+      "response_sha256": "815dea94058e3a7b993558b2ea7e471d12e62854ff0dd3559cea8060c7de454b",
+      "retry_count": 0,
+      "total_tokens": 24425,
+      "trace_id": "whygame-reboot:6bea4b535bbdc50e:5c9c60081d9f421e80f47d869446f00d/proposal"
+    },
+    {
+      "billing_mode": "subscription_included",
+      "completion_tokens": 459,
+      "cost_source": "subscription_included",
+      "cost_usd": 0.0,
+      "fallback_used": false,
+      "latency_s": 19.495,
+      "logical_call_id": "llmcall_83cbfb1128f64c97b227d09b70b46535",
+      "prompt_tokens": 25728,
+      "reasoning_effort": "medium",
+      "request_fingerprint": "e266332b12da80f133c3f6ab172c530e6cc7c61eff6e82ae536120e2b915bd42",
+      "requested_model": "codex/gpt-5.6-luna",
+      "resolved_model": "codex/gpt-5.6-luna",
+      "response_sha256": "11af344cba25d6ae6289d5f57c4831391e935583ef50a765ece7643545c1bbd6",
+      "retry_count": 0,
+      "total_tokens": 26187,
+      "trace_id": "whygame-reboot:6bea4b535bbdc50e:5c9c60081d9f421e80f47d869446f00d/revision"
+    }
+  ],
+  "report_sha256": "2432720fd79f644c205284560c1965d5dfb094c354201c5ed7f6a54f260ff5de",
+  "resumed_stages": [],
+  "revision_events": [
+    {
+      "added_claims": [
+        {
+          "claim_id": "claim-6eee9c0ef2c83eed",
+          "confidence": "provisional",
+          "content_sha256": "6eee9c0ef2c83eed0cf83ec5049a433b739d7d737c0aa02e14c007f7213ae1d2",
+          "normalized_object": "failure to show the existing cached report first",
+          "normalized_subject": "local ui rerunning a cached analysis",
+          "object": "failure to show the existing cached report first",
+          "observation_ids": [
+            "obs-1",
+            "obs-2"
+          ],
+          "proposal_local_id": "revision:claim-fd36d0e3603068db",
+          "rationale": "Starting a new paid run while a finished report exists may contribute to the cached report not being surfaced first, but the observations leave the underlying mechanism unresolved.",
+          "relation": "contributes_to",
+          "subject": "local UI rerunning a cached analysis"
+        }
+      ],
+      "event_id": "event-5711419d09d63358",
+      "event_sha256": "5711419d09d63358276240b1ecdf0c5df0944a9455f7816d4ca9790b6da6e40d",
+      "finding_sha256": "662365d80efa12ca5a8fed7db021a47f3108199d80692997a37eace374221d94",
+      "plan_sha256": "f43955662fe8bc9273569b3006c8ffa134c5b44f3578b358f63a097991603eea",
+      "superseded_claim_ids": [
+        "claim-fd36d0e3603068db"
+      ]
+    }
+  ],
+  "revision_plan": {
+    "decisions": [
+      {
+        "action": "retain",
+        "rationale": "Observation obs-1 states that the UI started a new paid run despite an existing finished report, and obs-2 records the user's question about why existing runs were not shown first. Together these support that rerunning prevents first display of the cached report.",
+        "replacement": null,
+        "target_claim_id": "claim-a240e8717aa7e4cd"
+      },
+      {
+        "action": "supersede",
+        "rationale": "The direct causes relation conflicts with the retained prevents claim and overstates what the observations establish. The evidence supports a qualified contribution to the failure to show the cached report first, not that rerunning causes the display outcome itself.",
+        "replacement": {
+          "claim_id": "claim-6eee9c0ef2c83eed",
+          "confidence": "provisional",
+          "content_sha256": "6eee9c0ef2c83eed0cf83ec5049a433b739d7d737c0aa02e14c007f7213ae1d2",
+          "normalized_object": "failure to show the existing cached report first",
+          "normalized_subject": "local ui rerunning a cached analysis",
+          "object": "failure to show the existing cached report first",
+          "observation_ids": [
+            "obs-1",
+            "obs-2"
+          ],
+          "proposal_local_id": "revision:claim-fd36d0e3603068db",
+          "rationale": "Starting a new paid run while a finished report exists may contribute to the cached report not being surfaced first, but the observations leave the underlying mechanism unresolved.",
+          "relation": "contributes_to",
+          "subject": "local UI rerunning a cached analysis"
+        },
+        "target_claim_id": "claim-fd36d0e3603068db"
+      }
+    ],
+    "finding_id": "finding-662365d80efa12ca",
+    "finding_sha256": "662365d80efa12ca5a8fed7db021a47f3108199d80692997a37eace374221d94",
+    "plan_sha256": "f43955662fe8bc9273569b3006c8ffa134c5b44f3578b358f63a097991603eea",
+    "proposal_sha256": "2e88d6225c8d3b79eb3c88db8f45485c2d910000c78db0e0a2b8aacaa453e117",
+    "revised_answer": "Based on the supplied observations, the local UI's default behavior prevents the existing cached report from being shown first. The rerun may contribute to that outcome, but the observations do not establish whether missing lookup, intentional product choice, or routing/display behavior is responsible.",
+    "unresolved_questions": [
+      "Whether the rerun is caused by missing cache lookup, an intentional product choice, or a routing/display defect.",
+      "Whether the existing report is technically available to the UI at the time of the new run."
+    ]
+  },
+  "run_id": "whygame-reboot/ui-live-308dbb1754f9",
+  "schema_version": "1.0",
+  "status": "accepted"
+}

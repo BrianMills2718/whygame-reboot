@@ -1,0 +1,13 @@
+{
+  "config_sha256": "e640aea5daee8995795056706e168dfb4976bb412d2a8a1d3d94b90ee50ae33b",
+  "files": {
+    "finding.json": "8841e05192edbe334cf50f029e6258f34c04ba6a15f27d95444e52d595d01829",
+    "proposal-receipt.json": "6288ab16389ae28d09a2bf23284d886af44d6483c1f47f95712a996c4f8271fb",
+    "proposal.json": "15b52c403f9bbaf749ae717da69dd9a003c8473c661cf299c2f7c56fedd48c19"
+  },
+  "input_sha256": "290304210f6c579fd1a2095be21bffd9543ef6a4c398f07a13471b117e585638",
+  "producer_revision": "2d8065f57477f81640fb4d77373c04adf0507477",
+  "question_id": "custom-d6ea45dd27",
+  "run_id": "whygame-reboot/ui-live-308dbb1754f9",
+  "schema_version": "1.0"
+}

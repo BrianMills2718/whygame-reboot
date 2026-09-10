@@ -1,0 +1,39 @@
+{
+  "decisions": [
+    {
+      "action": "retain",
+      "rationale": "Retain the provisional causal stress-test that checks protecting only registered intent can leave unregistered mission intent outside the evidence that appears green.",
+      "replacement": null,
+      "target_claim_id": "claim-1d3a5eb977113f40"
+    },
+    {
+      "action": "supersede",
+      "rationale": "The observation does not support a direct prevention claim. It shows bounded protection of registered intent while unregistered mission intent remains outside the checks, so the claim should be qualified.",
+      "replacement": {
+        "claim_id": "claim-994cabb98a400542",
+        "confidence": "provisional",
+        "content_sha256": "994cabb98a400542afdb403c1258b87cef3c6f8f01ec09f651e2a37aaffc42e7",
+        "normalized_object": "drift away from the complete product mission",
+        "normalized_subject": "relationship checks protecting the registered policy admission island",
+        "object": "drift away from the complete product mission",
+        "observation_ids": [
+          "registered-island"
+        ],
+        "proposal_local_id": "revision:claim-6e0564ec80f3aad4",
+        "rationale": "By validating only registered intent, the checks can contribute to mission drift when complete mission intent is not registered; the observation does not establish universal prevention or direct causation.",
+        "relation": "contributes_to",
+        "subject": "Relationship checks protecting the registered policy-admission island"
+      },
+      "target_claim_id": "claim-6e0564ec80f3aad4"
+    }
+  ],
+  "finding_id": "finding-157be3c4e9700ce5",
+  "finding_sha256": "157be3c4e9700ce5ea39502fb91a73ac8af82346d7c049f5cd0fc0e37f539531",
+  "plan_sha256": "8c9c5f8f4b0b2c6d369cb5e0f85ee382bd08b533d4e93cc87c1014d5f6624dd7",
+  "proposal_sha256": "0e5435c4d50378e2c6468cfa775d2ecf696d6fda037c6c2e347e6784c40bd82e",
+  "revised_answer": "The observations support a bounded proposal that protecting only registered policy intent can contribute to mission drift by leaving unregistered intent outside green checks. The evidence does not establish that the checks directly cause or prevent drift in general; their effect is limited by what has been registered.",
+  "unresolved_questions": [
+    "What mechanism should ensure complete mission intent is registered before relationship checks can appear green?",
+    "How should the system distinguish sequencing limits from unauthorized scope reduction?"
+  ]
+}

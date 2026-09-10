@@ -1,0 +1,28 @@
+{
+  "added_claims": [
+    {
+      "claim_id": "claim-0903b2a78eac740f",
+      "confidence": "contested",
+      "content_sha256": "0903b2a78eac740f86c1dd4c9d6dde4d55bfebd585a112e23d9c34026e2a2471",
+      "normalized_object": "mission drift away from the complete product outcome",
+      "normalized_subject": "a narrow gate 1 implementation boundary becoming repository product identity",
+      "object": "mission drift away from the complete product outcome",
+      "observation_ids": [
+        "gate-became-identity",
+        "green-but-incomplete",
+        "sequencing-not-scope"
+      ],
+      "proposal_local_id": "revision:claim-1f5f9db27421fecd",
+      "rationale": "The boundary may preserve sequencing focus, but the observed authority-migration failure shows that treating it as the product identity can contribute to mission drift. The effect is conditional and does not establish a general contradiction or truth claim.",
+      "relation": "contributes_to",
+      "subject": "a narrow Gate 1 implementation boundary becoming repository product identity"
+    }
+  ],
+  "event_id": "event-c91d2da897c6aab4",
+  "event_sha256": "c91d2da897c6aab43dfa13e5af5f49cf46a1172e00535d8a102562933dde4a74",
+  "finding_sha256": "f06661f4af0c220d620192cdfdbc71b6befc0b56e5eccae79cc09a8de57dcce1",
+  "plan_sha256": "0013e6804d0b4750e0e9059cd334fe8e374c6196415f4694f07ab7aa62ecedc8",
+  "superseded_claim_ids": [
+    "claim-1f5f9db27421fecd"
+  ]
+}

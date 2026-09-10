@@ -1,0 +1,13 @@
+{
+  "config_sha256": "e640aea5daee8995795056706e168dfb4976bb412d2a8a1d3d94b90ee50ae33b",
+  "files": {
+    "finding.json": "38d78e8e4da10e760c7fbd21804059ff2c5e37e45d0eab67be3839eb91ea9f88",
+    "proposal-receipt.json": "71c8aaf547cd1ef42d1aec6deee2716a80b492cda03434e48de45deceef76377",
+    "proposal.json": "d385c02e6733ecd652050cd822cb041bf9be2e269f2548d972990a321d952c3c"
+  },
+  "input_sha256": "0cdcf8202f4224591a03c4953ec7cad5e8e9d5d94bebe4e227f4ab0a082ee80c",
+  "producer_revision": "2d8065f57477f81640fb4d77373c04adf0507477",
+  "question_id": "aes-mission-drift",
+  "run_id": "whygame-reboot/ui-live-195d685770e3",
+  "schema_version": "1.0"
+}

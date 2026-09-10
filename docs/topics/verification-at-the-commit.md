@@ -98,7 +98,8 @@ silently because of how a command was written.
 
 ## Conformance
 
-- PASS AES-INV-004 — verified by ${AES_PYTHON:-.venv/bin/python} scripts/check_verification_reaches_the_commit.py /home/brian/code/whygame-reboot
+- EXTERN AES-INV-004 — ${AES_PYTHON:-.venv/bin/python} scripts/check_verification_reaches_the_commit.py /home/brian/code/whygame-reboot settles this against /home/brian/code/whygame-reboot, which is outside this repository. A committed page cannot assert a state it cannot reproduce, so the observation lives in the invariant sweep, not here
 
-1 invariant(s): 1 passing, 0 failing, 0 with no checker, 0 whose checker could not run.
+1 invariant(s): 0 passing, 0 failing, 0 with no checker, 0 whose checker could not run, 1 settled outside this repository.
+**A declared checker is settled by a checkout outside this repository, so this page records no conformance state for it: AES-INV-004.** This is not a passing invariant and not a failing one. The checker still runs in `scripts/invariant_status.py`, where the observation belongs; a page regenerated from this repository alone must read the same on every machine, and one that embeds such a result reads PASS on one computer and UNRUN on all the others.
 <!-- /GENERATED -->

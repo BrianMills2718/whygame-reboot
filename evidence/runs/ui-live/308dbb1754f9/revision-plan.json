@@ -1,0 +1,40 @@
+{
+  "decisions": [
+    {
+      "action": "retain",
+      "rationale": "Observation obs-1 states that the UI started a new paid run despite an existing finished report, and obs-2 records the user's question about why existing runs were not shown first. Together these support that rerunning prevents first display of the cached report.",
+      "replacement": null,
+      "target_claim_id": "claim-a240e8717aa7e4cd"
+    },
+    {
+      "action": "supersede",
+      "rationale": "The direct causes relation conflicts with the retained prevents claim and overstates what the observations establish. The evidence supports a qualified contribution to the failure to show the cached report first, not that rerunning causes the display outcome itself.",
+      "replacement": {
+        "claim_id": "claim-6eee9c0ef2c83eed",
+        "confidence": "provisional",
+        "content_sha256": "6eee9c0ef2c83eed0cf83ec5049a433b739d7d737c0aa02e14c007f7213ae1d2",
+        "normalized_object": "failure to show the existing cached report first",
+        "normalized_subject": "local ui rerunning a cached analysis",
+        "object": "failure to show the existing cached report first",
+        "observation_ids": [
+          "obs-1",
+          "obs-2"
+        ],
+        "proposal_local_id": "revision:claim-fd36d0e3603068db",
+        "rationale": "Starting a new paid run while a finished report exists may contribute to the cached report not being surfaced first, but the observations leave the underlying mechanism unresolved.",
+        "relation": "contributes_to",
+        "subject": "local UI rerunning a cached analysis"
+      },
+      "target_claim_id": "claim-fd36d0e3603068db"
+    }
+  ],
+  "finding_id": "finding-662365d80efa12ca",
+  "finding_sha256": "662365d80efa12ca5a8fed7db021a47f3108199d80692997a37eace374221d94",
+  "plan_sha256": "f43955662fe8bc9273569b3006c8ffa134c5b44f3578b358f63a097991603eea",
+  "proposal_sha256": "2e88d6225c8d3b79eb3c88db8f45485c2d910000c78db0e0a2b8aacaa453e117",
+  "revised_answer": "Based on the supplied observations, the local UI's default behavior prevents the existing cached report from being shown first. The rerun may contribute to that outcome, but the observations do not establish whether missing lookup, intentional product choice, or routing/display behavior is responsible.",
+  "unresolved_questions": [
+    "Whether the rerun is caused by missing cache lookup, an intentional product choice, or a routing/display defect.",
+    "Whether the existing report is technically available to the UI at the time of the new run."
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "answer": "This is a bounded proposal based only on the supplied observations: the UI may rerun cached analyses because it initiates a new paid run by default instead of surfacing an existing report first. The competing pair is deliberate for deterministic stress-testing.",
+  "claims": [
+    {
+      "claim_id": "claim-fd36d0e3603068db",
+      "confidence": "provisional",
+      "content_sha256": "fd36d0e3603068dbf0ea1e05860ce04ed5a51e6a00fc8d0e19ebb215968316e4",
+      "normalized_object": "showing the existing cached report first",
+      "normalized_subject": "local ui rerunning a cached analysis",
+      "object": "showing the existing cached report first",
+      "observation_ids": [
+        "obs-1"
+      ],
+      "proposal_local_id": "claim-1",
+      "rationale": "The first UI version always started a brand-new paid run even when a finished report already existed for the question.",
+      "relation": "causes",
+      "subject": "local UI rerunning a cached analysis"
+    },
+    {
+      "claim_id": "claim-a240e8717aa7e4cd",
+      "confidence": "provisional",
+      "content_sha256": "a240e8717aa7e4cd28cebda7686a6b6faf100560bc42d94586479dca976c9d65",
+      "normalized_object": "showing the existing cached report first",
+      "normalized_subject": "local ui rerunning a cached analysis",
+      "object": "showing the existing cached report first",
+      "observation_ids": [
+        "obs-1",
+        "obs-2"
+      ],
+      "proposal_local_id": "claim-2",
+      "rationale": "Starting a new paid run means the existing finished report is not shown first; the user explicitly questioned why cached runs were not cached or surfaced.",
+      "relation": "prevents",
+      "subject": "local UI rerunning a cached analysis"
+    },
+    {
+      "claim_id": "claim-84082818d1967c5a",
+      "confidence": "contested",
+      "content_sha256": "84082818d1967c5a5654db51e75ecf2df76039820ba048615b3eb8fa6c1f9183",
+      "normalized_object": "local ui behavior",
+      "normalized_subject": "user expectation of cached run visibility",
+      "object": "local UI behavior",
+      "observation_ids": [
+        "obs-2"
+      ],
+      "proposal_local_id": "claim-3",
+      "rationale": "The immediate question about caching and showing existing runs first identifies a user expectation that the current behavior does not satisfy.",
+      "relation": "constrains",
+      "subject": "user expectation of cached-run visibility"
+    }
+  ],
+  "model_competing_pair": {
+    "disagreement": "The same UI behavior is proposed as both causing and preventing the exact same outcome: showing the existing cached report first.",
+    "left_local_id": "claim-1",
+    "right_local_id": "claim-2"
+  },
+  "proposal_sha256": "2e88d6225c8d3b79eb3c88db8f45485c2d910000c78db0e0a2b8aacaa453e117",
+  "unresolved_questions": [
+    "Whether the rerun is caused by missing cache lookup, an intentional product choice, or a routing/display defect.",
+    "Whether the existing report is technically available to the UI at the time of the new run."
+  ]
+}

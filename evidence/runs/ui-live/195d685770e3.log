@@ -1,0 +1,6 @@
+LLM_CLIENT_TIMEOUT_POLICY=ban (first observed in call_llm_structured)
+TIMEOUT_DISABLED[call_llm_structured]: timeout=180s ignored (set LLM_CLIENT_TIMEOUT_POLICY=allow to re-enable).
+TIMEOUT_DISABLED[_route_call_structured]: timeout=239s ignored (set LLM_CLIENT_TIMEOUT_POLICY=allow to re-enable).
+TIMEOUT_DISABLED[call_llm_structured]: timeout=180s ignored (set LLM_CLIENT_TIMEOUT_POLICY=allow to re-enable).
+TIMEOUT_DISABLED[_route_call_structured]: timeout=239s ignored (set LLM_CLIENT_TIMEOUT_POLICY=allow to re-enable).
+/home/brian/code/whygame-reboot/evidence/runs/ui-live/195d685770e3/report.html

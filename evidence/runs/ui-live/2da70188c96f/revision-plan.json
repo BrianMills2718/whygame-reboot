@@ -1,0 +1,41 @@
+{
+  "decisions": [
+    {
+      "action": "supersede",
+      "rationale": "The direct preventing relation is too strong. The observations support a narrower qualification: the boundary can constrain premature scope expansion while still contributing to drift when mistaken for the complete mission.",
+      "replacement": {
+        "claim_id": "claim-0903b2a78eac740f",
+        "confidence": "contested",
+        "content_sha256": "0903b2a78eac740f86c1dd4c9d6dde4d55bfebd585a112e23d9c34026e2a2471",
+        "normalized_object": "mission drift away from the complete product outcome",
+        "normalized_subject": "a narrow gate 1 implementation boundary becoming repository product identity",
+        "object": "mission drift away from the complete product outcome",
+        "observation_ids": [
+          "gate-became-identity",
+          "green-but-incomplete",
+          "sequencing-not-scope"
+        ],
+        "proposal_local_id": "revision:claim-1f5f9db27421fecd",
+        "rationale": "The boundary may preserve sequencing focus, but the observed authority-migration failure shows that treating it as the product identity can contribute to mission drift. The effect is conditional and does not establish a general contradiction or truth claim.",
+        "relation": "contributes_to",
+        "subject": "a narrow Gate 1 implementation boundary becoming repository product identity"
+      },
+      "target_claim_id": "claim-1f5f9db27421fecd"
+    },
+    {
+      "action": "retain",
+      "rationale": "The observations support retaining the qualified causal pathway: the narrow boundary became product identity, while green documentation omitted the complete outcome.",
+      "replacement": null,
+      "target_claim_id": "claim-f3039b51accbf142"
+    }
+  ],
+  "finding_id": "finding-f06661f4af0c220d",
+  "finding_sha256": "f06661f4af0c220d620192cdfdbc71b6befc0b56e5eccae79cc09a8de57dcce1",
+  "plan_sha256": "0013e6804d0b4750e0e9059cd334fe8e374c6196415f4694f07ab7aa62ecedc8",
+  "proposal_sha256": "c6d409cea624da22ee156fb26082fd25b3ea11625eb07e9cdf06f75892555025",
+  "revised_answer": "A narrow Gate 1 implementation boundary can contribute to mission drift when it becomes the repository's product identity during authority migration and green checks omit the complete product outcome. The boundary may still preserve sequencing focus, so its effect remains conditional rather than inherently causal or preventive.",
+  "unresolved_questions": [
+    "Whether the boundary's effect depends on authority-migration conditions.",
+    "Whether checks can cover complete mission intent without creating speculative universal infrastructure."
+  ]
+}

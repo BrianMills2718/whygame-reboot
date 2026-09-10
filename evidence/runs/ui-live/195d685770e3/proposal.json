@@ -1,0 +1,76 @@
+{
+  "answer": "The observations support a bounded proposal: drift can occur when a narrow implementation boundary becomes the system\u2019s identity, while green checks cover only a registered subset of mission intent. The competing pair below is deliberate stress-testing, not a truth claim.",
+  "claims": [
+    {
+      "claim_id": "claim-b2125473c6161a12",
+      "confidence": "provisional",
+      "content_sha256": "b2125473c6161a1265f81429894517389c4ead9188c83671c876316d16b6fe3c",
+      "normalized_object": "drift away from the complete product mission",
+      "normalized_subject": "a deliberately narrow gate 1 implementation boundary",
+      "object": "drift away from the complete product mission",
+      "observation_ids": [
+        "gate-became-identity",
+        "green-but-incomplete"
+      ],
+      "proposal_local_id": "claim-1",
+      "rationale": "When the boundary became the repository\u2019s product identity, the documentation remained coherent and green while omitting the complete outcome.",
+      "relation": "causes",
+      "subject": "A deliberately narrow Gate 1 implementation boundary"
+    },
+    {
+      "claim_id": "claim-1d3a5eb977113f40",
+      "confidence": "contested",
+      "content_sha256": "1d3a5eb977113f4037a2d8ac0262545905d1190fed10f0d6f61fe08ad20b0f97",
+      "normalized_object": "drift away from the complete product mission",
+      "normalized_subject": "relationship checks protecting the registered policy admission island",
+      "object": "drift away from the complete product mission",
+      "observation_ids": [
+        "registered-island"
+      ],
+      "proposal_local_id": "claim-2a",
+      "rationale": "If checks protect only registered intent, unregistered mission intent can remain outside the evidence that appears green; this is a deliberate causal stress-test proposal.",
+      "relation": "causes",
+      "subject": "Relationship checks protecting the registered policy-admission island"
+    },
+    {
+      "claim_id": "claim-6e0564ec80f3aad4",
+      "confidence": "contested",
+      "content_sha256": "6e0564ec80f3aad4bb39eaf2e27edb57bf0c8baa534edc1d051b3ef337c90b95",
+      "normalized_object": "drift away from the complete product mission",
+      "normalized_subject": "relationship checks protecting the registered policy admission island",
+      "object": "drift away from the complete product mission",
+      "observation_ids": [
+        "registered-island"
+      ],
+      "proposal_local_id": "claim-2b",
+      "rationale": "As a competing proposal, the checks may prevent drift within the intent they register, though the observation limits that protection and leaves unregistered mission intent uncovered.",
+      "relation": "prevents",
+      "subject": "Relationship checks protecting the registered policy-admission island"
+    },
+    {
+      "claim_id": "claim-1b95ac8e623e48a8",
+      "confidence": "provisional",
+      "content_sha256": "1b95ac8e623e48a83fc8eb2095887f199a1a5940f7b881a0d932f5ace28ea1e0",
+      "normalized_object": "drift away from the complete product mission",
+      "normalized_subject": "treating sequencing constraints as scope authorization",
+      "object": "drift away from the complete product mission",
+      "observation_ids": [
+        "sequencing-not-scope"
+      ],
+      "proposal_local_id": "claim-3",
+      "rationale": "The observation explicitly distinguishes avoiding speculative infrastructure from permission to narrow the complete mission, suggesting that conflating them can produce mission loss.",
+      "relation": "causes",
+      "subject": "Treating sequencing constraints as scope authorization"
+    }
+  ],
+  "model_competing_pair": {
+    "disagreement": "Whether protecting only the registered policy-admission island contributes to mission drift or prevents it.",
+    "left_local_id": "claim-2a",
+    "right_local_id": "claim-2b"
+  },
+  "proposal_sha256": "0e5435c4d50378e2c6468cfa775d2ecf696d6fda037c6c2e347e6784c40bd82e",
+  "unresolved_questions": [
+    "What mechanism should ensure complete mission intent is registered before relationship checks can appear green?",
+    "How should the system distinguish sequencing limits from unauthorized scope reduction?"
+  ]
+}

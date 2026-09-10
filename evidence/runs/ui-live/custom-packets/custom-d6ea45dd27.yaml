@@ -1,0 +1,13 @@
+id: custom-d6ea45dd27
+question: Why does a local UI let you rerun a cached analysis instead of just showing
+  it?
+observations:
+- id: obs-1
+  text: The first UI version always started a brand-new paid run even when a finished
+    report already existed for that question.
+  source_ref: this conversation
+  source_revision: user-provided
+- id: obs-2
+  text: A user immediately asked why the existing runs were not cached or shown first.
+  source_ref: this conversation
+  source_revision: user-provided

@@ -1,0 +1,9 @@
+{
+  "explanation": "The committed claims use the same normalized subject and object but make opposed direct causal assertions (causes versus prevents).",
+  "finding_id": "finding-662365d80efa12ca",
+  "finding_sha256": "662365d80efa12ca5a8fed7db021a47f3108199d80692997a37eace374221d94",
+  "kind": "direct_causal_conflict",
+  "left_claim_id": "claim-a240e8717aa7e4cd",
+  "proposal_sha256": "2e88d6225c8d3b79eb3c88db8f45485c2d910000c78db0e0a2b8aacaa453e117",
+  "right_claim_id": "claim-fd36d0e3603068db"
+}
