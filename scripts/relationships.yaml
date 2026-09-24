@@ -1,7 +1,7 @@
 governance:
   - source: docs/topics/graph-adversary.md
     docs:
-      - CLAUDE.md
+      - AGENTS.md
       - README.md
       - roadmap/README.md
       - docs/plans/1_graph-adversary-vertical.md
@@ -9,27 +9,27 @@ governance:
       - evidence/README.md
   - source: docs/plans/1_graph-adversary-vertical.md
     docs:
-      - docs/plans/CLAUDE.md
+      - docs/plans/AGENTS.md
       - roadmap/README.md
       - policy/current-claims.json
   - source: docs/plans/1_graph-adversary-vertical_work_graph.json
     docs:
       - docs/plans/1_graph-adversary-vertical.md
-      - docs/plans/CLAUDE.md
+      - docs/plans/AGENTS.md
       - roadmap/README.md
   - source: docs/plans/2_second-question-recurring-lessons.md
     docs:
-      - docs/plans/CLAUDE.md
+      - docs/plans/AGENTS.md
       - roadmap/README.md
       - examples/recurring-lessons/question.yaml
   - source: docs/plans/2_second-question-recurring-lessons_work_graph.json
     docs:
       - docs/plans/2_second-question-recurring-lessons.md
-      - docs/plans/CLAUDE.md
+      - docs/plans/AGENTS.md
 couplings:
   - source: pyproject.toml
     docs:
-      - CLAUDE.md
+      - AGENTS.md
       - README.md
 architecture:
   - source: src/whygame_reboot

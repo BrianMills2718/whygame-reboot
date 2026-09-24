@@ -14,10 +14,10 @@ Clean WhyGame rewrite that produces a typed, traced causal proposal, determinist
 
 ## Read next
 
-- [Operating rules](../CLAUDE.md)
+- [Operating rules](../AGENTS.md)
 - [Project overview](../README.md)
 - [Roadmap](../roadmap/README.md)
-- [Active plan queue](../docs/plans/CLAUDE.md)
+- [Active plan queue](../docs/plans/AGENTS.md)
 
 ## Coverage and unknowns
 
