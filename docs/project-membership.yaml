@@ -10,7 +10,7 @@ repositories:
     role: primary
     workspace: default
     authority_entrypoints:
-      - CLAUDE.md
+      - AGENTS.md
       - README.md
       - roadmap/README.md
       - docs/plans/1_graph-adversary-vertical.md
@@ -20,7 +20,7 @@ repositories:
     role: supporting
     workspace: on_claim
     authority_entrypoints:
-      - CLAUDE.md
+      - AGENTS.md
       - README.md
     contract_seams:
       - python-package:llm_client
