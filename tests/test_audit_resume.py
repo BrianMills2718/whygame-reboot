@@ -10,11 +10,14 @@ import pytest
 
 from tests.test_cli import ROOT, _isolated_env
 from tests.test_engine import packet
-from tests.test_runner import ObservedRunStub, caller_for, outputs
+from tests.test_runner import ObservedRunStub, caller_for, observed_runs, outputs
 from whygame_reboot import cli
 from whygame_reboot.runner import run_loop
 
 ORIGINAL_RUN_ID = "whygame-reboot/original-run"
+
+__all__ = ["observed_runs"]  # fixture: stands in for the llm_client run store
+pytestmark = pytest.mark.usefixtures("observed_runs")
 
 
 def _failed_checkpoint(output_dir: Path, *, producer_revision: str) -> dict[str, bytes]:

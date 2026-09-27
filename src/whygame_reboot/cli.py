@@ -12,7 +12,7 @@ import uuid
 from pathlib import Path
 
 import yaml
-from llm_client import ObservedRun, get_observed_run
+from llm_client import ObservedRun
 
 from whygame_reboot.contracts import LoopRun, OuterRunReceipt, QuestionPacket
 from whygame_reboot.render import render_report
@@ -22,7 +22,9 @@ from whygame_reboot.runner import (
     REASONING_EFFORT,
     checkpoint_run_id,
     config_sha256,
+    observed_outer_receipt,
     run_loop,
+    write_atomic_text,
 )
 
 
@@ -58,23 +60,6 @@ def _producer_revision() -> str:
         text=True,
     )
     return result.stdout.strip()
-
-
-def _outer_receipt(run_id: str) -> OuterRunReceipt:
-    record = get_observed_run(run_id)
-    return OuterRunReceipt(
-        run_id=record.run_id,
-        root_trace_id=record.root_trace_id,
-        status=record.status,
-        linked_call_count=record.linked_call_count,
-        runtime_revision=record.runtime_revision,
-        config_sha256=record.config_sha256,
-        requested_model=record.requested_model,
-        reasoning_effort=record.reasoning_effort,
-        max_budget=record.max_budget,
-        error_type=record.error_type,
-        error_phase=record.error_phase,
-    )
 
 
 def _attach_outer_custody(
@@ -170,15 +155,18 @@ def main() -> int:
 
     assert run is not None
     try:
-        run = _attach_outer_custody(run, _outer_receipt(observed.run_id))
+        run = _attach_outer_custody(run, observed_outer_receipt(observed.run_id))
         report = render_report(run)
         report_sha256 = hashlib.sha256(report.encode("utf-8")).hexdigest()
         run = run.model_copy(update={"report_sha256": report_sha256})
-        (args.output / "run.json").write_text(
+        # run.json is the terminal commit point, so it is published last: a kill
+        # before it leaves the checkpoint resumable rather than a record whose
+        # report_sha256 names a report that was never written.
+        write_atomic_text(args.output / "report.html", report)
+        write_atomic_text(
+            args.output / "run.json",
             json.dumps(run.model_dump(mode="json"), indent=2, sort_keys=True) + "\n",
-            encoding="utf-8",
         )
-        (args.output / "report.html").write_text(report, encoding="utf-8")
     except Exception as exc:  # noqa: BLE001 - never leave a success manifest without custody
         print(f"{type(exc).__name__}: {exc}", file=sys.stderr)
         return 1

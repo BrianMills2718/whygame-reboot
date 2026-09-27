@@ -7,6 +7,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).parents[1]
 
 
@@ -134,3 +136,41 @@ def test_live_cli_requires_explicit_codex_home_before_dispatch(tmp_path: Path) -
     assert result.returncode == 2
     assert "live runs require --codex-home" in result.stderr
     assert not (tmp_path / "run").exists()
+
+
+def test_cli_publishes_report_before_terminal_run_record(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from whygame_reboot import cli, runner
+
+    for key, value in _isolated_env(tmp_path).items():
+        if key.startswith("LLM_CLIENT_"):
+            monkeypatch.setenv(key, value)
+    real_replace = runner.os.replace
+    published: list[str] = []
+
+    def recording_replace(src, dst):
+        real_replace(src, dst)
+        published.append(Path(dst).name)
+
+    monkeypatch.setattr(runner.os, "replace", recording_replace)
+    output_dir = tmp_path / "run"
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "whygame-reboot",
+            str(ROOT / "examples" / "aes-mission-drift" / "question.yaml"),
+            "--output",
+            str(output_dir),
+            "--dry-run",
+            "--run-id",
+            "whygame-reboot/test-cli-publish-order",
+        ],
+    )
+
+    assert cli.main() == 0
+    # run.json is the terminal commit point; a kill before it must not leave a
+    # record whose report_sha256 names an unwritten report.
+    assert published == ["report.html", "run.json"]
+    assert not [path.name for path in output_dir.iterdir() if path.name.endswith(".tmp")]
