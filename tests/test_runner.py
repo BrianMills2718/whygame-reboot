@@ -390,6 +390,7 @@ def test_resume_rejects_checkpoint_attempt_with_foreign_trace_root(
 # Every durable write in a live run, in order. A kill "at" a write lands after the
 # temporary bytes are written but before the atomic rename publishes them.
 LIVE_WRITES = (
+    "attempts.json",
     "proposal.json",
     "finding.json",
     "proposal-receipt.json",
@@ -435,14 +436,14 @@ def test_kill_at_every_write_leaves_fresh_or_resumable_state(
     monkeypatch.setattr(runner.os, "replace", real_replace)
 
     committed = kill_at > LIVE_WRITES.index("checkpoint-manifest.json")
+    # Once its ledger entry is published an attempt may have made a model call, so
+    # its custody survives even when its proposal checkpoint never committed.
+    recorded = kill_at > LIVE_WRITES.index("attempts.json")
     retained = _resume_to_acceptance(tmp_path, expected_calls=1 if committed else 2)
 
-    if committed:
-        assert retained.resumed_stages == ("proposal_and_finding",)
-        assert [item.run_id for item in retained.outer_runs] == ["attempt-1", "attempt-2"]
-    else:
-        assert retained.resumed_stages == ()
-        assert [item.run_id for item in retained.outer_runs] == ["attempt-2"]
+    assert retained.resumed_stages == (("proposal_and_finding",) if committed else ())
+    expected_attempts = ["attempt-1", "attempt-2"] if recorded else ["attempt-2"]
+    assert [item.run_id for item in retained.outer_runs] == expected_attempts
     assert not [path.name for path in tmp_path.iterdir() if path.name.endswith(".tmp")]
 
 
@@ -464,3 +465,95 @@ def test_killed_accepted_attempt_before_terminal_record_resumes(tmp_path) -> Non
     retained = _resume_to_acceptance(tmp_path, expected_calls=1)
 
     assert [item.run_id for item in retained.outer_runs] == ["attempt-1", "attempt-2"]
+
+
+def _killed_during_revision(tmp_path, attempt: str, *, calls: tuple) -> None:
+    killing, _ = caller_for((*calls, _Killed()))
+    with pytest.raises(_Killed):
+        run_loop(
+            packet(),
+            output_dir=tmp_path,
+            producer_revision="k" * 40,
+            observed_run=ObservedRunStub(attempt),
+            caller=killing,
+            run_id="whygame-reboot/test-kill",
+            codex_home=tmp_path / "codex-profile",
+        )
+
+
+def _directory_bytes(path: Path) -> dict[str, bytes]:
+    return {item.name: item.read_bytes() for item in path.iterdir()}
+
+
+def test_concurrent_resume_fails_before_any_read_write_or_call(
+    tmp_path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import os
+
+    from whygame_reboot import runner
+
+    first, _ = outputs()
+    _killed_during_revision(tmp_path, "attempt-1", calls=(first,))
+    before = _directory_bytes(tmp_path)
+
+    def must_not_read(*args, **kwargs):
+        raise AssertionError("a second process must not read checkpoint state")
+
+    def should_not_call(*args, **kwargs):
+        raise AssertionError("a second process must not dispatch a model call")
+
+    # Holding the lock in-test makes the contention deterministic: flock conflicts
+    # between open file descriptions even inside one process.
+    with runner.hold_run_directory(tmp_path), monkeypatch.context() as patched:
+        patched.setattr(runner, "_prepare_output_dir", must_not_read)
+        patched.setattr(runner, "checkpoint_run_id", must_not_read)
+        with pytest.raises(runner.RunDirectoryLockedError, match=f"pid {os.getpid()}"):
+            run_loop(
+                packet(),
+                output_dir=tmp_path,
+                producer_revision="k" * 40,
+                observed_run=ObservedRunStub("attempt-2"),
+                caller=should_not_call,
+                run_id="whygame-reboot/test-kill",
+                codex_home=tmp_path / "codex-profile",
+            )
+
+    assert _directory_bytes(tmp_path) == before
+    # Once the holder releases, the same checkpoint resumes normally.
+    retained = _resume_to_acceptance(tmp_path, expected_calls=1)
+    assert [item.run_id for item in retained.outer_runs] == ["attempt-1", "attempt-2"]
+
+
+def test_resume_killed_during_its_revision_keeps_custody_of_every_attempt(tmp_path) -> None:
+    first, _ = outputs()
+    # attempt-1 commits the proposal checkpoint, then dies inside the revision call.
+    _killed_during_revision(tmp_path, "attempt-1", calls=(first,))
+    # attempt-2 resumes the checkpoint and also dies inside its own revision call:
+    # it made a model call but left no terminal record and is not the manifest's attempt.
+    _killed_during_revision(tmp_path, "attempt-2", calls=())
+    assert not (tmp_path / "run.json").exists()
+
+    _, second = outputs()
+    caller, calls = caller_for((second,))
+    resumed = run_loop(
+        packet(),
+        output_dir=tmp_path,
+        producer_revision="k" * 40,
+        observed_run=ObservedRunStub("attempt-final"),
+        caller=caller,
+        run_id="whygame-reboot/test-kill",
+        codex_home=tmp_path / "codex-profile",
+    )
+    assert resumed.status == "accepted", resumed.issues
+    assert len(calls) == 1
+    retained = _attach_outer_custody(resumed, _current_attempt("attempt-final", 1))
+
+    assert [item.run_id for item in retained.outer_runs] == [
+        "attempt-1",
+        "attempt-2",
+        "attempt-final",
+    ]
+    killed_resume = retained.outer_runs[1]
+    assert killed_resume.status == "running"
+    assert killed_resume.linked_call_count == 1
+    assert killed_resume.root_trace_id == "attempt-2/outer"

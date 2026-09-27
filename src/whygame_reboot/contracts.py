@@ -169,6 +169,7 @@ class OuterRunReceipt(Contract):
     root_trace_id: str
     # ``running`` is retained verbatim when a resume recovers the custody of an
     # attempt that was killed before llm_client could record a terminal status.
+    # Resume holds the run-directory lock, so such an attempt is provably dead.
     status: Literal[
         "running",
         "completed",

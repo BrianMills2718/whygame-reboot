@@ -46,6 +46,22 @@ input with source revision and digest.
   or without an error `run.json`. The manifest records the outer attempt that
   made the proposal call, so resume recovers that attempt's outer-run custody
   from the shared client even when a kill prevented any terminal record.
+- A run or resume holds an exclusive OS lock (`flock` on `.run.lock` in the run
+  directory) from before it reads any checkpoint state until its terminal
+  record is published. A second process fails fast, naming the holder's PID,
+  without reading, writing, or calling a model. The kernel releases the lock
+  when its holder exits for any reason, so an attempt that the shared client
+  still records as `running` is provably dead whenever the lock is acquirable.
+  The lock file is empty unless a live holder has written its PID.
+- Before its first model call, every attempt appends its outer run ID and trace
+  root to `attempts.json`, bound to the product run ID. Resume reconstructs the
+  custody of every recorded attempt that no terminal record retained -- for
+  example a resume killed during its own revision call -- from the shared
+  client's durable run store, bound to its recorded trace root, so the final
+  `run.json` lists every attempt that made a model call. A directory holding
+  only the ledger and uncommitted checkpoint files restarts the proposal but
+  keeps the recorded custody, and refuses `--no-resume` or a dry run rather than
+  discarding it.
 
 ## First-vertical execution
 

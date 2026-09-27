@@ -2,13 +2,15 @@
 
 from __future__ import annotations
 
+import fcntl
 import json
 import math
 import os
 import re
 import time
 import uuid
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
+from contextlib import contextmanager
 from pathlib import Path
 from typing import Any, Protocol, TypeVar
 
@@ -75,6 +77,58 @@ not claim truth, independence, or general contradiction detection."""
 
 # Files a proposal checkpoint publishes before its manifest commits them.
 CHECKPOINT_DATA_FILES = frozenset({"proposal.json", "finding.json", "proposal-receipt.json"})
+# Held with flock for a whole run or resume; empty unless a live holder wrote its PID.
+RUN_LOCK_FILE = ".run.lock"
+# Every attempt that may make a model call, recorded before its first call.
+ATTEMPTS_FILE = "attempts.json"
+
+
+class RunDirectoryLockedError(RuntimeError):
+    """Another live process holds the run directory; nothing was read or written."""
+
+
+class RunDirectoryLock:
+    """Proof that this process holds a run directory's exclusive lock."""
+
+    def __init__(self, directory: Path) -> None:
+        self.directory = directory
+        self.held = False
+
+
+@contextmanager
+def hold_run_directory(output_dir: Path) -> Iterator[RunDirectoryLock]:
+    """Hold an exclusive OS lock on ``output_dir`` for a whole run or resume.
+
+    The lock is taken before any checkpoint state is read and fails fast, naming
+    the holder's PID, when another process holds it. The kernel releases it when
+    its holder exits for any reason, so while it is held every attempt still
+    recorded as ``running`` in the shared client is provably dead.
+    """
+
+    if output_dir.exists() and not output_dir.is_dir():
+        raise FileExistsError(f"run output path exists and is not a directory: {output_dir}")
+    output_dir.mkdir(parents=True, exist_ok=True)
+    descriptor = os.open(output_dir / RUN_LOCK_FILE, os.O_RDWR | os.O_CREAT, 0o644)
+    try:
+        try:
+            fcntl.flock(descriptor, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            holder = os.pread(descriptor, 32, 0).decode("ascii", "replace").strip()
+            raise RunDirectoryLockedError(
+                f"run directory {output_dir} is locked by pid {holder or 'unknown'}; "
+                "another process is running or resuming it"
+            ) from None
+        lock = RunDirectoryLock(output_dir)
+        lock.held = True
+        os.ftruncate(descriptor, 0)
+        os.pwrite(descriptor, f"{os.getpid()}\n".encode("ascii"), 0)
+        try:
+            yield lock
+        finally:
+            lock.held = False
+            os.ftruncate(descriptor, 0)
+    finally:
+        os.close(descriptor)
 _TEMP_FILE = re.compile(r"^\.[A-Za-z0-9._-]+\.[0-9a-f]{32}\.tmp$")
 
 
@@ -279,15 +333,59 @@ def _checkpoint_manifest(
 
 
 def checkpoint_run_id(output_dir: Path) -> str | None:
-    """Return the run ID a resumable checkpoint in ``output_dir`` is bound to."""
+    """Return the run ID a resumable checkpoint or attempt ledger is bound to."""
 
-    manifest_path = output_dir / "checkpoint-manifest.json"
-    if not manifest_path.is_file():
+    for name in ("checkpoint-manifest.json", ATTEMPTS_FILE):
+        path = output_dir / name
+        if not path.is_file():
+            continue
+        run_id = json.loads(path.read_text(encoding="utf-8")).get("run_id")
+        if not isinstance(run_id, str) or not run_id:
+            raise ValueError(f"{name} has no run_id: {path}")
+        return run_id
+    return None
+
+
+def _read_attempt_ledger(output_dir: Path) -> dict[str, Any] | None:
+    path = output_dir / ATTEMPTS_FILE
+    if not path.is_file():
         return None
-    run_id = json.loads(manifest_path.read_text(encoding="utf-8")).get("run_id")
-    if not isinstance(run_id, str) or not run_id:
-        raise ValueError(f"checkpoint manifest has no run_id: {manifest_path}")
-    return run_id
+    ledger = json.loads(path.read_text(encoding="utf-8"))
+    attempts = ledger.get("attempts") if isinstance(ledger, dict) else None
+    if (
+        not isinstance(ledger, dict)
+        or not isinstance(ledger.get("run_id"), str)
+        or not isinstance(attempts, list)
+        or not all(
+            isinstance(item, dict)
+            and all(isinstance(item.get(key), str) for key in ("run_id", "root_trace_id"))
+            for item in attempts
+        )
+    ):
+        raise ValueError(f"attempt ledger is malformed: {path}")
+    return ledger
+
+
+def _record_attempt(output_dir: Path, *, run_id: str, observed_run: ObservedRunLike) -> None:
+    """Durably record this attempt before its first model call.
+
+    A later resume reconstructs the custody of every recorded attempt from the
+    shared client's run store, so an attempt killed mid-call is never dropped.
+    """
+
+    ledger = _read_attempt_ledger(output_dir) or {
+        "schema_version": "1.0",
+        "run_id": run_id,
+        "attempts": [],
+    }
+    if ledger["run_id"] != run_id:
+        raise ValueError("attempt ledger belongs to a different run: run_id")
+    if any(item["run_id"] == observed_run.run_id for item in ledger["attempts"]):
+        raise ValueError(f"outer attempt {observed_run.run_id} is already recorded")
+    ledger["attempts"].append(
+        {"run_id": observed_run.run_id, "root_trace_id": observed_run.root_trace_id}
+    )
+    _write_json(output_dir / ATTEMPTS_FILE, ledger)
 
 
 def _checked_checkpoint_manifest(
@@ -375,11 +473,15 @@ def _prepare_output_dir(
     for leftover in output_dir.iterdir():
         if leftover.is_file() and _TEMP_FILE.fullmatch(leftover.name):
             leftover.unlink()
-    names = {path.name for path in output_dir.iterdir()}
+    names = {path.name for path in output_dir.iterdir()} - {RUN_LOCK_FILE}
     if names <= CHECKPOINT_DATA_FILES:
         return (), None
     if dry_run or not resume:
         raise FileExistsError(f"run output directory is not empty: {output_dir}")
+    if names <= CHECKPOINT_DATA_FILES | {ATTEMPTS_FILE}:
+        # Killed before committing a checkpoint: the proposal starts over, but the
+        # recorded attempts' custody is still carried forward.
+        return (), None
 
     run_path = output_dir / "run.json"
     manifest_path = output_dir / "checkpoint-manifest.json"
@@ -406,20 +508,48 @@ def _prepare_output_dir(
     return prior_outer_runs, attempt
 
 
-def _with_checkpoint_attempt(
-    prior_outer_runs: tuple[OuterRunReceipt, ...],
-    attempt: dict[str, Any] | None,
-) -> tuple[OuterRunReceipt, ...]:
-    """Recover the checkpoint attempt's custody when no terminal record retained it."""
-
-    if attempt is None or any(item.run_id == attempt["run_id"] for item in prior_outer_runs):
-        return prior_outer_runs
+def _recovered_attempt(attempt: dict[str, Any]) -> OuterRunReceipt:
     recovered = observed_outer_receipt(attempt["run_id"])
     if recovered.root_trace_id != attempt["root_trace_id"]:
         raise ValueError(
-            "checkpoint attempt's outer-run custody does not match its recorded trace root"
+            f"attempt {attempt['run_id']}'s outer-run custody does not match its "
+            "recorded trace root"
         )
-    return (*prior_outer_runs, recovered)
+    return recovered
+
+
+def _reconstruct_prior_attempts(
+    retained: tuple[OuterRunReceipt, ...],
+    checkpoint_attempt: dict[str, Any] | None,
+    ledger: dict[str, Any] | None,
+) -> tuple[OuterRunReceipt, ...]:
+    """Return custody for every prior attempt, in the order the attempts began.
+
+    A terminal ``run.json`` retains the attempts it knew about. Any recorded
+    attempt it lacks -- one killed before a terminal record, including a resume
+    killed during its own revision call -- is recovered from llm_client's durable
+    run store and bound to its recorded trace root. Because the caller holds the
+    run-directory lock, a recovered ``running`` status means the attempt is dead.
+    """
+
+    attempts = list(ledger["attempts"]) if ledger is not None else []
+    # A checkpoint written before the attempt ledger existed names only its own attempt.
+    if checkpoint_attempt is not None and not any(
+        item["run_id"] == checkpoint_attempt["run_id"] for item in attempts
+    ):
+        attempts.insert(0, checkpoint_attempt)
+    recorded = {item["run_id"] for item in attempts}
+    by_id = {item.run_id: item for item in retained}
+    custody = [item for item in retained if item.run_id not in recorded]
+    for attempt in attempts:
+        kept = by_id.get(attempt["run_id"])
+        if kept is not None and kept.root_trace_id != attempt["root_trace_id"]:
+            raise ValueError(
+                f"attempt {attempt['run_id']}'s retained outer-run custody does not "
+                "match its recorded trace root"
+            )
+        custody.append(kept or _recovered_attempt(attempt))
+    return tuple(custody)
 
 
 def run_loop(
@@ -433,9 +563,44 @@ def run_loop(
     run_id: str | None = None,
     resume: bool = True,
     codex_home: Path | None = None,
+    run_lock: RunDirectoryLock | None = None,
 ) -> LoopRun:
-    """Execute or resume the exact two-call graph-adversary loop."""
+    """Execute or resume the exact two-call graph-adversary loop.
 
+    The whole run holds ``output_dir``'s exclusive lock. A caller that must also
+    read or publish in that directory (the CLI) passes the lock it already holds.
+    """
+
+    arguments = {
+        "output_dir": output_dir,
+        "producer_revision": producer_revision,
+        "observed_run": observed_run,
+        "dry_run": dry_run,
+        "caller": caller,
+        "run_id": run_id,
+        "resume": resume,
+        "codex_home": codex_home,
+    }
+    if run_lock is None:
+        with hold_run_directory(output_dir):
+            return _run_loop_locked(packet, **arguments)
+    if not run_lock.held or run_lock.directory != output_dir:
+        raise ValueError(f"run_lock does not hold {output_dir}")
+    return _run_loop_locked(packet, **arguments)
+
+
+def _run_loop_locked(
+    packet: QuestionPacket,
+    *,
+    output_dir: Path,
+    producer_revision: str,
+    observed_run: ObservedRunLike | None,
+    dry_run: bool,
+    caller: StructuredCaller,
+    run_id: str | None,
+    resume: bool,
+    codex_home: Path | None,
+) -> LoopRun:
     prior_outer_runs, checkpoint_attempt = _prepare_output_dir(
         output_dir, dry_run=dry_run, resume=resume
     )
@@ -456,7 +621,12 @@ def run_loop(
             config_sha256=resolved_config_sha256,
             producer_revision=producer_revision,
         )
-        prior_outer_runs = _with_checkpoint_attempt(prior_outer_runs, checkpoint_attempt)
+        ledger = _read_attempt_ledger(output_dir)
+        if ledger is not None and ledger["run_id"] != stable_id:
+            raise ValueError("checkpoint identity differs from the requested run: run_id")
+        prior_outer_runs = _reconstruct_prior_attempts(
+            prior_outer_runs, checkpoint_attempt, ledger
+        )
     common = {
         "run_id": stable_id,
         "input_sha256": input_sha256,
@@ -490,6 +660,7 @@ def run_loop(
         _write_json(output_dir / "run.json", run)
         return run
 
+    _record_attempt(output_dir, run_id=stable_id, observed_run=observed_run)
     receipts: list[CallReceipt] = []
     proposal: CommittedProposal | None = None
     finding: Finding | None = None
