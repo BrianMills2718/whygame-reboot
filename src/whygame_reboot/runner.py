@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import fcntl
+import hashlib
 import json
 import math
 import os
@@ -81,6 +82,10 @@ CHECKPOINT_DATA_FILES = frozenset({"proposal.json", "finding.json", "proposal-re
 RUN_LOCK_FILE = ".run.lock"
 # Every attempt that may make a model call, recorded before its first call.
 ATTEMPTS_FILE = "attempts.json"
+# Written after a checkpoint; committed only by an accepted run.json.
+REVISION_FILES = frozenset({"revision-plan.json", "revision-event.json"})
+# Committed only by a run.json whose report_sha256 names its exact bytes.
+REPORT_FILE = "report.html"
 
 
 class RunDirectoryLockedError(RuntimeError):
@@ -450,6 +455,49 @@ def _load_checkpoint(
     return loaded[0], loaded[1], loaded[2]
 
 
+def _uncommitted_files(output_dir: Path, names: set[str]) -> set[str]:
+    """Return the files in ``names`` that no commit point vouches for.
+
+    Checkpoint data is committed only by ``checkpoint-manifest.json``; the report
+    only by a ``run.json`` whose ``report_sha256`` names its exact bytes; the
+    revision files only by an accepted ``run.json``, which is never admitted.
+    Everything else a killed attempt left behind belongs to that dead attempt.
+    """
+
+    uncommitted = names & REVISION_FILES
+    if "checkpoint-manifest.json" not in names:
+        uncommitted |= names & CHECKPOINT_DATA_FILES
+    if REPORT_FILE in names:
+        run_path = output_dir / "run.json"
+        named = (
+            json.loads(run_path.read_text(encoding="utf-8")).get("report_sha256")
+            if run_path.is_file()
+            else None
+        )
+        actual = hashlib.sha256((output_dir / REPORT_FILE).read_bytes()).hexdigest()
+        if named != actual:
+            uncommitted.add(REPORT_FILE)
+    return uncommitted
+
+
+def _remove_uncommitted(output_dir: Path, names: set[str]) -> None:
+    """Delete a dead attempt's uncommitted files before this run writes anything.
+
+    Each file stays uncommitted by the same rule until it is gone, so a kill part
+    way through leaves a directory the next admission cleans up the same way.
+    """
+
+    if not names:
+        return
+    for name in sorted(names):
+        (output_dir / name).unlink()
+    directory = os.open(output_dir, os.O_RDONLY)
+    try:
+        os.fsync(directory)
+    finally:
+        os.close(directory)
+
+
 def _prepare_output_dir(
     output_dir: Path,
     *,
@@ -459,10 +507,11 @@ def _prepare_output_dir(
     """Create a new run directory or admit only a committed, resumable checkpoint.
 
     ``checkpoint-manifest.json`` commits a proposal checkpoint and ``run.json``
-    commits a terminal record. Anything else a killed attempt left behind is
-    uncommitted: temporary files are removed and checkpoint data files without a
-    manifest are overwritten by a fresh run. Returns the prior outer runs retained
-    by an error/blocked ``run.json`` and the manifest's recorded outer attempt.
+    commits a terminal record and the report it names. Anything else a killed
+    attempt left behind is uncommitted: it is removed when the directory is
+    admitted, so a new run never ends beside a dead attempt's files. A refusal
+    changes nothing but temporary files. Returns the prior outer runs retained by
+    an error/blocked ``run.json`` and the manifest's recorded outer attempt.
     """
 
     if not output_dir.exists():
@@ -474,13 +523,17 @@ def _prepare_output_dir(
         if leftover.is_file() and _TEMP_FILE.fullmatch(leftover.name):
             leftover.unlink()
     names = {path.name for path in output_dir.iterdir()} - {RUN_LOCK_FILE}
-    if names <= CHECKPOINT_DATA_FILES:
+    uncommitted = _uncommitted_files(output_dir, names)
+    committed = names - uncommitted
+    if not committed:
+        _remove_uncommitted(output_dir, uncommitted)
         return (), None
     if dry_run or not resume:
         raise FileExistsError(f"run output directory is not empty: {output_dir}")
-    if names <= CHECKPOINT_DATA_FILES | {ATTEMPTS_FILE}:
+    if committed <= {ATTEMPTS_FILE}:
         # Killed before committing a checkpoint: the proposal starts over, but the
         # recorded attempts' custody is still carried forward.
+        _remove_uncommitted(output_dir, uncommitted)
         return (), None
 
     run_path = output_dir / "run.json"
@@ -505,6 +558,7 @@ def _prepare_output_dir(
         or not all(isinstance(attempt.get(key), str) for key in ("run_id", "root_trace_id"))
     ):
         raise ValueError(f"checkpoint manifest has a malformed outer_attempt: {manifest_path}")
+    _remove_uncommitted(output_dir, uncommitted)
     return prior_outer_runs, attempt
 
 
