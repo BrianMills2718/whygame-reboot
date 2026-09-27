@@ -353,7 +353,8 @@ def _read_attempt_ledger(output_dir: Path) -> dict[str, Any] | None:
     ledger = json.loads(path.read_text(encoding="utf-8"))
     attempts = ledger.get("attempts") if isinstance(ledger, dict) else None
     if (
-        not isinstance(ledger.get("run_id"), str)
+        not isinstance(ledger, dict)
+        or not isinstance(ledger.get("run_id"), str)
         or not isinstance(attempts, list)
         or not all(
             isinstance(item, dict)
