@@ -155,3 +155,26 @@ def test_wrong_finding_digest_cannot_be_applied() -> None:
         assert "finding digest mismatch" in str(exc)
     else:
         raise AssertionError("mismatched evidence binding must fail")
+
+
+def _endpoint_proposal(cause_subject: str, prevent_subject: str) -> ProposalResponse:
+    payload = proposal().model_dump(mode="json")
+    payload["claims"][0]["subject"] = cause_subject
+    payload["claims"][1]["subject"] = prevent_subject
+    return ProposalResponse.model_validate(payload)
+
+
+def test_meaningful_punctuation_keeps_endpoints_distinct() -> None:
+    committed = commit_proposal(_endpoint_proposal("C++ runtime", "C# runtime"), packet())
+
+    assert committed.claims[0].normalized_subject != committed.claims[1].normalized_subject
+    assert select_finding(committed) is None
+
+
+def test_case_and_whitespace_are_identity_noise() -> None:
+    committed = commit_proposal(
+        _endpoint_proposal("Narrow  Gate optimization", " narrow gate\tOPTIMIZATION "),
+        packet(),
+    )
+
+    assert select_finding(committed) is not None

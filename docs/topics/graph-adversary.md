@@ -28,6 +28,8 @@ input with source revision and digest.
 - The system validates the proposal and assigns stable claim IDs and digests.
 - A finding identifies two committed claims with the same normalized endpoints
   and opposed causal polarity. Reversing endpoints alone is not a conflict.
+  Endpoint normalization removes only letter case and whitespace layout;
+  punctuation is kept because it can carry identity (`C++` versus `C#`).
 - A revision plan cites the finding and exact input digests and declares an
   append-only decision for each affected claim.
 - A revision event records application of the validated plan. Active state is a
