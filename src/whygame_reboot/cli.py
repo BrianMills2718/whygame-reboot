@@ -20,8 +20,11 @@ from whygame_reboot.runner import (
     MAX_RUN_BUDGET_USD,
     MODEL,
     REASONING_EFFORT,
+    RunDirectoryLock,
+    RunDirectoryLockedError,
     checkpoint_run_id,
     config_sha256,
+    hold_run_directory,
     observed_outer_receipt,
     run_loop,
     write_atomic_text,
@@ -103,6 +106,23 @@ def main() -> int:
             print("--codex-home must contain .codex/auth.json", file=sys.stderr)
             return 2
     revision = _producer_revision()
+    try:
+        # One exclusive lock covers reading checkpoint identity, the loop, and
+        # publishing the terminal record; a concurrent run fails here untouched.
+        with hold_run_directory(args.output) as run_lock:
+            return _run_locked(args, codex_home=codex_home, revision=revision, run_lock=run_lock)
+    except (RunDirectoryLockedError, FileExistsError) as exc:
+        print(f"{type(exc).__name__}: {exc}", file=sys.stderr)
+        return 1
+
+
+def _run_locked(
+    args: argparse.Namespace,
+    *,
+    codex_home: Path | None,
+    revision: str,
+    run_lock: RunDirectoryLock,
+) -> int:
     # Resuming a checkpoint keeps its run ID unless the caller names one explicitly.
     product_run_id = (
         args.run_id
@@ -144,6 +164,7 @@ def main() -> int:
                 run_id=product_run_id,
                 resume=not args.no_resume,
                 codex_home=codex_home,
+                run_lock=run_lock,
             )
             if run.status not in {"accepted", "dry_run"}:
                 raise _TerminalRunError(run)

@@ -174,3 +174,77 @@ def test_cli_publishes_report_before_terminal_run_record(
     # record whose report_sha256 names an unwritten report.
     assert published == ["report.html", "run.json"]
     assert not [path.name for path in output_dir.iterdir() if path.name.endswith(".tmp")]
+
+
+def test_cli_second_process_fails_fast_while_run_directory_is_held(tmp_path: Path) -> None:
+    from tests.test_audit_resume import _failed_checkpoint
+    from whygame_reboot.runner import hold_run_directory
+
+    output_dir = tmp_path / "run"
+    before = _failed_checkpoint(output_dir, producer_revision="0" * 40)
+    codex_home = tmp_path / "codex-profile"
+    (codex_home / ".codex").mkdir(parents=True)
+    (codex_home / ".codex" / "auth.json").write_text("{}", encoding="utf-8")
+
+    # This test process is the live holder; the CLI is a genuinely separate process.
+    with hold_run_directory(output_dir):
+        result = subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "whygame_reboot.cli",
+                "examples/aes-mission-drift/question.yaml",
+                "--output",
+                str(output_dir),
+                "--codex-home",
+                str(codex_home),
+            ],
+            cwd=ROOT,
+            env=_isolated_env(tmp_path),
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+
+    assert result.returncode == 1
+    assert f"locked by pid {os.getpid()}" in result.stderr
+    # It failed before the identity check, any outer run, or any write.
+    assert "checkpoint identity differs" not in result.stderr
+    assert not (tmp_path / "observability.db").exists()
+    assert {path.name: path.read_bytes() for path in output_dir.iterdir()} == before
+
+
+def test_killed_holder_releases_run_directory_lock(tmp_path: Path) -> None:
+    import signal
+
+    from whygame_reboot.runner import RUN_LOCK_FILE, hold_run_directory
+
+    output_dir = tmp_path / "run"
+    holder = subprocess.Popen(
+        [
+            sys.executable,
+            "-c",
+            (
+                "import sys, time; from pathlib import Path; "
+                "from whygame_reboot.runner import hold_run_directory; "
+                "lock = hold_run_directory(Path(sys.argv[1])); lock.__enter__(); "
+                "print('held', flush=True); time.sleep(60)"
+            ),
+            str(output_dir),
+        ],
+        cwd=ROOT,
+        stdout=subprocess.PIPE,
+        text=True,
+    )
+    try:
+        assert holder.stdout is not None and holder.stdout.readline().strip() == "held"
+        assert (output_dir / RUN_LOCK_FILE).read_text().strip() == str(holder.pid)
+        holder.send_signal(signal.SIGKILL)
+        holder.wait(timeout=10)
+    finally:
+        if holder.poll() is None:
+            holder.kill()
+    # SIGKILL runs no cleanup, yet the kernel released the lock at process exit,
+    # so an acquirable lock proves any attempt still marked running is dead.
+    with hold_run_directory(output_dir) as lock:
+        assert lock.held
