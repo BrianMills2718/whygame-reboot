@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import re
 from itertools import combinations
 from typing import Any
 
@@ -36,9 +35,13 @@ def sha256_value(value: Any) -> str:
 
 
 def normalize_node(value: str) -> str:
-    """Normalize only identity noise; do not infer semantic equivalence."""
+    """Normalize only identity noise; do not infer semantic equivalence.
 
-    return re.sub(r"[^a-z0-9]+", " ", value.casefold()).strip()
+    Identity noise is letter case and whitespace layout. Punctuation is kept
+    because it can carry identity ("C++" versus "C#").
+    """
+
+    return " ".join(value.casefold().split())
 
 
 def _commit_claim(claim: ModelClaim | ReplacementClaim, *, local_id: str) -> CommittedClaim:
