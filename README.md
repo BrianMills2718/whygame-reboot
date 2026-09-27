@@ -35,8 +35,8 @@ uv run whygame-reboot examples/aes-mission-drift/question.yaml \
 ```
 
 The profile root must contain `.codex/auth.json`. The command writes `run.json`
-and `report.html`; a failed second stage retains the committed proposal and
-finding and can resume only when their digests still match.
+and `report.html`; a failed or killed second stage retains the committed proposal
+and finding and can resume only when their digests still match.
 
 The legacy `whygame4` repository is a read-only salvage source. It remains the
 incumbent until Project Meta separately accepts the replacement claim.

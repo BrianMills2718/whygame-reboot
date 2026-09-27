@@ -167,7 +167,10 @@ class CallReceipt(Contract):
 class OuterRunReceipt(Contract):
     run_id: str
     root_trace_id: str
+    # ``running`` is retained verbatim when a resume recovers the custody of an
+    # attempt that was killed before llm_client could record a terminal status.
     status: Literal[
+        "running",
         "completed",
         "failed_before_call_start",
         "failed_after_call_start",

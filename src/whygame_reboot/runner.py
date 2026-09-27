@@ -4,13 +4,15 @@ from __future__ import annotations
 
 import json
 import math
+import os
+import re
 import time
 import uuid
 from collections.abc import Callable
 from pathlib import Path
 from typing import Any, Protocol, TypeVar
 
-from llm_client import call_llm_structured, get_llm_call_receipts
+from llm_client import call_llm_structured, get_llm_call_receipts, get_observed_run
 from pydantic import BaseModel
 
 from whygame_reboot.contracts import (
@@ -18,6 +20,7 @@ from whygame_reboot.contracts import (
     CommittedProposal,
     Finding,
     LoopRun,
+    OuterRunReceipt,
     ProposalResponse,
     QuestionPacket,
     RevisionResponse,
@@ -70,10 +73,54 @@ Bind your reasoning to supplied observations, preserve unresolved uncertainty, a
 not claim truth, independence, or general contradiction detection."""
 
 
+# Files a proposal checkpoint publishes before its manifest commits them.
+CHECKPOINT_DATA_FILES = frozenset({"proposal.json", "finding.json", "proposal-receipt.json"})
+_TEMP_FILE = re.compile(r"^\.[A-Za-z0-9._-]+\.[0-9a-f]{32}\.tmp$")
+
+
+def write_atomic_text(path: Path, text: str) -> None:
+    """Publish ``text`` at ``path`` so a crash leaves either the old or the new bytes.
+
+    The bytes go to a same-directory temporary file, are fsynced, renamed over the
+    target, and the directory entry is fsynced. A reader never sees a partial file.
+    """
+
+    temp = path.with_name(f".{path.name}.{uuid.uuid4().hex}.tmp")
+    with temp.open("x", encoding="utf-8") as handle:
+        handle.write(text)
+        handle.flush()
+        os.fsync(handle.fileno())
+    os.replace(temp, path)
+    directory = os.open(path.parent, os.O_RDONLY)
+    try:
+        os.fsync(directory)
+    finally:
+        os.close(directory)
+
+
 def _write_json(path: Path, value: Any) -> None:
     if hasattr(value, "model_dump"):
         value = value.model_dump(mode="json")
-    path.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    write_atomic_text(path, json.dumps(value, indent=2, sort_keys=True) + "\n")
+
+
+def observed_outer_receipt(run_id: str) -> OuterRunReceipt:
+    """Snapshot one attempt's durable llm_client outer-run record."""
+
+    record = get_observed_run(run_id)
+    return OuterRunReceipt(
+        run_id=record.run_id,
+        root_trace_id=record.root_trace_id,
+        status=record.status,
+        linked_call_count=record.linked_call_count,
+        runtime_revision=record.runtime_revision,
+        config_sha256=record.config_sha256,
+        requested_model=record.requested_model,
+        reasoning_effort=record.reasoning_effort,
+        max_budget=record.max_budget,
+        error_type=record.error_type,
+        error_phase=record.error_phase,
+    )
 
 
 def _usage_int(usage: dict[str, Any], *names: str) -> int:
@@ -208,10 +255,17 @@ def _checkpoint_manifest(
     proposal_path: Path,
     finding_path: Path,
     receipt_path: Path,
+    observed_run: ObservedRunLike,
 ) -> dict[str, Any]:
     return {
         "schema_version": "1.0",
         "run_id": run_id,
+        # The attempt whose outer run owns proposal-receipt.json. Its OuterRunReceipt
+        # is otherwise only retained by a terminal run.json that a kill can prevent.
+        "outer_attempt": {
+            "run_id": observed_run.run_id,
+            "root_trace_id": observed_run.root_trace_id,
+        },
         "question_id": packet.id,
         "input_sha256": input_sha256,
         "config_sha256": config_sha256,
@@ -303,32 +357,69 @@ def _prepare_output_dir(
     *,
     dry_run: bool,
     resume: bool,
-) -> tuple[Any, ...]:
-    """Create a new run directory or admit only a digest-checked partial resume."""
+) -> tuple[tuple[OuterRunReceipt, ...], dict[str, Any] | None]:
+    """Create a new run directory or admit only a committed, resumable checkpoint.
+
+    ``checkpoint-manifest.json`` commits a proposal checkpoint and ``run.json``
+    commits a terminal record. Anything else a killed attempt left behind is
+    uncommitted: temporary files are removed and checkpoint data files without a
+    manifest are overwritten by a fresh run. Returns the prior outer runs retained
+    by an error/blocked ``run.json`` and the manifest's recorded outer attempt.
+    """
 
     if not output_dir.exists():
         output_dir.mkdir(parents=True)
-        return ()
+        return (), None
     if not output_dir.is_dir():
         raise FileExistsError(f"run output path exists and is not a directory: {output_dir}")
-    if not any(output_dir.iterdir()):
-        return ()
+    for leftover in output_dir.iterdir():
+        if leftover.is_file() and _TEMP_FILE.fullmatch(leftover.name):
+            leftover.unlink()
+    names = {path.name for path in output_dir.iterdir()}
+    if names <= CHECKPOINT_DATA_FILES:
+        return (), None
     if dry_run or not resume:
         raise FileExistsError(f"run output directory is not empty: {output_dir}")
 
     run_path = output_dir / "run.json"
     manifest_path = output_dir / "checkpoint-manifest.json"
-    if not run_path.is_file() or not manifest_path.is_file():
+    if not manifest_path.is_file():
         raise FileExistsError(
             "existing run directory is not a resumable proposal checkpoint; "
             "choose a new output directory"
         )
-    existing = LoopRun.model_validate_json(run_path.read_text(encoding="utf-8"))
-    if existing.status not in {"blocked", "error"}:
-        raise FileExistsError(
-            f"existing run is terminal ({existing.status}); choose a new output directory"
+    prior_outer_runs: tuple[OuterRunReceipt, ...] = ()
+    if run_path.is_file():
+        existing = LoopRun.model_validate_json(run_path.read_text(encoding="utf-8"))
+        if existing.status not in {"blocked", "error"}:
+            raise FileExistsError(
+                f"existing run is terminal ({existing.status}); choose a new output directory"
+            )
+        prior_outer_runs = existing.outer_runs
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    attempt = manifest.get("outer_attempt")
+    if attempt is not None and (
+        not isinstance(attempt, dict)
+        or not all(isinstance(attempt.get(key), str) for key in ("run_id", "root_trace_id"))
+    ):
+        raise ValueError(f"checkpoint manifest has a malformed outer_attempt: {manifest_path}")
+    return prior_outer_runs, attempt
+
+
+def _with_checkpoint_attempt(
+    prior_outer_runs: tuple[OuterRunReceipt, ...],
+    attempt: dict[str, Any] | None,
+) -> tuple[OuterRunReceipt, ...]:
+    """Recover the checkpoint attempt's custody when no terminal record retained it."""
+
+    if attempt is None or any(item.run_id == attempt["run_id"] for item in prior_outer_runs):
+        return prior_outer_runs
+    recovered = observed_outer_receipt(attempt["run_id"])
+    if recovered.root_trace_id != attempt["root_trace_id"]:
+        raise ValueError(
+            "checkpoint attempt's outer-run custody does not match its recorded trace root"
         )
-    return existing.outer_runs
+    return (*prior_outer_runs, recovered)
 
 
 def run_loop(
@@ -345,7 +436,9 @@ def run_loop(
 ) -> LoopRun:
     """Execute or resume the exact two-call graph-adversary loop."""
 
-    prior_outer_runs = _prepare_output_dir(output_dir, dry_run=dry_run, resume=resume)
+    prior_outer_runs, checkpoint_attempt = _prepare_output_dir(
+        output_dir, dry_run=dry_run, resume=resume
+    )
     input_sha256 = sha256_value(packet)
     resolved_config_sha256 = config_sha256()
     stable_id = (
@@ -363,6 +456,7 @@ def run_loop(
             config_sha256=resolved_config_sha256,
             producer_revision=producer_revision,
         )
+        prior_outer_runs = _with_checkpoint_attempt(prior_outer_runs, checkpoint_attempt)
     common = {
         "run_id": stable_id,
         "input_sha256": input_sha256,
@@ -458,6 +552,7 @@ def run_loop(
                     proposal_path=proposal_path,
                     finding_path=finding_path,
                     receipt_path=receipt_path,
+                    observed_run=observed_run,
                 ),
             )
 

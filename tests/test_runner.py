@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
@@ -11,6 +12,44 @@ from whygame_reboot.contracts import OuterRunReceipt, ProposalResponse, Revision
 from whygame_reboot.engine import commit_proposal, select_finding
 from whygame_reboot.render import render_report
 from whygame_reboot.runner import run_loop
+
+pytestmark = pytest.mark.usefixtures("observed_runs")
+
+
+def killed_attempt_record(run_id: str, **overrides: object) -> SimpleNamespace:
+    fields = {
+        "run_id": run_id,
+        "root_trace_id": f"{run_id}/outer",
+        "status": "running",
+        "linked_call_count": 1,
+        "runtime_revision": None,
+        "config_sha256": None,
+        "requested_model": "codex/gpt-5.6-luna",
+        "reasoning_effort": "medium",
+        "max_budget": 0.5,
+        "error_type": None,
+        "error_phase": None,
+    }
+    return SimpleNamespace(**{**fields, **overrides})
+
+
+@pytest.fixture
+def observed_runs(monkeypatch: pytest.MonkeyPatch) -> dict[str, SimpleNamespace]:
+    """Stand in for llm_client's durable observed-run store (no live database or calls).
+
+    An attempt killed mid-run never reaches its terminal lifecycle write, so its
+    durable record keeps status ``running`` with the calls it had linked.
+    """
+
+    records: dict[str, SimpleNamespace] = {}
+
+    def get_observed_run(run_id: str) -> SimpleNamespace:
+        return records.get(run_id) or killed_attempt_record(run_id)
+
+    monkeypatch.setattr(
+        "whygame_reboot.runner.get_observed_run", get_observed_run, raising=False
+    )
+    return records
 
 
 class ObservedRunStub:
@@ -48,7 +87,7 @@ def caller_for(values):
     def caller(*args, **kwargs):
         calls.append((args, kwargs))
         value = values[len(calls) - 1]
-        if isinstance(value, Exception):
+        if isinstance(value, BaseException):
             raise value
         return value, result(len(calls))
 
@@ -230,3 +269,198 @@ def test_live_run_without_explicit_codex_home_fails_before_dispatch(tmp_path) ->
     assert run.status == "error"
     assert run.receipts == ()
     assert run.issues == ("non-dry execution requires an explicit codex_home",)
+
+
+class _Killed(BaseException):
+    """Simulates SIGKILL/power loss: nothing after the fault point runs, not even except."""
+
+
+def _current_attempt(run_id: str, linked_call_count: int) -> OuterRunReceipt:
+    return OuterRunReceipt(
+        run_id=run_id,
+        root_trace_id=f"{run_id}/outer",
+        status="completed",
+        linked_call_count=linked_call_count,
+        runtime_revision="a" * 40,
+        config_sha256="sha256:" + "b" * 64,
+        requested_model="codex/gpt-5.6-luna",
+        reasoning_effort="medium",
+        max_budget=0.5,
+        error_type=None,
+        error_phase=None,
+    )
+
+
+def _resume_to_acceptance(tmp_path, *, expected_calls: int):
+    first, second = outputs()
+    values = (first, second) if expected_calls == 2 else (second,)
+    caller, calls = caller_for(values)
+    resumed = run_loop(
+        packet(),
+        output_dir=tmp_path,
+        producer_revision="k" * 40,
+        observed_run=ObservedRunStub("attempt-2"),
+        caller=caller,
+        run_id="whygame-reboot/test-kill",
+        codex_home=tmp_path / "codex-profile",
+    )
+    assert resumed.status == "accepted", resumed.issues
+    assert len(calls) == expected_calls
+    # The CLI attaches the current attempt; every retained receipt must be in custody.
+    return _attach_outer_custody(resumed, _current_attempt("attempt-2", expected_calls))
+
+
+def test_abrupt_kill_after_checkpoint_resumes_with_proposal_custody(tmp_path) -> None:
+    first, _ = outputs()
+    killing, _ = caller_for((first, _Killed()))
+    with pytest.raises(_Killed):
+        run_loop(
+            packet(),
+            output_dir=tmp_path,
+            producer_revision="k" * 40,
+            observed_run=ObservedRunStub("attempt-1"),
+            caller=killing,
+            run_id="whygame-reboot/test-kill",
+            codex_home=tmp_path / "codex-profile",
+        )
+    assert not (tmp_path / "run.json").exists()
+    assert (tmp_path / "checkpoint-manifest.json").exists()
+
+    retained = _resume_to_acceptance(tmp_path, expected_calls=1)
+
+    assert retained.resumed_stages == ("proposal_and_finding",)
+    assert [item.run_id for item in retained.outer_runs] == ["attempt-1", "attempt-2"]
+    assert retained.outer_runs[0].status == "running"
+    assert retained.receipts[0].trace_id.startswith("attempt-1/outer/")
+
+
+def test_error_record_without_outer_custody_still_resumes_to_acceptance(tmp_path) -> None:
+    # Kill between run_loop's error run.json and the CLI's custody rewrite: the
+    # retained error record carries no outer run for the proposal's attempt.
+    first, _ = outputs()
+    failing, _ = caller_for((first, RuntimeError("revision route unavailable")))
+    failed = run_loop(
+        packet(),
+        output_dir=tmp_path,
+        producer_revision="k" * 40,
+        observed_run=ObservedRunStub("attempt-1"),
+        caller=failing,
+        run_id="whygame-reboot/test-kill",
+        codex_home=tmp_path / "codex-profile",
+    )
+    assert failed.outer_runs == ()
+
+    retained = _resume_to_acceptance(tmp_path, expected_calls=1)
+
+    assert [item.run_id for item in retained.outer_runs] == ["attempt-1", "attempt-2"]
+
+
+def test_resume_rejects_checkpoint_attempt_with_foreign_trace_root(
+    tmp_path, observed_runs
+) -> None:
+    first, _ = outputs()
+    killing, _ = caller_for((first, _Killed()))
+    with pytest.raises(_Killed):
+        run_loop(
+            packet(),
+            output_dir=tmp_path,
+            producer_revision="k" * 40,
+            observed_run=ObservedRunStub("attempt-1"),
+            caller=killing,
+            run_id="whygame-reboot/test-kill",
+            codex_home=tmp_path / "codex-profile",
+        )
+    observed_runs["attempt-1"] = killed_attempt_record("attempt-1", root_trace_id="someone-else")
+
+    def should_not_call(*args, **kwargs):
+        raise AssertionError("custody mismatch must fail before dispatch")
+
+    with pytest.raises(ValueError, match="outer-run custody"):
+        run_loop(
+            packet(),
+            output_dir=tmp_path,
+            producer_revision="k" * 40,
+            observed_run=ObservedRunStub("attempt-2"),
+            caller=should_not_call,
+            run_id="whygame-reboot/test-kill",
+            codex_home=tmp_path / "codex-profile",
+        )
+
+
+# Every durable write in a live run, in order. A kill "at" a write lands after the
+# temporary bytes are written but before the atomic rename publishes them.
+LIVE_WRITES = (
+    "proposal.json",
+    "finding.json",
+    "proposal-receipt.json",
+    "checkpoint-manifest.json",
+    "revision-plan.json",
+    "revision-event.json",
+)
+
+
+@pytest.mark.parametrize("kill_at", range(len(LIVE_WRITES)))
+def test_kill_at_every_write_leaves_fresh_or_resumable_state(
+    tmp_path, monkeypatch: pytest.MonkeyPatch, kill_at: int
+) -> None:
+    from whygame_reboot import runner
+
+    real_replace = runner.os.replace
+    published: list[str] = []
+
+    def faulty_replace(src, dst):
+        if len(published) == kill_at:
+            raise _Killed()
+        real_replace(src, dst)
+        published.append(Path(dst).name)
+
+    monkeypatch.setattr(runner.os, "replace", faulty_replace)
+    first, second = outputs()
+    caller, _ = caller_for((first, second))
+    with pytest.raises(_Killed):
+        run_loop(
+            packet(),
+            output_dir=tmp_path,
+            producer_revision="k" * 40,
+            observed_run=ObservedRunStub("attempt-1"),
+            caller=caller,
+            run_id="whygame-reboot/test-kill",
+            codex_home=tmp_path / "codex-profile",
+        )
+    assert published == list(LIVE_WRITES[:kill_at])
+    # No published file is ever partial: each is absent or complete JSON.
+    for name in LIVE_WRITES:
+        if (tmp_path / name).exists():
+            json.loads((tmp_path / name).read_text())
+    monkeypatch.setattr(runner.os, "replace", real_replace)
+
+    committed = kill_at > LIVE_WRITES.index("checkpoint-manifest.json")
+    retained = _resume_to_acceptance(tmp_path, expected_calls=1 if committed else 2)
+
+    if committed:
+        assert retained.resumed_stages == ("proposal_and_finding",)
+        assert [item.run_id for item in retained.outer_runs] == ["attempt-1", "attempt-2"]
+    else:
+        assert retained.resumed_stages == ()
+        assert [item.run_id for item in retained.outer_runs] == ["attempt-2"]
+    assert not [path.name for path in tmp_path.iterdir() if path.name.endswith(".tmp")]
+
+
+def test_killed_accepted_attempt_before_terminal_record_resumes(tmp_path) -> None:
+    # The CLI writes report.html before run.json, so a kill between them leaves
+    # an uncommitted report beside the committed checkpoint.
+    caller, _ = caller_for(outputs())
+    run_loop(
+        packet(),
+        output_dir=tmp_path,
+        producer_revision="k" * 40,
+        observed_run=ObservedRunStub("attempt-1"),
+        caller=caller,
+        run_id="whygame-reboot/test-kill",
+        codex_home=tmp_path / "codex-profile",
+    )
+    (tmp_path / "report.html").write_text("<html>uncommitted</html>", encoding="utf-8")
+
+    retained = _resume_to_acceptance(tmp_path, expected_calls=1)
+
+    assert [item.run_id for item in retained.outer_runs] == ["attempt-1", "attempt-2"]

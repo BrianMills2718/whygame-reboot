@@ -38,6 +38,14 @@ input with source revision and digest.
   secrets.
 - A loop-run manifest records stage states and artifact digests, enabling loud
   failure and safe resume from completed immutable checkpoints.
+- Every run artifact is published by atomic replace (fsynced temporary file,
+  rename, directory fsync), so a crash never leaves a partial file. The
+  checkpoint manifest is the checkpoint's commit point and `run.json` is the
+  terminal commit point, written after the report. A directory holding only
+  uncommitted checkpoint files starts fresh; a committed checkpoint resumes with
+  or without an error `run.json`. The manifest records the outer attempt that
+  made the proposal call, so resume recovers that attempt's outer-run custody
+  from the shared client even when a kill prevented any terminal record.
 
 ## First-vertical execution
 
