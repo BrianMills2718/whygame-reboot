@@ -186,17 +186,16 @@ def test_checkpoint_cannot_be_rebound_to_another_run_id(tmp_path) -> None:
     def should_not_call(*args, **kwargs):
         raise AssertionError("identity mismatch must fail before dispatch")
 
-    rebound = run_loop(
-        packet(),
-        output_dir=tmp_path,
-        producer_revision="e" * 40,
-        observed_run=ObservedRunStub("whygame-reboot/test-rebind-attempt-2"),
-        caller=should_not_call,
-        run_id="whygame-reboot/different-run",
-        codex_home=tmp_path / "codex-profile",
-    )
-    assert rebound.status == "error"
-    assert "checkpoint identity differs" in rebound.issues[0]
+    with pytest.raises(ValueError, match="checkpoint identity differs"):
+        run_loop(
+            packet(),
+            output_dir=tmp_path,
+            producer_revision="e" * 40,
+            observed_run=ObservedRunStub("whygame-reboot/test-rebind-attempt-2"),
+            caller=should_not_call,
+            run_id="whygame-reboot/different-run",
+            codex_home=tmp_path / "codex-profile",
+        )
 
 
 def test_dry_run_dispatches_no_call_and_renders_stopped_state(tmp_path) -> None:
