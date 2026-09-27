@@ -224,7 +224,19 @@ def _checkpoint_manifest(
     }
 
 
-def _load_checkpoint(
+def checkpoint_run_id(output_dir: Path) -> str | None:
+    """Return the run ID a resumable checkpoint in ``output_dir`` is bound to."""
+
+    manifest_path = output_dir / "checkpoint-manifest.json"
+    if not manifest_path.is_file():
+        return None
+    run_id = json.loads(manifest_path.read_text(encoding="utf-8")).get("run_id")
+    if not isinstance(run_id, str) or not run_id:
+        raise ValueError(f"checkpoint manifest has no run_id: {manifest_path}")
+    return run_id
+
+
+def _checked_checkpoint_manifest(
     output_dir: Path,
     *,
     run_id: str,
@@ -232,7 +244,7 @@ def _load_checkpoint(
     input_sha256: str,
     config_sha256: str,
     producer_revision: str,
-) -> tuple[CommittedProposal, Finding, CallReceipt] | None:
+) -> dict[str, Any] | None:
     manifest_path = output_dir / "checkpoint-manifest.json"
     if not manifest_path.exists():
         return None
@@ -244,8 +256,33 @@ def _load_checkpoint(
         "config_sha256": config_sha256,
         "producer_revision": producer_revision,
     }
-    if any(manifest.get(key) != value for key, value in expected.items()):
-        raise ValueError("checkpoint identity differs from the requested run")
+    mismatched = sorted(key for key, value in expected.items() if manifest.get(key) != value)
+    if mismatched:
+        raise ValueError(
+            "checkpoint identity differs from the requested run: " + ", ".join(mismatched)
+        )
+    return manifest
+
+
+def _load_checkpoint(
+    output_dir: Path,
+    *,
+    run_id: str,
+    packet: QuestionPacket,
+    input_sha256: str,
+    config_sha256: str,
+    producer_revision: str,
+) -> tuple[CommittedProposal, Finding, CallReceipt] | None:
+    manifest = _checked_checkpoint_manifest(
+        output_dir,
+        run_id=run_id,
+        packet=packet,
+        input_sha256=input_sha256,
+        config_sha256=config_sha256,
+        producer_revision=producer_revision,
+    )
+    if manifest is None:
+        return None
     models = (
         ("proposal.json", CommittedProposal),
         ("finding.json", Finding),
@@ -308,10 +345,24 @@ def run_loop(
 ) -> LoopRun:
     """Execute or resume the exact two-call graph-adversary loop."""
 
-    stable_id = run_id or f"whygame-reboot/{uuid.uuid4().hex}"
     prior_outer_runs = _prepare_output_dir(output_dir, dry_run=dry_run, resume=resume)
     input_sha256 = sha256_value(packet)
     resolved_config_sha256 = config_sha256()
+    stable_id = (
+        run_id
+        or (checkpoint_run_id(output_dir) if resume else None)
+        or f"whygame-reboot/{uuid.uuid4().hex}"
+    )
+    if resume:
+        # Reject a mismatched resume before anything can rewrite the checkpoint's run.json.
+        _checked_checkpoint_manifest(
+            output_dir,
+            run_id=stable_id,
+            packet=packet,
+            input_sha256=input_sha256,
+            config_sha256=resolved_config_sha256,
+            producer_revision=producer_revision,
+        )
     common = {
         "run_id": stable_id,
         "input_sha256": input_sha256,

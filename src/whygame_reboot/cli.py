@@ -20,6 +20,7 @@ from whygame_reboot.runner import (
     MAX_RUN_BUDGET_USD,
     MODEL,
     REASONING_EFFORT,
+    checkpoint_run_id,
     config_sha256,
     run_loop,
 )
@@ -34,7 +35,10 @@ def _parser() -> argparse.ArgumentParser:
         required=True,
         help="New run directory, or an exact failed proposal checkpoint to resume",
     )
-    parser.add_argument("--run-id", help="Stable run ID; generated when omitted")
+    parser.add_argument(
+        "--run-id",
+        help="Stable run ID; a resumed checkpoint keeps its own, otherwise generated",
+    )
     parser.add_argument("--dry-run", action="store_true", help="Validate without model calls")
     parser.add_argument("--no-resume", action="store_true", help="Ignore an existing checkpoint")
     parser.add_argument(
@@ -114,7 +118,12 @@ def main() -> int:
             print("--codex-home must contain .codex/auth.json", file=sys.stderr)
             return 2
     revision = _producer_revision()
-    product_run_id = args.run_id or f"whygame-reboot/{uuid.uuid4().hex}"
+    # Resuming a checkpoint keeps its run ID unless the caller names one explicitly.
+    product_run_id = (
+        args.run_id
+        or (None if args.no_resume or args.dry_run else checkpoint_run_id(args.output))
+        or f"whygame-reboot/{uuid.uuid4().hex}"
+    )
     attempt_token = uuid.uuid4().hex
     os.environ["LLM_CLIENT_REQUIRE_OBSERVED_RUN"] = "1"
     observed = ObservedRun(
