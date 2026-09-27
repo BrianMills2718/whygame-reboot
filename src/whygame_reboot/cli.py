@@ -88,6 +88,26 @@ def _attach_outer_custody(
     return run.model_copy(update={"outer_runs": outer_runs})
 
 
+def publish_terminal_record(output_dir: Path, run: LoopRun) -> LoopRun:
+    """Publish the report, then ``run.json`` naming its digest, and return that record.
+
+    run.json is the terminal commit point, so it is published last: a kill before
+    it leaves the checkpoint resumable rather than a record whose report_sha256
+    names a report that was never written.
+    """
+
+    report = render_report(run)
+    run = run.model_copy(
+        update={"report_sha256": hashlib.sha256(report.encode("utf-8")).hexdigest()}
+    )
+    write_atomic_text(output_dir / "report.html", report)
+    write_atomic_text(
+        output_dir / "run.json",
+        json.dumps(run.model_dump(mode="json"), indent=2, sort_keys=True) + "\n",
+    )
+    return run
+
+
 class _TerminalRunError(RuntimeError):
     def __init__(self, run: LoopRun) -> None:
         super().__init__(f"run ended with status {run.status}")
@@ -177,17 +197,7 @@ def _run_locked(
     assert run is not None
     try:
         run = _attach_outer_custody(run, observed_outer_receipt(observed.run_id))
-        report = render_report(run)
-        report_sha256 = hashlib.sha256(report.encode("utf-8")).hexdigest()
-        run = run.model_copy(update={"report_sha256": report_sha256})
-        # run.json is the terminal commit point, so it is published last: a kill
-        # before it leaves the checkpoint resumable rather than a record whose
-        # report_sha256 names a report that was never written.
-        write_atomic_text(args.output / "report.html", report)
-        write_atomic_text(
-            args.output / "run.json",
-            json.dumps(run.model_dump(mode="json"), indent=2, sort_keys=True) + "\n",
-        )
+        publish_terminal_record(args.output, run)
     except Exception as exc:  # noqa: BLE001 - never leave a success manifest without custody
         print(f"{type(exc).__name__}: {exc}", file=sys.stderr)
         return 1
