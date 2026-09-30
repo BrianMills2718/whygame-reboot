@@ -64,8 +64,11 @@ claim and remove the worktree through the sanctioned close procedure.
   revision. No retry, silent fallback, third critic, or random strategy.
 - Product acceptance precedes AES admission. Store the AES result as a separate
   receipt so a policy decision cannot circularly alter the artifact it judges.
-- The first report is deterministic static HTML plus immutable JSON. Do not add
-  SSE, a server, or generalized graph infrastructure before the report is useful.
+- The first report is deterministic static HTML plus immutable JSON. The report
+  has since proved useful, so `src/whygame_reboot/web.py` adds one public-hosting
+  front door (default-deny, `WHYGAME_PUBLIC=1`, OpenRouter Luna route, per-visitor
+  sessions and spend caps) served at why.brianmills.dev. Still no SSE or
+  generalized graph infrastructure; the CLI and Codex route are unchanged.
 - Do not claim a world model, truth discovery, independent criticism, or unique
   symbolic reasoning. The evaluator checks a deliberately bounded conflict.
 

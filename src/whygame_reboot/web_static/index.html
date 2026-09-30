@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WhyGame: code checks an AI's causal claims</title>
+<meta name="description" content="Run a real model that proposes cause-and-effect claims, watch plain code find a contradiction in them, and see the revision.">
+<style>
+:root {
+  --bg:#f7f6f2; --panel:#ffffff; --ink:#1d2228; --muted:#5d6670; --line:#d8d6cf;
+  --accent:#1f4f8f; --conflict:#c0292b; --conflict-bg:#fdeceb; --new:#1d7a46; --new-bg:#e8f5ee;
+  --gone:#8b9097; --node:#eef1f5; --node-line:#9aa4b0; --code:#16324f; --warn-bg:#fff4dc;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:#14171b; --panel:#1c2026; --ink:#e7e9ec; --muted:#9aa3ad; --line:#323841;
+    --accent:#7fb0ee; --conflict:#ff7b7d; --conflict-bg:#3a1f20; --new:#59c585; --new-bg:#17301f;
+    --gone:#7d848c; --node:#262b33; --node-line:#5a6470; --code:#a9c6ea; --warn-bg:#352c14;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:#14171b; --panel:#1c2026; --ink:#e7e9ec; --muted:#9aa3ad; --line:#323841;
+  --accent:#7fb0ee; --conflict:#ff7b7d; --conflict-bg:#3a1f20; --new:#59c585; --new-bg:#17301f;
+  --gone:#7d848c; --node:#262b33; --node-line:#5a6470; --code:#a9c6ea; --warn-bg:#352c14;
+}
+* { box-sizing:border-box; }
+html { -webkit-text-size-adjust:100%; }
+body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+main { max-width:1040px; margin:0 auto; padding:20px 16px 48px; }
+h1 { font-size:clamp(1.5rem,4.2vw,2.1rem); line-height:1.2; margin:8px 0 6px; }
+.sub { color:var(--muted); margin:0 0 16px; max-width:62ch; }
+button, select, textarea { font:inherit; color:inherit; }
+button { cursor:pointer; }
+.btn { border:1px solid var(--line); background:var(--panel); border-radius:8px; padding:10px 14px; min-height:44px; }
+.btn:hover:not(:disabled) { border-color:var(--accent); }
+.btn:disabled { opacity:.55; cursor:default; }
+.btn.primary { background:var(--accent); border-color:var(--accent); color:#fff; font-weight:600; }
+:root[data-theme="dark"] .btn.primary, :root:not([data-theme="light"]) .btn.primary { color:#0c1118; }
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) .btn.primary { color:#fff; } }
+.btn:focus-visible, .step:focus-visible, summary:focus-visible, .edge:focus-visible, .nodeg:focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
+.actions { display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:10px; }
+.actions .or { color:var(--muted); }
+.linkbtn { background:none; border:0; color:var(--accent); text-decoration:underline; padding:10px 2px; min-height:44px; }
+.pick { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:0 0 12px; color:var(--muted); font-size:.95rem; }
+.pick label { display:inline-flex; gap:6px; align-items:center; border:1px solid var(--line); background:var(--panel); padding:8px 12px; border-radius:999px; min-height:40px; cursor:pointer; }
+.pick input:checked + span { font-weight:600; color:var(--ink); }
+.pick label:has(input:checked) { border-color:var(--accent); }
+details.own { margin:0 0 14px; background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:4px 14px; }
+details.own summary { cursor:pointer; padding:10px 0; min-height:44px; }
+details.own textarea { width:100%; background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:8px; margin:4px 0 10px; }
+.note { color:var(--muted); font-size:.9rem; }
+.steps { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin:14px 0 10px; }
+.step { text-align:left; background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:8px 10px; min-height:64px; display:flex; flex-direction:column; gap:4px; }
+.step[aria-current="step"] { border-color:var(--accent); box-shadow:0 0 0 2px var(--accent) inset; }
+.step.todo { opacity:.55; }
+.step.stop { border-color:var(--conflict); background:var(--conflict-bg); }
+.step .who { font:600 .72rem/1 ui-monospace,Menlo,monospace; letter-spacing:.04em; border-radius:4px; padding:3px 6px; align-self:flex-start; }
+.who.model { border:1px solid var(--ink); }
+.who.code { background:var(--code); color:#fff; font-family:ui-monospace,Menlo,monospace; }
+:root[data-theme="dark"] .who.code, :root:not([data-theme="light"]) .who.code { color:#0c1118; }
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) .who.code { color:#fff; } }
+.step .what { font-size:.9rem; line-height:1.25; }
+.step .pulse { animation:pulse 1.2s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity:.4; } }
+@media (prefers-reduced-motion: reduce) { .step .pulse { animation:none; } }
+.stage { display:grid; grid-template-columns:minmax(0,1fr); gap:12px; }
+@media (min-width:900px) { .stage { grid-template-columns:230px minmax(0,1fr); } }
+.panel { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:12px 14px; }
+.panel h2 { font-size:.8rem; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin:0 0 8px; }
+.obs { display:flex; gap:8px; margin:0 0 8px; font-size:.9rem; line-height:1.35; }
+.obs b { flex:none; min-width:30px; height:26px; border-radius:13px; background:var(--node); border:1px solid var(--node-line); display:grid; place-items:center; font-size:.75rem; }
+.obs.hl b { background:var(--accent); color:#fff; border-color:var(--accent); }
+.qtext { font-weight:600; margin:0 0 10px; }
+.canvas { min-height:260px; }
+.canvas svg { width:100%; height:auto; display:block; }
+.legend { display:flex; flex-wrap:wrap; gap:6px 14px; font-size:.82rem; color:var(--muted); margin:8px 0 0; }
+.legend i { display:inline-block; width:22px; height:0; border-top:3px solid; vertical-align:middle; margin-right:5px; }
+.legend .l-conf i { border-color:var(--conflict); } .legend .l-gone i { border-top-style:dashed; border-color:var(--gone); }
+.legend .l-new i { border-color:var(--new); } .legend .l-kept i { border-color:var(--ink); }
+.edge { cursor:pointer; } .edge path.line { fill:none; stroke-width:2.4; } .edge .hit { fill:none; stroke:transparent; stroke-width:16; }
+.edge.kept path.line { stroke:var(--ink); } .edge.conflict path.line { stroke:var(--conflict); stroke-width:3.2; }
+.edge.gone path.line { stroke:var(--gone); stroke-dasharray:7 5; } .edge.new path.line { stroke:var(--new); stroke-width:3; }
+.edge.sel path.line { stroke-width:4.4; }
+.edge.soft path.line { stroke-dasharray:2 5; }
+.edge.thin path.line { stroke-width:1.6; }
+.elabel rect { fill:var(--panel); stroke:var(--line); } .edge.conflict .elabel rect { stroke:var(--conflict); } .edge.new .elabel rect { stroke:var(--new); }
+.elabel text { fill:var(--ink); font:600 12px system-ui,sans-serif; } .edge.gone .elabel text { fill:var(--gone); text-decoration:line-through; }
+.tag text { font:700 10px ui-monospace,monospace; letter-spacing:.04em; }
+.nodeg { cursor:pointer; } .nodeg rect { fill:var(--node); stroke:var(--node-line); stroke-width:1.2; }
+.nodeg text { fill:var(--ink); font:13px system-ui,sans-serif; }
+.nodeg.sel rect { stroke:var(--accent); stroke-width:3; }
+.colhead { fill:var(--muted); font:600 11px system-ui,sans-serif; text-transform:uppercase; letter-spacing:.06em; }
+.strips { display:flex; flex-direction:column; gap:10px; }
+.strip { border:1px solid var(--line); border-left-width:6px; border-radius:10px; padding:10px; background:var(--bg); cursor:pointer; text-align:left; width:100%; }
+.strip.kept { border-left-color:var(--ink); } .strip.conflict { border-left-color:var(--conflict); background:var(--conflict-bg); }
+.strip.gone { border-left-color:var(--gone); border-left-style:dashed; } .strip.gone .cl { text-decoration:line-through; color:var(--gone); }
+.strip.new { border-left-color:var(--new); background:var(--new-bg); } .strip.sel { outline:3px solid var(--accent); }
+.strip .cl { font-size:1rem; line-height:1.35; }
+.strip .rel { display:inline-block; font:700 .8rem ui-monospace,monospace; padding:1px 8px; border-radius:999px; border:1px solid currentColor; margin:2px 4px; }
+.strip .tg { font:700 .7rem ui-monospace,monospace; letter-spacing:.04em; display:block; margin-top:6px; color:var(--muted); }
+.strip.conflict .tg { color:var(--conflict); } .strip.new .tg { color:var(--new); }
+.callout { margin-top:12px; padding:12px 14px; border-radius:10px; background:var(--panel); border:1px solid var(--line); }
+.callout h3 { margin:0 0 4px; font-size:.85rem; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; }
+.callout p { margin:0; }
+.detail { margin-top:12px; padding:12px 14px; border-radius:10px; border:1px solid var(--accent); background:var(--panel); }
+.detail h3 { margin:0 0 6px; font-size:1rem; }
+.detail .close { float:right; }
+.detail p { margin:6px 0; }
+.refusal { padding:14px; border-radius:10px; background:var(--conflict-bg); border:1px solid var(--conflict); margin-top:12px; }
+.refusal strong { color:var(--conflict); }
+.notice { padding:12px 14px; border-radius:10px; background:var(--warn-bg); border:1px solid var(--line); margin-top:12px; }
+.wait { display:grid; place-items:center; min-height:260px; text-align:center; color:var(--muted); padding:20px; }
+.adv { margin-top:16px; }
+.adv > summary { cursor:pointer; font-weight:600; padding:10px 0; min-height:44px; }
+.chain { display:flex; flex-wrap:wrap; gap:6px; align-items:center; font:.85rem ui-monospace,Menlo,monospace; margin:8px 0 14px; }
+.chain span { background:var(--node); border:1px solid var(--node-line); padding:3px 8px; border-radius:6px; }
+.chain em { font-style:normal; color:var(--muted); font-family:system-ui,sans-serif; }
+table { width:100%; border-collapse:collapse; font-size:.85rem; }
+th, td { text-align:left; padding:6px 8px; border-bottom:1px solid var(--line); vertical-align:top; }
+td.k { border-left:5px solid var(--ink); } td.k.conflict { border-left-color:var(--conflict); } td.k.gone { border-left-color:var(--gone); } td.k.new { border-left-color:var(--new); }
+.tscroll { overflow-x:auto; }
+.recs { display:grid; gap:8px; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); margin:8px 0; }
+.rec { background:var(--node); border-radius:8px; padding:8px 10px; font-size:.88rem; }
+footer { margin-top:28px; color:var(--muted); font-size:.85rem; }
+footer p { margin:4px 0; }
+.sr { position:absolute; left:-9999px; }
+@media (max-width:640px) {
+  .steps { grid-template-columns:repeat(2,1fr); }
+  .step .what { font-size:.95rem; }
+  main { padding:14px 16px 40px; }
+  .obs-panel > summary { min-height:44px; padding:10px 0; cursor:pointer; font-weight:600; }
+}
+</style>
+</head>
+<body>
+<main>
+  <h1>Code checks an AI's cause-and-effect claims, and makes it revise</h1>
+  <p class="sub">One real run, about a minute, two model calls. The model is told to include two opposing claims. <b>Plain code, not the model,</b> has to find them, and the model then has to revise.</p>
+
+  <div class="actions">
+    <button class="btn primary" id="go" type="button">Run it live (about 30 s)</button>
+    <span class="or">or</span>
+    <button class="linkbtn" id="sample" type="button">open a finished run instantly</button>
+    <button class="linkbtn" id="break" type="button">try to break it</button>
+  </div>
+  <div class="pick" role="radiogroup" aria-label="Question to run" id="pick"></div>
+  <details class="own" id="own">
+    <summary>Write your own question</summary>
+    <label for="q">Question (20 to 400 characters)</label>
+    <textarea id="q" rows="2" maxlength="400" placeholder="Why did our deployment pipeline get slower after we added more tests?"></textarea>
+    <label for="o">Observations: short facts, one per line (2 to 6)</label>
+    <textarea id="o" rows="4" placeholder="Test count went from 400 to 2,000 over a year.&#10;The tests run in one serial job.&#10;Flaky tests are retried up to three times."></textarea>
+    <button class="btn" id="goown" type="button">Run my question</button>
+    <p class="note">Your text is sent to a model and is not kept after the run.</p>
+  </details>
+
+  <div class="steps" id="steps" aria-label="The four steps of a run"></div>
+  <div id="status" role="status" aria-live="polite" class="note"></div>
+
+  <div class="stage">
+    <div class="panel obs-panel" id="inputs"></div>
+    <div>
+      <div class="panel canvas" id="canvas"><div class="wait">Press <b>&nbsp;Run it live&nbsp;</b> to start, or open a finished run. The drawing fills in as the run progresses.</div></div>
+      <div class="legend" id="legend" hidden>
+        <span class="l-kept"><i></i>kept claim</span><span class="l-conf"><i></i>in conflict (found by code)</span>
+        <span class="l-gone"><i></i>superseded</span><span class="l-new"><i></i>replacement</span>
+      </div>
+      <div id="detail"></div>
+      <div id="callout"></div>
+      <div id="refusal"></div>
+    </div>
+  </div>
+
+  <details class="adv panel" id="adv"><summary>Show the machinery</summary><div id="advbody"><p class="note">Run or open a result to see the fingerprints, claim table and model-call receipts.</p></div></details>
+
+  <footer>
+    <p id="foot"></p>
+    <p><b>What this does not show:</b> it is not a world model, a truth detector, or independent criticism. The check is deliberately narrow: two claims about the same subject and object, one saying "causes" and the other "prevents". Whether the revision is right is for you to judge.</p>
+  </footer>
+</main>
+<script>
+"use strict";
+const SVGNS = "http://www.w3.org/2000/svg";
+const $ = (id) => document.getElementById(id);
+function h(tag, attrs, ...kids) {
+  const svg = ["svg","g","path","rect","text","tspan","marker","defs","line","title"].includes(tag);
+  const el = svg ? document.createElementNS(SVGNS, tag) : document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (v === false || v == null) continue;
+    if (k === "on") for (const [ev, fn] of Object.entries(v)) el.addEventListener(ev, fn);
+    else if (k === "text") el.textContent = v;
+    else el.setAttribute(k, v === true ? "" : v);
+  }
+  for (const kid of kids.flat()) if (kid != null && kid !== false) el.append(kid.nodeType ? kid : document.createTextNode(String(kid)));
+  return el;
+}
+const STEPS = [
+  { who: "model", what: "Proposes claims" },
+  { who: "code", what: "Checks for a conflict" },
+  { who: "model", what: "Revises" },
+  { who: "code", what: "Replays the change log" },
+];
+const STAGE_STEP = { queued: 0, proposing: 0, checking: 1, revising: 2, finishing: 3, done: 3 };
+const REL = { causes: "causes", prevents: "prevents", contributes_to: "contributes to", constrains: "limits" };
+const REL_GLYPH = { causes: "→", prevents: "⊣", contributes_to: "⇢", constrains: "⋯" };
+
+const S = { examples: [], exampleId: null, run: null, job: null, step: 2, sel: null, live: false, stage: null, refusal: null,
+  timer: null, running: false, source: null, started: 0 };
+
+// ---------------------------------------------------------------- data helpers
+function model(run) {
+  // Every claim that ever existed in this run, with its state at each step.
+  const claims = [];
+  if (!run || !run.proposal) return { claims, obsIndex: {}, conflict: [] };
+  const obsIndex = {};
+  run.observations.forEach((o, i) => { obsIndex[o.id] = { n: i + 1, text: o.text }; });
+  const conflict = run.finding ? [run.finding.left_claim_id, run.finding.right_claim_id] : [];
+  const superseded = new Set(run.active_projection ? run.active_projection.superseded_claim_ids : []);
+  const active = new Set(run.active_projection ? run.active_projection.active_claims.map((c) => c.claim_id) : []);
+  for (const c of run.proposal.claims) claims.push({ ...c, origin: "proposed", superseded: superseded.has(c.claim_id), inConflict: conflict.includes(c.claim_id), active: active.has(c.claim_id) });
+  if (run.active_projection) {
+    const proposed = new Set(run.proposal.claims.map((c) => c.claim_id));
+    for (const c of run.active_projection.active_claims) if (!proposed.has(c.claim_id)) claims.push({ ...c, origin: "replacement", superseded: false, inConflict: false, active: true });
+  }
+  return { claims, obsIndex, conflict };
+}
+function stateAt(c, step) {
+  // step is 0-based: 0 proposed, 1 conflict found, 2 revised, 3 replayed
+  if (c.origin === "replacement") return step >= 2 ? "new" : null;
+  if (step === 0) return "kept";
+  if (step === 1) return c.inConflict ? "conflict" : "kept";
+  if (step === 2) return c.superseded ? "gone" : "kept";
+  return c.superseded ? null : "kept";
+}
+const TAG = { kept: "", conflict: "CONFLICT", gone: "SUPERSEDED", new: "REPLACEMENT" };
+
+// ---------------------------------------------------------------- rendering
+function renderSteps() {
+  const box = $("steps"); box.replaceChildren();
+  const done = S.run && !S.running;
+  const active = S.running ? STAGE_STEP[S.stage || "queued"] : S.step;
+  STEPS.forEach((s, i) => {
+    const stopped = S.refusal && i === 0;
+    const todo = S.running ? i > active : (!S.run && !S.refusal);
+    const el = h("button", { class: "step" + (todo ? " todo" : "") + (stopped ? " stop" : ""), type: "button", "aria-current": (!S.refusal && (S.running || S.run) && i === active) ? "step" : false,
+      disabled: !done, on: { click: () => { S.step = i; render(); } } },
+      h("span", { class: "who " + s.who }, s.who === "model" ? "MODEL" : "CODE"),
+      h("span", { class: "what" + (S.running && i === active ? " pulse" : "") }, (stopped ? "✕ " : (i + 1) + ". ") + s.what));
+    box.append(el);
+  });
+}
+function renderInputs() {
+  const box = $("inputs"); box.replaceChildren();
+  const run = S.run || (S.pending || null);
+  if (!run) { box.append(h("h2", { text: "Question and evidence" }), h("p", { class: "note", text: "The question and the observations the model must explain will appear here." })); return; }
+  const list = h("div", {}, run.observations.map((o, i) => h("div", { class: "obs", "data-obs": o.id }, h("b", { text: "ev" + (i + 1) }), h("span", { text: o.text }))));
+  if (window.matchMedia("(max-width:640px)").matches) {
+    box.append(h("details", {}, h("summary", { text: "Question and evidence (" + run.observations.length + " observations)" }), h("p", { class: "qtext", text: run.question }), list));
+  } else box.append(h("h2", { text: "Question" }), h("p", { class: "qtext", text: run.question }), h("h2", { text: "Evidence it must fit" }), list);
+}
+function wrap(text, n) {
+  const words = String(text).split(/\s+/), lines = []; let cur = "";
+  for (const w of words) { if (cur && (cur + " " + w).length > n) { lines.push(cur); cur = w; } else cur = cur ? cur + " " + w : w; }
+  if (cur) lines.push(cur); return lines.slice(0, 6);
+}
+function obsLabel(c, m) { return c.observation_ids.map((id) => "ev" + (m.obsIndex[id] ? m.obsIndex[id].n : "?")).join(" "); }
+function visibleClaims(m) {
+  return m.claims.map((c) => ({ c, st: stateAt(c, S.step) })).filter((x) => x.st);
+}
+function renderCanvas() {
+  const box = $("canvas"); box.replaceChildren(); $("legend").hidden = true;
+  if (S.running && !S.run) {
+    box.append(h("div", { class: "wait" }, h("div", {}, h("p", { text: S.stage === "revising" ? "The model is revising…" : "The model is reading the evidence and proposing claims…" }),
+      h("p", { class: "note", text: "Elapsed: " + Math.round((Date.now() - S.started) / 1000) + " s. Runs usually take 20 to 60 s. The drawing appears when the first model call returns." }))));
+    return;
+  }
+  if (S.refusal) { box.append(h("div", { class: "wait" }, h("div", {}, h("p", { text: "Nothing was drawn because nothing ran." }), h("p", { class: "note", text: "No model call was made and nothing was spent." })))); return; }
+  if (!S.run) { box.append(h("div", { class: "wait", text: "Press Run it live to start, or open a finished run. The drawing fills in as the run progresses." })); return; }
+  if (!S.run.proposal) {
+    box.append(h("div", { class: "wait", text: "The run stopped before the model produced any claims, so there is nothing to draw." })); return;
+  }
+  $("legend").hidden = false;
+  const m = model(S.run), vis = visibleClaims(m);
+  const narrow = window.matchMedia("(max-width:640px)").matches;
+  box.append(narrow ? strips(m, vis) : graph(m, vis, box.clientWidth - 28));
+}
+function strips(m, vis) {
+  const wrapEl = h("div", { class: "strips" });
+  vis.forEach(({ c, st }) => {
+    wrapEl.append(h("button", { type: "button", class: "strip " + st + (S.sel === "c:" + c.claim_id ? " sel" : ""), on: { click: () => { S.sel = "c:" + c.claim_id; render(); } } },
+      h("span", { class: "cl" }, c.subject, h("span", { class: "rel" }, REL_GLYPH[c.relation] + " " + REL[c.relation]), c.object),
+      h("span", { class: "tg" }, (TAG[st] ? TAG[st] + " · " : "") + obsLabel(c, m) + " · " + c.confidence)));
+  });
+  return wrapEl;
+}
+function markers() {
+  const colors = { kept: "var(--ink)", conflict: "var(--conflict)", gone: "var(--gone)", new: "var(--new)" };
+  const defs = h("defs");
+  for (const [k, col] of Object.entries(colors)) {
+    defs.append(h("marker", { id: "arrow-" + k, viewBox: "0 0 10 10", refX: 9, refY: 5, markerWidth: 8, markerHeight: 8, orient: "auto" }, h("path", { d: "M0,0 L10,5 L0,10 z", fill: col })));
+    defs.append(h("marker", { id: "bar-" + k, viewBox: "0 0 10 10", refX: 5, refY: 5, markerWidth: 8, markerHeight: 10, orient: "auto" }, h("path", { d: "M5,-2 L5,12", stroke: col, "stroke-width": 3, fill: "none" })));
+  }
+  return defs;
+}
+function graph(m, vis, width) {
+  const W = Math.max(520, Math.min(width, 900)), nodeW = Math.round(W * 0.34), charsPer = Math.floor(nodeW / 7.2);
+  const norm = (s) => s.toLowerCase().replace(/\s+/g, " ").trim();
+  const left = [], right = [];
+  const find = (arr, text) => { let n = arr.find((x) => norm(x.text) === norm(text)); if (!n) { n = { text, lines: wrap(text, charsPer) }; arr.push(n); } return n; };
+  const edges = vis.map(({ c, st }) => ({ c, st, l: find(left, c.subject), r: find(right, c.object) }));
+  const pair = new Map();
+  edges.forEach((e) => { const k = left.indexOf(e.l) + ":" + right.indexOf(e.r); pair.set(k, (pair.get(k) || 0) + 1); });
+  const crowd = Math.max(...pair.values());
+  const gap = 26 + (crowd > 1 ? 40 : 0), top = 26 + (crowd > 1 ? 50 : 0);
+  const place = (arr) => { let y = top; for (const n of arr) { n.h = n.lines.length * 16 + 18; n.y = y; y += n.h + gap; } return y; };
+  const hL = place(left), hR = place(right), H = Math.max(hL, hR) + 10;
+  left.forEach((n) => { n.x = 0; }); right.forEach((n) => { n.x = W - nodeW; });
+  const groups = new Map();
+  edges.forEach((e) => { const k = left.indexOf(e.l) + ":" + right.indexOf(e.r); (groups.get(k) || groups.set(k, []).get(k)).push(e); });
+  const svg = h("svg", { viewBox: `0 0 ${W} ${H}`, role: "group", "aria-label": "Claim graph: causes on the left, effects on the right" }, markers());
+  svg.append(h("text", { class: "colhead", x: 0, y: 14, text: "Cause" }), h("text", { class: "colhead", x: W - nodeW, y: 14, text: "Effect" }));
+  const drawNode = (n, kind) => {
+    const id = kind + ":" + norm(n.text);
+    const g = h("g", { class: "nodeg" + (S.sel === id ? " sel" : ""), tabindex: 0, role: "button", "aria-label": kind + " " + n.text, on: { click: () => { S.sel = id; render(); }, keydown: (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); S.sel = id; render(); } } } },
+      h("rect", { x: n.x, y: n.y, width: nodeW, height: n.h, rx: 8 }),
+      n.lines.map((ln, i) => h("text", { x: n.x + 10, y: n.y + 19 + i * 16, text: ln })));
+    return g;
+  };
+  groups.forEach((list) => {
+    list.forEach((e, i) => {
+      const off = (i - (list.length - 1) / 2) * 84, spread = (i - (list.length - 1) / 2) * 14;
+      const x1 = e.l.x + nodeW, y1 = e.l.y + e.l.h / 2 + spread, x2 = e.r.x, y2 = e.r.y + e.r.h / 2 + spread, dx = (x2 - x1) * 0.42;
+      const d = `M${x1},${y1} C${x1 + dx},${y1 + off} ${x2 - dx},${y2 + off} ${x2 - 2},${y2}`;
+      const t = [0.5, 0.3, 0.7][edges.indexOf(e) % 3], u = 1 - t;
+      const bx = (a, b, c, d2) => u*u*u*a + 3*u*u*t*b + 3*u*t*t*c + t*t*t*d2;
+      const mx = bx(x1, x1 + dx, x2 - dx, x2 - 2), my = bx(y1, y1 + off, y2 + off, y2);
+      const marker = e.c.relation === "prevents" ? `url(#bar-${e.st})` : `url(#arrow-${e.st})`;
+      const label = REL[e.c.relation], ob = obsLabel(e.c, m), tag = TAG[e.st];
+      const tw = Math.max(label.length * 7 + 14, ob.length * 6.4 + 12, tag.length * 6.6 + 12);
+      const cls = "edge " + e.st + (e.c.relation === "constrains" ? " soft" : "") + (e.c.relation === "contributes_to" ? " thin" : "") + (S.sel === "c:" + e.c.claim_id ? " sel" : "");
+      const tagColor = e.st === "conflict" ? "var(--conflict)" : e.st === "new" ? "var(--new)" : "var(--gone)";
+      svg.append(h("g", { class: cls, tabindex: 0, role: "button", "aria-label": `${e.c.subject} ${label} ${e.c.object}. ${tag || "kept"}`,
+        on: { click: () => { S.sel = "c:" + e.c.claim_id; render(); }, keydown: (ev) => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); S.sel = "c:" + e.c.claim_id; render(); } } } },
+        h("path", { class: "line", d, "marker-end": marker }), h("path", { class: "hit", d }),
+        h("g", { class: "elabel" }, h("rect", { x: mx - tw / 2, y: my - 13, width: tw, height: tag ? 46 : 30, rx: 6 }),
+          h("text", { x: mx, y: my + 2, "text-anchor": "middle", text: label }),
+          h("text", { x: mx, y: my + 15, "text-anchor": "middle", style: "font:500 10px ui-monospace,monospace;fill:var(--muted)", text: ob }),
+          tag && h("g", { class: "tag" }, h("text", { x: mx, y: my + 27, "text-anchor": "middle", fill: tagColor, text: tag })))));
+    });
+  });
+  left.forEach((n) => svg.append(drawNode(n, "cause"))); right.forEach((n) => svg.append(drawNode(n, "effect")));
+  return svg;
+}
+function renderDetail() {
+  const box = $("detail"); box.replaceChildren();
+  if (!S.run || !S.run.proposal || !S.sel) return;
+  const m = model(S.run), [kind, ...rest] = S.sel.split(":"), key = rest.join(":");
+  const close = h("button", { class: "linkbtn close", type: "button", on: { click: () => { S.sel = null; render(); } }, text: "Close" });
+  const obsText = (c) => c.observation_ids.map((id) => "ev" + (m.obsIndex[id] ? m.obsIndex[id].n : "?") + ": " + (m.obsIndex[id] ? m.obsIndex[id].text : id));
+  if (kind === "c") {
+    const c = m.claims.find((x) => x.claim_id === key); if (!c) return;
+    const st = stateAt(c, S.step) || "kept";
+    const why = S.run.revision_plan && S.run.revision_plan.decisions.find((d) => d.target_claim_id === c.claim_id);
+    box.append(h("div", { class: "detail" }, close, h("h3", { text: `${c.subject} ${REL[c.relation]} ${c.object}` }),
+      h("p", { class: "note", text: [c.origin === "replacement" ? "Replacement written in the revision step" : "Proposed in step 1", "confidence: " + c.confidence, TAG[st] ? TAG[st].toLowerCase() : "kept"].join(" · ") }),
+      h("p", {}, h("b", { text: "Why the model said so: " }), c.rationale),
+      why && h("p", {}, h("b", { text: "Revision decision (" + why.action + "): " }), why.rationale),
+      h("p", {}, h("b", { text: "Evidence cited: " }), obsText(c).join(" | "))));
+    document.querySelectorAll(".obs").forEach((el) => el.classList.toggle("hl", c.observation_ids.includes(el.dataset.obs)));
+  } else {
+    const text = m.claims.map((c) => [c.subject, c.object]).flat().find((t) => t.toLowerCase().replace(/\s+/g, " ").trim() === key);
+    const around = m.claims.filter((c) => (kind === "cause" ? c.subject : c.object).toLowerCase().replace(/\s+/g, " ").trim() === key);
+    box.append(h("div", { class: "detail" }, close, h("h3", { text: text || key }),
+      h("p", { class: "note", text: (kind === "cause" ? "Appears as a cause in " : "Appears as an effect in ") + around.length + " claim" + (around.length === 1 ? "" : "s") + ". Click a line to read one." })));
+  }
+}
+function renderCallout() {
+  const box = $("callout"); box.replaceChildren();
+  const run = S.run; if (!run || !run.proposal) return;
+  const caption = [
+    ["Step 1: the model's proposal", run.proposal.answer, "Every claim here came from the model. It was told to include one deliberately opposed pair."],
+    ["Step 2: code found a conflict", run.finding ? run.finding.explanation : "No conflict found.", "This rule is ordinary code, not a model: same subject, same object, one claim says causes and the other says prevents."],
+    ["Step 3: the revised answer", run.revision_plan ? run.revision_plan.revised_answer : "The run did not reach a revision.", "The model kept one side of the conflict and replaced the other with a qualified claim. Code checked that the conflict is gone."],
+    ["Step 4: replayed from the change log", run.active_projection ? run.active_projection.active_claims.length + " claims are active; " + run.active_projection.superseded_claim_ids.length + " superseded claim is kept in the history, not erased." : "", "Code rebuilt the current graph from the append-only log and got the same fingerprint."],
+  ][S.step];
+  box.append(h("div", { class: "callout" }, h("h3", { text: caption[0] }), h("p", { text: caption[1] }), h("p", { class: "note", text: caption[2] })));
+}
+function renderStatus() {
+  const box = $("status");
+  if (S.running) { box.textContent = "Running: " + ({ queued: "starting", proposing: "step 1, the model is proposing claims", checking: "step 2, code is checking", revising: "step 3, the model is revising", finishing: "step 4, code is replaying" }[S.stage] || "working") + " (" + Math.round((Date.now() - S.started) / 1000) + " s)."; }
+  else if (S.run && S.source === "sample") box.textContent = "This is a finished real run recorded on " + S.recorded + " (not a new model call). Use \"Run it live\" for a fresh one.";
+  else if (S.run && S.live) box.textContent = "Finished in " + S.job.elapsed_s + " s. Click any step, line or box for details.";
+  else box.textContent = "";
+}
+function renderRefusal() {
+  const box = $("refusal"); box.replaceChildren();
+  if (S.refusal) box.append(h("div", { class: "refusal", role: "alert" }, h("strong", { text: "Refused before anything ran. " }), S.refusal, h("p", { class: "note", text: "The server applied the same rule the real system uses (a question needs at least two observations). No model call was made and nothing was spent." })));
+  if (S.notice) box.append(h("div", { class: "notice", role: "alert" }, S.notice));
+  if (S.run && S.run.status === "blocked") {}
+}
+function short(x) { return x ? String(x).slice(0, 8) : "n/a"; }
+function renderAdvanced() {
+  const box = $("advbody"); box.replaceChildren();
+  const run = S.run; if (!run) { box.append(h("p", { class: "note", text: "Run or open a result to see the fingerprints, claim table and model-call receipts." })); return; }
+  const ev = run.revision_events && run.revision_events[0];
+  const chain = [["input", run.input_sha256], ["proposal", run.proposal && run.proposal.proposal_sha256], ["finding", run.finding && run.finding.finding_sha256], ["plan", run.revision_plan && run.revision_plan.plan_sha256], ["event", ev && ev.event_sha256], ["active graph", run.active_projection && run.active_projection.projection_sha256]];
+  box.append(h("h2", { class: "note", text: "Fingerprint chain (first 8 characters of each SHA-256; each is computed by code from the one before it)" }),
+    h("div", { class: "chain" }, chain.flatMap(([k, v], i) => [i ? h("em", { text: "→" }) : null, h("span", { text: k + " " + short(v) })])));
+  const m = model(run);
+  box.append(h("h2", { class: "note", text: "Claim table" }), h("div", { class: "tscroll" }, h("table", {},
+    h("thead", {}, h("tr", {}, ["id", "subject", "relation", "object", "confidence", "evidence", "state"].map((t) => h("th", { text: t })))),
+    h("tbody", {}, m.claims.map((c) => { const st = c.origin === "replacement" ? "new" : c.superseded ? "gone" : c.inConflict ? "conflict" : "kept";
+      return h("tr", {}, h("td", { class: "k " + st, text: c.claim_id.slice(-8) }), h("td", { text: c.subject }), h("td", { text: REL[c.relation] }), h("td", { text: c.object }), h("td", { text: c.confidence }), h("td", { text: obsLabel(c, m) }),
+        h("td", { text: c.origin === "replacement" ? "replacement" : c.superseded ? "superseded" : c.inConflict ? "kept (was in conflict)" : "kept" })); })))));
+  box.append(h("h2", { class: "note", text: "Model-call receipts" }), h("div", { class: "recs" }, run.receipts.map((r, i) => h("div", { class: "rec" },
+    h("b", { text: i === 0 ? "Call 1: proposal" : "Call 2: revision" }), h("br"), r.resolved_model, h("br"),
+    `${r.latency_s.toFixed(1)} s · ${r.prompt_tokens} in / ${r.completion_tokens} out tokens`, h("br"),
+    (r.billing_mode === "api_metered" ? "$" + r.cost_usd.toFixed(4) : "$0.00 (" + r.billing_mode.replace(/_/g, " ") + ")") + " · " + r.cost_source.replace(/_/g, " ")))));
+  const links = h("div", { class: "actions" }, h("button", { class: "btn", type: "button", text: "Download run.json", on: { click: downloadJson } }));
+  if (S.live && S.job) links.append(h("a", { class: "btn", href: "/api/runs/" + S.job.job_id + "/report.html", target: "_blank", rel: "noopener", text: "Open the project's own static report" }));
+  box.append(links);
+}
+function downloadJson() {
+  const blob = new Blob([JSON.stringify(S.run, null, 2) + "\n"], { type: "application/json" });
+  const a = h("a", { href: URL.createObjectURL(blob), download: "run.json" }); document.body.append(a); a.click(); a.remove();
+}
+function renderFoot() {
+  const r = S.run, live = S.live && r;
+  $("foot").textContent = live ? "Live run: model " + r.receipts.map((x) => x.resolved_model)[0] + ", code revision " + short(r.producer_revision) + "."
+    : r ? "Recorded run: model " + r.receipts.map((x) => x.resolved_model)[0] + " on " + S.recorded + ", code revision " + short(r.producer_revision) + "."
+    : "Live runs use one OpenRouter model (gpt-5.6-luna). The limit is 10 runs per visitor per hour.";
+}
+function render() {
+  renderSteps(); renderStatus(); renderInputs(); renderCanvas(); renderDetail(); renderCallout(); renderRefusal(); renderAdvanced(); renderFoot();
+}
+
+// ---------------------------------------------------------------- actions
+function reset() { clearInterval(S.timer); S.run = null; S.job = null; S.refusal = null; S.notice = null; S.sel = null; S.pending = null; S.running = false; S.live = false; S.source = null; }
+async function api(path, opts) {
+  const res = await fetch(path, opts);
+  let body = null; try { body = await res.json(); } catch (e) { /* non-JSON */ }
+  return { ok: res.ok, status: res.status, body };
+}
+async function showSample(id) {
+  reset();
+  const { ok, body } = await api("/api/samples/" + id);
+  if (!ok) { S.notice = "Could not load the recorded run."; render(); return; }
+  S.run = body.run; S.recorded = body.recorded_on; S.source = "sample"; S.step = 2; render();
+}
+async function start(payload, example) {
+  reset(); S.pending = example ? { question: example.question, observations: example.observations } : null;
+  S.running = true; S.started = Date.now(); S.stage = "queued"; $("go").disabled = true; render();
+  const { ok, status, body } = await api("/api/runs", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(payload) });
+  if (!ok) {
+    S.running = false; $("go").disabled = false; S.pending = null;
+    if (status === 429) S.notice = (body && body.detail) || "Limit reached. Please try again later.";
+    else S.refusal = (body && body.detail) || "The request was refused.";
+    render(); return;
+  }
+  S.jobId = body.job_id;
+  S.timer = setInterval(poll, 1500); poll();
+}
+async function poll() {
+  const { ok, body } = await api("/api/runs/" + S.jobId);
+  if (!ok || !body) { clearInterval(S.timer); S.running = false; $("go").disabled = false; S.notice = "Lost track of the run. Please try again."; render(); return; }
+  S.stage = body.stage; S.job = body;
+  if (body.status === "running") { render(); return; }
+  clearInterval(S.timer); S.running = false; $("go").disabled = false; S.pending = null;
+  if (body.run) S.run = body.run;
+  S.live = true; S.source = "live"; S.step = 2;
+  if (body.status !== "accepted") S.notice = body.message;
+  render();
+}
+function pickExample() { return S.examples.find((e) => e.id === S.exampleId) || S.examples[0]; }
+
+async function init() {
+  const { body } = await api("/api/examples");
+  S.examples = (body && body.examples) || [];
+  S.exampleId = S.examples[0] && S.examples[0].id;
+  const pick = $("pick"); pick.append(h("span", { text: "Question:" }));
+  S.examples.forEach((e, i) => pick.append(h("label", {}, h("input", { type: "radio", name: "ex", value: e.id, checked: i === 0, on: { change: () => { S.exampleId = e.id; } } }), h("span", { text: e.id === "aes-mission-drift" ? "Why does an anti-drift system drift?" : "Why do recorded lessons never bind?" }))));
+  $("go").addEventListener("click", () => { const e = pickExample(); start({ example: e.id }, e); });
+  $("sample").addEventListener("click", () => showSample(S.exampleId));
+  $("break").addEventListener("click", () => start({ question: "Why does my deployment pipeline keep getting slower?", observations: ["Only one fact is given here."] }, null));
+  $("goown").addEventListener("click", () => {
+    const question = $("q").value, observations = $("o").value.split("\n");
+    start({ question, observations }, { question, observations: observations.filter((t) => t.trim()).map((t, i) => ({ id: "o" + i, text: t })) });
+  });
+  window.addEventListener("resize", () => { clearTimeout(S.rs); S.rs = setTimeout(render, 150); });
+  render();
+}
+init();
+</script>
+</body>
+</html>

@@ -9,10 +9,14 @@ description = "A typed graph-adversary loop for inspectable causal revision"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-  "llm-client[codex] @ git+https://github.com/BrianMills2718/llm_client.git@c171d542658402f7de4d99a2d3f3bf085b7b3c00",
+  "llm-client[codex] @ git+https://github.com/BrianMills2718/llm_client.git@2e544d66641a3b9f00d2df540ed2a32d086e819e",
   "pydantic>=2.11,<3",
   "pyyaml>=6.0,<7",
 ]
+
+[project.optional-dependencies]
+# The public hosted front door (whygame_reboot.web); not needed for the CLI.
+web = ["fastapi>=0.115,<1.0", "uvicorn>=0.34,<1.0"]
 
 [project.scripts]
 whygame-reboot = "whygame_reboot.cli:main"
@@ -20,6 +24,8 @@ whygame-reboot = "whygame_reboot.cli:main"
 [dependency-groups]
 dev = [
   "pytest>=8.4,<9",
+  "fastapi>=0.115,<1.0",
+  "uvicorn>=0.34,<1.0",
   "ruff>=0.12,<1",
   # AES sat in an optional `governance` extra from the day it was first pinned.
   # Nothing named that extra -- not this repository's pre-commit hook, not a

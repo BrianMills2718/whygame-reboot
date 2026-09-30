@@ -58,7 +58,7 @@ def test_cross_project_dependencies_are_revision_pinned() -> None:
     project = manifest["project"]
     dependencies = "\n".join(project["dependencies"])
     dev = "\n".join(manifest["dependency-groups"]["dev"])
-    assert "llm_client.git@c171d542658402f7de4d99a2d3f3bf085b7b3c00" in dependencies
+    assert "llm_client.git@2e544d66641a3b9f00d2df540ed2a32d086e819e" in dependencies
     assert (
         "agentic-engineering-system.git@"
         "089bc6a57baee6f4d949cc2abe0dfef22ad62b18" in dev

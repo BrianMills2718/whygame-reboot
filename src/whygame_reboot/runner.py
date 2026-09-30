@@ -12,6 +12,7 @@ import time
 import uuid
 from collections.abc import Callable, Iterator
 from contextlib import contextmanager
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Protocol, TypeVar
 
@@ -47,6 +48,27 @@ MODEL_JUSTIFICATION = (
     "Brian selected Luna medium for the personal-project rewrite program; this is one "
     "bounded WhyGame graph-adversary proposal or revision stage."
 )
+
+
+
+@dataclass(frozen=True)
+class RunRoute:
+    """Which model and spend ceilings one run uses; the default is the adopted Codex Luna route.
+
+    A non-``codex/`` route (for example the public demo's OpenRouter Luna) needs no Codex
+    account profile. Everything else about the loop is identical.
+    """
+
+    model: str = MODEL
+    stage_budget_usd: float = MAX_STAGE_BUDGET_USD
+    run_budget_usd: float = MAX_RUN_BUDGET_USD
+
+    @property
+    def needs_codex_home(self) -> bool:
+        return self.model.startswith("codex/")
+
+
+DEFAULT_ROUTE = RunRoute()
 
 StructuredCaller = Callable[..., tuple[Any, Any]]
 StructuredResult = TypeVar("StructuredResult", bound=BaseModel)
@@ -189,7 +211,7 @@ def _usage_int(usage: dict[str, Any], *names: str) -> int:
     return 0
 
 
-def _receipt(trace_id: str, result: Any, *, elapsed_s: float) -> CallReceipt:
+def _receipt(trace_id: str, result: Any, *, elapsed_s: float, model: str = MODEL) -> CallReceipt:
     canonical = get_llm_call_receipts(trace_id=trace_id)
     retained = canonical[-1] if canonical else None
     usage = result.usage
@@ -208,7 +230,7 @@ def _receipt(trace_id: str, result: Any, *, elapsed_s: float) -> CallReceipt:
     return CallReceipt(
         trace_id=trace_id,
         logical_call_id=getattr(result, "logical_call_id", None),
-        requested_model=MODEL,
+        requested_model=model,
         resolved_model=(
             getattr(result, "resolved_model", None)
             or getattr(result, "execution_model", None)
@@ -237,12 +259,14 @@ def _call_stage(
     system_prompt: str,
     payload: dict[str, Any],
     response_model: type[StructuredResult],
-    codex_home: Path,
+    codex_home: Path | None,
+    route: RunRoute = DEFAULT_ROUTE,
 ) -> tuple[StructuredResult, CallReceipt]:
     trace_id = observed_run.child_trace_id(stage)
     started = time.monotonic()
+    extra = {"codex_home": str(codex_home)} if route.needs_codex_home else {}
     structured, result = caller(
-        MODEL,
+        route.model,
         [
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": json.dumps(payload, indent=2, sort_keys=True)},
@@ -254,28 +278,28 @@ def _call_stage(
         fallback_models=[],
         task=f"whygame_reboot.{stage}",
         trace_id=trace_id,
-        max_budget=MAX_STAGE_BUDGET_USD,
+        max_budget=route.stage_budget_usd,
         max_prompt_tokens=MAX_PROMPT_TOKENS,
         max_tokens=MAX_OUTPUT_TOKENS,
         model_policy="enforce_allowlist",
         model_justification=MODEL_JUSTIFICATION,
         reasoning_effort=REASONING_EFFORT,
-        codex_home=str(codex_home),
+        **extra,
     )
     if not isinstance(structured, response_model):
         structured = response_model.model_validate(structured)
-    return structured, _receipt(trace_id, result, elapsed_s=time.monotonic() - started)
+    return structured, _receipt(trace_id, result, elapsed_s=time.monotonic() - started, model=route.model)
 
 
-def config_sha256() -> str:
+def config_sha256(route: RunRoute = DEFAULT_ROUTE) -> str:
     return sha256_value(
         {
-            "model": MODEL,
+            "model": route.model,
             "reasoning_effort": REASONING_EFFORT,
             "max_prompt_tokens": MAX_PROMPT_TOKENS,
             "max_output_tokens": MAX_OUTPUT_TOKENS,
-            "max_stage_budget_usd": MAX_STAGE_BUDGET_USD,
-            "max_run_budget_usd": MAX_RUN_BUDGET_USD,
+            "max_stage_budget_usd": route.stage_budget_usd,
+            "max_run_budget_usd": route.run_budget_usd,
             "num_retries": 0,
             "fallback_models": [],
         }
@@ -617,6 +641,7 @@ def run_loop(
     run_id: str | None = None,
     resume: bool = True,
     codex_home: Path | None = None,
+    route: RunRoute = DEFAULT_ROUTE,
     run_lock: RunDirectoryLock | None = None,
 ) -> LoopRun:
     """Execute or resume the exact two-call graph-adversary loop.
@@ -634,6 +659,7 @@ def run_loop(
         "run_id": run_id,
         "resume": resume,
         "codex_home": codex_home,
+        "route": route,
     }
     if run_lock is None:
         with hold_run_directory(output_dir):
@@ -654,12 +680,13 @@ def _run_loop_locked(
     run_id: str | None,
     resume: bool,
     codex_home: Path | None,
+    route: RunRoute,
 ) -> LoopRun:
     prior_outer_runs, checkpoint_attempt = _prepare_output_dir(
         output_dir, dry_run=dry_run, resume=resume
     )
     input_sha256 = sha256_value(packet)
-    resolved_config_sha256 = config_sha256()
+    resolved_config_sha256 = config_sha256(route)
     stable_id = (
         run_id
         or (checkpoint_run_id(output_dir) if resume else None)
@@ -704,7 +731,7 @@ def _run_loop_locked(
         )
         _write_json(output_dir / "run.json", run)
         return run
-    if codex_home is None:
+    if codex_home is None and route.needs_codex_home:
         run = _base_run(
             packet,
             status="error",
@@ -745,6 +772,7 @@ def _run_loop_locked(
                 payload={"question_packet": packet.model_dump(mode="json")},
                 response_model=ProposalResponse,
                 codex_home=codex_home,
+                route=route,
             )
             receipts.append(receipt)
             proposal = commit_proposal(response, packet)
@@ -793,11 +821,12 @@ def _run_loop_locked(
             },
             response_model=RevisionResponse,
             codex_home=codex_home,
+            route=route,
         )
         receipts.append(receipt)
         plan = build_revision_plan(revision, proposal=proposal, finding=finding, packet=packet)
         event, projection = apply_revision(proposal, finding, plan)
-        if sum(item.cost_usd for item in receipts) > MAX_RUN_BUDGET_USD:
+        if sum(item.cost_usd for item in receipts) > route.run_budget_usd:
             raise ValueError("settled run cost exceeded the run budget")
         run = _base_run(
             packet,
