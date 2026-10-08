@@ -19,9 +19,11 @@ resulting active graph in both immutable JSON and a readable static report.
 The first product vertical is observed: the exact two-call Luna run produced a
 digest-bound append-only revision and a directly inspected static report, and
 installed AES discriminated `BLOCK` from `ALLOW` against that immutable result.
-Replacement of the legacy WhyGame remains unobserved and belongs to Project
-Meta. See [current claims](../policy/current-claims.json) for the
-machine-readable statement.
+Project Meta has selected this repository as the active canonical WhyGame
+generation, superseding `whygame4`; the legacy repository remains read-only
+salvage. This establishes product direction, not full legacy feature parity.
+See [current claims](../policy/current-claims.json) for the machine-readable
+statement and exact committed Project Meta evidence.
 
 [Plan 2](../docs/plans/2_second-question-recurring-lessons.md) is delivered:
 a second, different question ran through the same two-call loop on 2026-09-05

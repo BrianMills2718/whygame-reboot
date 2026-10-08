@@ -28,7 +28,7 @@ def test_bootstrap_claims_do_not_overstate_adoption() -> None:
         "canonical-private-custody": "observed",
         "graph-adversary-product": "observed",
         "aes-external-adoption": "observed",
-        "legacy-replacement": "unobserved",
+        "legacy-replacement": "observed",
         "second-question-observed": "observed",
     }
 

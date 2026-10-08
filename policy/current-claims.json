@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "generated": false,
-  "as_of": "2026-09-05T21:10:00.000000Z",
+  "as_of": "2026-10-08T05:28:37.845Z",
   "claims": [
     {
       "id": "canonical-private-custody",
@@ -23,9 +23,9 @@
     },
     {
       "id": "legacy-replacement",
-      "status": "unobserved",
-      "statement": "WhyGame Reboot supersedes the legacy whygame4 implementation.",
-      "evidence": null
+      "status": "observed",
+      "statement": "Project Meta selected WhyGame Reboot as the active canonical WhyGame generation superseding whygame4. This does not assert full legacy feature parity.",
+      "evidence": "https://github.com/BrianMills2718/project-meta/blob/ddf3119adcd69d2d04783c7a92d95db30e7f082c/PROJECT_GRAPH.json: whygame4.superseded_by=whygame-reboot; whygame-reboot.supersedes includes whygame4; whygame-reboot.status=active. Current AGENTS.md retains the legacy repository as read-only salvage."
     },
     {
       "id": "second-question-observed",
