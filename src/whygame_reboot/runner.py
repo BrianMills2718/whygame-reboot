@@ -37,7 +37,7 @@ from whygame_reboot.engine import (
     sha256_value,
 )
 
-MODEL = "codex/gpt-5.6-luna"
+MODEL = "codex/gpt-6-luna"
 REASONING_EFFORT = "medium"
 MAX_PROMPT_TOKENS = 20_000
 MAX_OUTPUT_TOKENS = 4_000
