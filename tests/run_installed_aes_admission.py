@@ -152,7 +152,7 @@ def main() -> int:
             "terminal_status": run["status"],
             "producer_revision": run["producer_revision"],
             "run_id": run["run_id"],
-            "model": "codex/gpt-5.6-luna",
+            "model": "codex/gpt-6-luna",
             "reasoning_effort": "medium",
             "call_count": len(run["receipts"]),
             "retry_count": sum(item["retry_count"] for item in run["receipts"]),
