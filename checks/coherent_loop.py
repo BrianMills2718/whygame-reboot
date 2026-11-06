@@ -9,7 +9,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-EXPECTED_MODEL = "codex/gpt-6-luna"
+EXPECTED_MODEL = "codex/gpt-5.6-luna"
 EXPECTED_PRODUCER_REVISION = "0f07a07c81cde9624a036d1f91f384a4299b4598"
 
 
