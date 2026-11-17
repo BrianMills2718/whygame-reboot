@@ -1,0 +1,13 @@
+# Generated from docs/architecture/*.c4 by `lockstep check arch gen`. Do not edit by hand.
+
+[importlinter]
+root_packages =
+    whygame_reboot
+
+[importlinter:contract:whygame_reboot.contracts]
+name = whygame_reboot.contracts imports only what the diagram allows
+type = forbidden
+source_modules = whygame_reboot.contracts
+forbidden_modules =
+    whygame_reboot.engine
+allow_indirect_imports = True

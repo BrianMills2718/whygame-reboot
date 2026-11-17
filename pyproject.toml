@@ -31,7 +31,11 @@ dev = [
   # developer checkout gets the controls, while `pip install whygame-reboot`
   # still does not drag a governance system into a product install.
   "agentic-engineering-system @ git+https://github.com/BrianMills2718/agentic-engineering-system.git@089bc6a57baee6f4d949cc2abe0dfef22ad62b18",
+  "import-linter>=2.15",
 ]
+
+[tool.lockstep]
+source = ["src/whygame_reboot"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/whygame_reboot"]

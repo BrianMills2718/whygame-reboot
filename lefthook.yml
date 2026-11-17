@@ -1,0 +1,14 @@
+remotes:
+  - git_url: git@github-personal:BrianMills2718/code2-workspace.git
+    ref: main
+    refetch_frequency: 24h
+    configs:
+      - hooks/base.yml
+pre-commit:
+  jobs:
+    - name: native-checks
+      run: make fast
+pre-push:
+  jobs:
+    - name: vision-checks
+      run: make check

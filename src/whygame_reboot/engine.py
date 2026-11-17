@@ -1,4 +1,9 @@
-"""Deterministic commit, stress-test, revision, and replay operators."""
+"""Deterministic commit, stress-test, revision, and replay operators.
+
+Implements: revision-replay/append-only-revision
+Implements: revision-replay/feedback-is-not-conflict
+Implements: revision-replay/digest-bound-revision
+"""
 
 from __future__ import annotations
 
