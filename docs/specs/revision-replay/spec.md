@@ -1,0 +1,1 @@
+../../../openspec/specs/revision-replay/spec.md

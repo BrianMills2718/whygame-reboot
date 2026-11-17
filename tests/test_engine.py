@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import pytest
+
 from whygame_reboot.contracts import ProposalResponse, QuestionPacket, RevisionResponse
 from whygame_reboot.engine import (
     apply_revision,
@@ -96,6 +98,7 @@ def revision(left: str, right: str) -> RevisionResponse:
     )
 
 
+@pytest.mark.req("revision-replay/direct-conflict-becomes-an-append-only-revision", existing=True)
 def test_direct_conflict_becomes_append_only_revision() -> None:
     original = commit_proposal(proposal(), packet())
     finding = select_finding(original)
@@ -118,6 +121,7 @@ def test_direct_conflict_becomes_append_only_revision() -> None:
     )
 
 
+@pytest.mark.req("revision-replay/reverse-edge-is-feedback", existing=True)
 def test_reverse_edge_is_feedback_not_a_conflict() -> None:
     committed = commit_proposal(proposal(reverse=True), packet())
     assert select_finding(committed) is None
@@ -139,6 +143,7 @@ def test_model_local_reference_must_exist() -> None:
         raise AssertionError("unknown model-local IDs must fail")
 
 
+@pytest.mark.req("revision-replay/wrong-finding-digest-is-refused", existing=True)
 def test_wrong_finding_digest_cannot_be_applied() -> None:
     original = commit_proposal(proposal(), packet())
     finding = select_finding(original)

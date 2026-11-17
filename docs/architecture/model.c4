@@ -1,0 +1,7 @@
+specification { element component }
+model {
+ engine = component 'Revision engine' { metadata { python 'whygame_reboot.engine' } }
+ contracts = component 'Typed contracts' { metadata { python 'whygame_reboot.contracts' } }
+ engine -> contracts 'Uses strict Pydantic types'
+}
+views { view index { include * } }
